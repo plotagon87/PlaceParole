@@ -15,6 +15,10 @@
  * 6. Password strength enforced SERVER-SIDE (client-side JS is cosmetic only).
  */
 
+// Enable error reporting for troubleshooting registration rendering issues
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 require_once '../../templates/header.php';   // Starts session, loads $t (translations), renders nav
 require_once '../../config/db.php';           // Provides $pdo — the PDO database connection
 
@@ -409,6 +413,7 @@ function validateManagerPasswordStrength(string $password): array
                 value="<?= htmlspecialchars($oldValues['market_name'] ?? '') ?>"
                 required
                 autocomplete="organization"
+                autofocus
             >
 
             <label for="market_location" class="form-label"><?= $t['market_location'] ?> *</label>

@@ -15,6 +15,10 @@
  * 6. Exception handling with PDO transaction rollback prevents partial inserts.
  */
 
+// Enable error reporting during development to catch issues on these pages
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 require_once '../../templates/header.php';   // Loads session, language ($t), navigation bar
 require_once '../../config/db.php';           // Provides $pdo — the database connection object
 
