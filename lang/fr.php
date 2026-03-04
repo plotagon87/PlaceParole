@@ -44,6 +44,14 @@ return [
     'register_success'      => "Inscription réussie ! Vous pouvez maintenant vous connecter.",
     'logout_success'        => 'Vous avez été déconnecté.',
 
+    // Registration page headings/intros
+    'seller_registration'          => 'Inscription vendeur',
+    'register_seller'              => 'Inscrire en tant que vendeur',
+    'seller_registration_intro'    => 'Choisissez votre marché et créez votre profil de vendeur.',
+
+    'manager_registration'         => 'Inscription Gestionnaire de Marché',
+    'register_manager_intro'       => 'Créez votre marché et votre compte gestionnaire en une seule étape.',
+
     // --- Complaints ---
     'submit_complaint'      => 'Soumettre une Plainte',
     'complaint_category'    => 'Catégorie',
