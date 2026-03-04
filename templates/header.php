@@ -8,6 +8,10 @@
 if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/../config/db.php'; // Load BASE_URL constant
 require_once __DIR__ . '/../config/lang.php'; // Load language system — $t is now available
+
+// Append the current language query parameter to internal links when needed.
+// This keeps users on the selected language after navigating away from the home page.
+$langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
 ?><!DOCTYPE html>
 <html lang="<?= $_SESSION['lang'] ?? 'en' ?>">
 <head>
@@ -193,17 +197,17 @@ require_once __DIR__ . '/../config/lang.php'; // Load language system — $t is 
                     <a href="<?= BASE_URL ?>/modules/complaints/submit.php" class="hover:text-gray-200 transition"><?= $t['nav_complaints'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/suggestions/submit.php" class="hover:text-gray-200 transition"><?= $t['nav_suggestions'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/community/report.php" class="hover:text-gray-200 transition"><?= $t['nav_community'] ?></a>
-                    <a href="<?= BASE_URL ?>/modules/announcements/list.php" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>
+                    <a href="<?= BASE_URL ?>/modules/announcements/list.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>
                 <?php elseif ($_SESSION['role'] === 'manager'): ?>
-                    <a href="<?= BASE_URL ?>/modules/analytics/dashboard.php" class="hover:text-gray-200 transition"><?= $t['nav_analytics'] ?? 'Analytics' ?></a>
-                    <a href="<?= BASE_URL ?>/modules/complaints/list.php" class="hover:text-gray-200 transition"><?= $t['nav_complaints'] ?></a>
-                    <a href="<?= BASE_URL ?>/modules/suggestions/list.php" class="hover:text-gray-200 transition"><?= $t['nav_suggestions'] ?></a>
-                    <a href="<?= BASE_URL ?>/modules/announcements/create.php" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>
-                    <a href="<?= BASE_URL ?>/modules/community/list.php" class="hover:text-gray-200 transition"><?= $t['nav_community'] ?></a>
+                    <a href="<?= BASE_URL ?>/modules/analytics/dashboard.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_analytics'] ?? 'Analytics' ?></a>
+                    <a href="<?= BASE_URL ?>/modules/complaints/list.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_complaints'] ?></a>
+                    <a href="<?= BASE_URL ?>/modules/suggestions/list.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_suggestions'] ?></a>
+                    <a href="<?= BASE_URL ?>/modules/announcements/create.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>
+                    <a href="<?= BASE_URL ?>/modules/community/list.php<?= $langParam ?>"class="hover:text-gray-200 transition"><?= $t['nav_community'] ?></a>
                 <?php endif; ?>
             <?php else: ?>
                 <!-- Not Logged In Navigation -->
-                <a href="<?= BASE_URL ?>/modules/complaints/track.php" class="hover:text-gray-200 transition"><?= $t['track_complaint'] ?></a>
+                <a href="<?= BASE_URL ?>/modules/complaints/track.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['track_complaint'] ?></a>
             <?php endif; ?>
         </div>
 
@@ -238,7 +242,7 @@ require_once __DIR__ . '/../config/lang.php'; // Load language system — $t is 
                     </div>
                 </div>
             <?php else: ?>
-                  <a href="<?= BASE_URL ?>/modules/auth/login.php" class="btn-primary">
+                  <a href="<?= BASE_URL ?>/modules/auth/login.php<?= $langParam ?>" class="btn-primary">
                     <?= $t['login'] ?>
                 </a>
             <?php endif; ?>
@@ -258,14 +262,14 @@ require_once __DIR__ . '/../config/lang.php'; // Load language system — $t is 
                 <a href="/" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_home'] ?></a>
                 
                 <?php if ($_SESSION['role'] === 'seller'): ?>
-                    <a href="<?= BASE_URL ?>/modules/complaints/submit.php" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_complaints'] ?></a>
-                    <a href="<?= BASE_URL ?>/modules/suggestions/submit.php" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_suggestions'] ?></a>
-                    <a href="<?= BASE_URL ?>/modules/community/report.php" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_community'] ?></a>
-                    <a href="<?= BASE_URL ?>/modules/announcements/list.php" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_announcements'] ?></a>
+                    <a href="<?= BASE_URL ?>/modules/complaints/submit.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_complaints'] ?></a>
+                    <a href="<?= BASE_URL ?>/modules/suggestions/submit.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_suggestions'] ?></a>
+                    <a href="<?= BASE_URL ?>/modules/community/report.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_community'] ?></a>
+                    <a href="<?= BASE_URL ?>/modules/announcements/list.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_announcements'] ?></a>
                 <?php elseif ($_SESSION['role'] === 'manager'): ?>
-                    <a href="<?= BASE_URL ?>/modules/analytics/dashboard.php" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_analytics'] ?? 'Analytics' ?></a>
-                    <a href="<?= BASE_URL ?>/modules/complaints/list.php" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_complaints'] ?></a>
-                    <a href="<?= BASE_URL ?>/modules/suggestions/list.php" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_suggestions'] ?></a>
+                    <a href="<?= BASE_URL ?>/modules/analytics/dashboard.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_analytics'] ?? 'Analytics' ?></a>
+                    <a href="<?= BASE_URL ?>/modules/complaints/list.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_complaints'] ?></a>
+                    <a href="<?= BASE_URL ?>/modules/suggestions/list.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_suggestions'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/announcements/create.php" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_announcements'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/community/list.php" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_community'] ?></a>
                 <?php endif; ?>
