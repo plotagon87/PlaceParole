@@ -31,6 +31,20 @@ $errors     = [];   // Array that accumulates validation error messages
 $oldValues  = [];   // Array that stores re-populated form values after a failed submission
                     // so the user does not have to retype everything
 
+// ── Rate limiting: prevent registration spam ──────────────────────────────────
+// Limit: 5 registration attempts per 15 minutes per IP address
+if (session_status() === PHP_SESSION_NONE) session_start();
+$max_reg_attempts = 5;
+$reg_lockout_time = 15 * 60;  // 15 minutes in seconds
+$reg_attempts_key = 'reg_attempts_' . md5($_SERVER['REMOTE_ADDR']);
+$reg_lockout_key  = 'reg_lockout_'  . md5($_SERVER['REMOTE_ADDR']);
+
+// Check if this IP is currently locked out
+if (isset($_SESSION[$reg_lockout_key]) && time() < $_SESSION[$reg_lockout_key]) {
+    $remaining = ceil(($_SESSION[$reg_lockout_key] - time()) / 60);
+    $errors[] = "Too many registration attempts. Please wait {$remaining} minute(s) before trying again.";
+}
+
 // ── Handle form submission ────────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -47,7 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $market_id        = (int)   ($_POST['market_id']       ?? 0);   // (int) cast prevents non-numeric injection
     $name             = trim(htmlspecialchars($_POST['name']            ?? ''));
     $email            = trim(strtolower($_POST['email']     ?? ''));  // Normalise email to lowercase
-    $phone            = trim(htmlspecialchars($_POST['phone']           ?? ''));
+    $phone            = preg_replace('/[\s\-()]/', '', trim(htmlspecialchars($_POST['phone'] ?? '')));
+    // ^-- Normalize phone: strip spaces, dashes, parentheses before storage
     $stall_no         = trim(htmlspecialchars($_POST['stall_no']        ?? ''));
     $password         =       $_POST['password']         ?? '';      // NOT htmlspecialchars — bcrypt handles raw bytes
     $password_confirm =       $_POST['password_confirm'] ?? '';
@@ -163,6 +178,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // We log the full error internally but only show a safe message to the user
             error_log('Registration PDO error: ' . $e->getMessage());
             $errors[] = 'Registration failed due to a server error. Please try again.';
+        }
+    }
+
+    // ── Rate limiting: increment attempt counter on registration failure ────
+    // This runs only if there are validation or database errors (successful registrations exit above)
+    if (!empty($errors) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $_SESSION[$reg_attempts_key] = ($_SESSION[$reg_attempts_key] ?? 0) + 1;
+        
+        if ($_SESSION[$reg_attempts_key] >= $max_reg_attempts) {
+            $_SESSION[$reg_lockout_key] = time() + $reg_lockout_time;
+            $errors[] = "Too many registration attempts. Please wait 15 minutes before trying again.";
         }
     }
 }

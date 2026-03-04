@@ -1,0 +1,28 @@
+# PlaceParole Security Configuration
+# ===================================
+
+# SEC-004: Block public access to setup verification file
+<Files "setup_verify.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# SEC-005: Add HTTP security headers to prevent common attacks
+# These headers tell browsers how to handle the page securely
+
+# X-Frame-Options: Prevent clickjacking by disallowing iframe embedding
+Header set X-Frame-Options "DENY"
+
+# X-Content-Type-Options: Prevent MIME-sniffing attacks by forcing declared content type
+Header set X-Content-Type-Options "nosniff"
+
+# Referrer-Policy: Control how much referrer information is shared
+Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Content-Security-Policy: Restrict which scripts and styles can be loaded
+# This helps prevent Cross-Site Scripting (XSS) attacks
+Header set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self';"
+
+# Optional: Strict-Transport-Security (HSTS)
+# Uncomment this line only after confirming HTTPS is properly configured
+# Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"

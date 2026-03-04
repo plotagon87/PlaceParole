@@ -53,6 +53,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['name']      = $user['name'];
             $_SESSION['lang']      = $user['lang'] ?? 'en';
 
+            // Regenerate session ID after login to prevent session fixation attacks
+            // This replaces the current session ID with a new one, invalidating any previously known IDs
+            session_regenerate_id(true);
+
             // Redirect based on role
             if ($user['role'] === 'manager') {
                 header('Location: ../../modules/complaints/list.php');
