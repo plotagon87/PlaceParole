@@ -191,9 +191,18 @@ require_once __DIR__ . '/../config/lang.php'; // Load language system — $t is 
         <div class="hidden md:flex items-center gap-4">
             <!-- Language Toggle -->
             <div class="flex gap-2">
-                <a href="?lang=en" class="<?= ($_SESSION['lang'] ?? 'en') === 'en' ? 'font-bold' : 'opacity-70 hover:opacity-100' ?> transition">EN</a>
+                <?php
+                    // Helper function to build language toggle URL while preserving other query parameters
+                    function buildLangUrl($lang) {
+                        $params = $_GET;
+                        $params['lang'] = $lang;
+                        $query = http_build_query($params);
+                        return '?' . $query;
+                    }
+                ?>
+                <a href="<?= buildLangUrl('en') ?>" class="<?= ($_SESSION['lang'] ?? 'en') === 'en' ? 'font-bold' : 'opacity-70 hover:opacity-100' ?> transition">EN</a>
                 <span class="opacity-70">/</span>
-                <a href="?lang=fr" class="<?= ($_SESSION['lang'] ?? 'en') === 'fr' ? 'font-bold' : 'opacity-70 hover:opacity-100' ?> transition">FR</a>
+                <a href="<?= buildLangUrl('fr') ?>" class="<?= ($_SESSION['lang'] ?? 'en') === 'fr' ? 'font-bold' : 'opacity-70 hover:opacity-100' ?> transition">FR</a>
             </div>
 
             <!-- User Menu / Auth Links -->
@@ -245,9 +254,9 @@ require_once __DIR__ . '/../config/lang.php'; // Load language system — $t is 
                 
                 <!-- Language Toggle Mobile -->
                 <div class="flex gap-4 py-2">
-                    <a href="?lang=en" class="<?= ($_SESSION['lang'] ?? 'en') === 'en' ? 'font-bold' : 'opacity-70' ?>" @click="mobileMenuOpen = false">EN</a>
+                    <a href="<?= buildLangUrl('en') ?>" class="<?= ($_SESSION['lang'] ?? 'en') === 'en' ? 'font-bold' : 'opacity-70' ?>" @click="mobileMenuOpen = false">EN</a>
                     <span class="opacity-30">/</span>
-                    <a href="?lang=fr" class="<?= ($_SESSION['lang'] ?? 'en') === 'fr' ? 'font-bold' : 'opacity-70' ?>" @click="mobileMenuOpen = false">FR</a>
+                    <a href="<?= buildLangUrl('fr') ?>" class="<?= ($_SESSION['lang'] ?? 'en') === 'fr' ? 'font-bold' : 'opacity-70' ?>" @click="mobileMenuOpen = false">FR</a>
                 </div>
 
                 <a href="<?= BASE_URL ?>/modules/auth/logout.php" class="block py-2 hover:text-gray-200 transition text-red-200" @click="mobileMenuOpen = false">

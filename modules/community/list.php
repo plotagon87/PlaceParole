@@ -56,6 +56,13 @@ $eventColors = [
         <?php endif; ?>
     </div>
 
+    <!-- Success/Error Message -->
+    <?php if ($message): ?>
+        <div class="<?= $message_type === 'success' ? 'bg-green-100 text-green-700 border-green-300' : 'bg-red-100 text-red-700 border-red-300' ?> px-4 py-3 rounded-lg mb-6 border">
+            <?= $message ?>
+        </div>
+    <?php endif; ?>
+
     <?php if (!empty($reports)): ?>
         <div class="space-y-6">
             <?php foreach ($reports as $report): ?>
@@ -74,11 +81,25 @@ $eventColors = [
                     <p class="text-gray-700 leading-relaxed mb-3">
                         <?= nl2br(htmlspecialchars($report['description'])) ?>
                     </p>
-                    <?php if ($report['status'] === 'coordinated'): ?>
-                        <div class="text-xs font-bold bg-green-200 text-green-800 px-3 py-1 rounded-full inline-block">
-                            ✅ Action coordinated
-                        </div>
-                    <?php endif; ?>
+                    
+                    <!-- Status and Action -->
+                    <div class="flex gap-3 items-center border-t pt-4">
+                        <?php if ($report['status'] === 'coordinated'): ?>
+                            <div class="text-xs font-bold bg-green-200 text-green-800 px-3 py-1 rounded-full inline-block">
+                                ✅ Action coordinated
+                            </div>
+                        <?php endif; ?>
+                        
+                        <?php if ($_SESSION['role'] === 'manager' && $report['status'] !== 'coordinated'): ?>
+                            <form method="POST" class="flex-1">
+                                <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
+                                <input type="hidden" name="report_id" value="<?= $report['id'] ?>">
+                                <button type="submit" class="w-full bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 transition font-semibold text-sm">
+                                    ✓ Mark as Coordinated
+                                </button>
+                            </form>
+                        <?php endif; ?>
+                    </div>
                 </div>
             <?php endforeach; ?>
         </div>
