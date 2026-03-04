@@ -370,14 +370,14 @@ function validateManagerPasswordStrength(string $password): array
 
     <div class="role-badge">
         <span style="width:7px;height:7px;background:var(--orange);border-radius:50%;display:inline-block;"></span>
-        Market Manager Registration
+        <?= htmlspecialchars($t['manager_registration']) ?>
     </div>
 
     <h1 style="font-size:1.875rem;font-weight:800;color:var(--text);margin:0 0 0.25rem;">
         <?= htmlspecialchars($t['register_market']) ?>
     </h1>
     <p style="color:var(--muted);font-size:0.9rem;margin:0 0 1.5rem;">
-        Create your market and manager account in one step.
+        <?= htmlspecialchars($t['register_manager_intro']) ?>
     </p>
 
     <!-- Server-side error messages -->

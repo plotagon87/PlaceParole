@@ -44,6 +44,14 @@ return [
     'register_success'      => 'Registration successful! You can now login.',
     'logout_success'        => 'You have been logged out.',
 
+    // Registration page headings/intros
+    'seller_registration'          => 'Seller Registration',
+    'register_seller'              => 'Register as seller',
+    'seller_registration_intro'    => 'Choose your market and create your seller profile.',
+
+    'manager_registration'         => 'Market Manager Registration',
+    'register_manager_intro'       => 'Create your market and manager account in one step.',
+
     // --- Complaints ---
     'submit_complaint'      => 'Submit a Complaint',
     'complaint_category'    => 'Category',

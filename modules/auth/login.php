@@ -6,6 +6,9 @@
 require_once '../../templates/header.php';
 require_once '../../config/db.php';
 
+// preserve language query parameter for links on this page
+$langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
+
 $error = '';
 $success = '';
 
@@ -127,10 +130,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="mt-8 space-y-3 border-t pt-6">
         <p class="text-center text-gray-600"><?= $t['no_account'] ?></p>
         <div class="grid grid-cols-2 gap-3">
-            <a href="register_seller.php" class="text-center btn-outlined py-2">
+            <a href="register_seller.php<?= $langParam ?>" class="text-center btn-outlined py-2">
                 <?= $t['seller'] ?>
             </a>
-            <a href="register_manager.php" class="text-center btn-secondary py-2">
+            <a href="register_manager.php<?= $langParam ?>" class="text-center btn-secondary py-2">
                 <?= $t['manager'] ?>
             </a>
         </div>

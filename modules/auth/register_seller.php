@@ -544,14 +544,14 @@ function validatePasswordStrength(string $password): array
     <div class="role-badge">
         <!-- Green dot indicator -->
         <span style="width:7px;height:7px;background:var(--green-mid);border-radius:50%;display:inline-block;"></span>
-        Seller Registration
+        <?= htmlspecialchars($t['seller_registration']) ?>
     </div>
 
     <h1 style="font-size:1.875rem;font-weight:800;color:var(--text);margin:0 0 0.25rem;">
-        <?= htmlspecialchars($t['register']) ?> Account
+        <?= htmlspecialchars($t['register_seller']) ?>
     </h1>
     <p style="color:var(--muted);font-size:0.9rem;margin:0 0 1.5rem;">
-        <?= htmlspecialchars($t['select_market']) ?> and create your seller profile.
+        <?= htmlspecialchars($t['seller_registration_intro']) ?>
     </p>
 
     <!-- ── Server-side error messages ──────────────────────────────────────── -->
