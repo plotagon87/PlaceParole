@@ -93,6 +93,7 @@ require_once __DIR__ . '/../config/lang.php'; // Load language system — $t is 
                 <a href="<?= BASE_URL ?>/modules/community/report.php" class="hover:text-gray-200 transition"><?= $t['nav_community'] ?></a>
                 <a href="<?= BASE_URL ?>/modules/announcements/list.php" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>
             <?php elseif ($_SESSION['role'] === 'manager'): ?>
+                <a href="<?= BASE_URL ?>/modules/analytics/dashboard.php" class="hover:text-gray-200 transition"><?= $t['nav_analytics'] ?? 'Analytics' ?></a>
                 <a href="<?= BASE_URL ?>/modules/complaints/list.php" class="hover:text-gray-200 transition"><?= $t['nav_complaints'] ?></a>
                 <a href="<?= BASE_URL ?>/modules/suggestions/list.php" class="hover:text-gray-200 transition"><?= $t['nav_suggestions'] ?></a>
                 <a href="<?= BASE_URL ?>/modules/announcements/create.php" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>
