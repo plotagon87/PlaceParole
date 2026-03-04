@@ -29,6 +29,7 @@ return [
     'phone'                 => 'Phone Number',
     'stall_number'          => 'Stall Number',
     'select_market'         => 'Select your Market',
+    'select_category'       => 'Select a Category',
     'register_market'       => 'Register a New Market',
     'market_name'           => 'Market Name',
     'market_location'       => 'Market Location',
@@ -92,6 +93,7 @@ return [
 
     // --- Dashboard (Manager) ---
     'manager_dashboard'     => 'Manager Dashboard',
+    'analytics_dashboard'   => 'Analytics Dashboard',
     'total_complaints'      => 'Total Complaints',
     'pending_complaints'    => 'Pending',
     'resolved_complaints'   => 'Resolved',
@@ -105,6 +107,16 @@ return [
     'view'                  => 'View',
     'respond'               => 'Respond',
     'mark_resolved'         => 'Mark as Resolved',
+
+    // --- Analytics ---
+    'by_category'           => 'Complaints by Category',
+    'by_month'              => 'Complaints by Month',
+    'recent_complaints'     => 'Recent Complaints',
+    'avg_resolution_time'   => 'Average Resolution Time',
+    'complaints_last_12_months' => 'Last 12 Months',
+    'hours'                 => 'hrs',
+    'no_resolved'           => 'No resolved yet',
+    'nav_analytics'         => 'Analytics',
 
     // --- General ---
     'submit'                => 'Submit',

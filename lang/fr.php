@@ -92,6 +92,7 @@ return [
 
     // --- Dashboard (Manager) ---
     'manager_dashboard'     => 'Tableau de Bord du Gestionnaire',
+    'analytics_dashboard'   => 'Tableau de Bord Analytique',
     'total_complaints'      => 'Plaintes Totales',
     'pending_complaints'    => 'En attente',
     'resolved_complaints'   => 'Résolues',
@@ -105,6 +106,16 @@ return [
     'view'                  => 'Afficher',
     'respond'               => 'Répondre',
     'mark_resolved'         => 'Marquer comme Résolu',
+
+    // --- Analytics ---
+    'by_category'           => 'Plaintes par Catégorie',
+    'by_month'              => 'Plaintes par Mois',
+    'recent_complaints'     => 'Plaintes Récentes',
+    'avg_resolution_time'   => 'Temps Moyen de Résolution',
+    'complaints_last_12_months' => '12 Derniers Mois',
+    'hours'                 => 'hrs',
+    'no_resolved'           => 'Aucune résolu',
+    'nav_analytics'         => 'Analytique',
 
     // --- General ---
     'submit'                => 'Soumettre',

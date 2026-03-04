@@ -53,37 +53,37 @@ $monthData = array_values($months);
 
 ?>
 <div class="mb-8">
-    <h1 class="text-3xl font-bold text-primary mb-4">📊 <?= $t['analytics_dashboard'] ?? 'Analytics Dashboard' ?></h1>
+    <h1 class="text-3xl font-bold text-primary mb-4">📊 <?= $t['analytics_dashboard'] ?></h1>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div class="card text-center">
             <div class="text-2xl font-bold"><?= array_sum($catData) ?></div>
-            <p class="text-gray-600 text-sm mt-2"><?= $t['total_complaints'] ?? 'Total complaints' ?></p>
+            <p class="text-gray-600 text-sm mt-2"><?= $t['total_complaints'] ?></p>
         </div>
         <div class="card text-center">
-            <div class="text-2xl font-bold"><?= $avgHours !== null ? $avgHours . ' ' . ($t['hours'] ?? 'hrs') : ($t['no_resolved'] ?? 'No resolved yet') ?></div>
-            <p class="text-gray-600 text-sm mt-2"><?= $t['avg_resolution_time'] ?? 'Avg resolution time' ?></p>
+            <div class="text-2xl font-bold"><?= $avgHours !== null ? $avgHours . ' ' . $t['hours'] : $t['no_resolved'] ?></div>
+            <p class="text-gray-600 text-sm mt-2"><?= $t['avg_resolution_time'] ?></p>
         </div>
         <div class="card text-center">
             <div class="text-2xl font-bold"><?= $byMonthRaw ? array_sum($monthData) : 0 ?></div>
-            <p class="text-gray-600 text-sm mt-2"><?= $t['complaints_last_12_months'] ?? 'Last 12 months' ?></p>
+            <p class="text-gray-600 text-sm mt-2"><?= $t['complaints_last_12_months'] ?></p>
         </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div class="card">
-            <h2 class="font-bold mb-4"><?= $t['by_category'] ?? 'Complaints by Category' ?></h2>
+            <h2 class="font-bold mb-4"><?= $t['by_category'] ?></h2>
             <canvas id="catChart" height="220"></canvas>
         </div>
 
         <div class="card">
-            <h2 class="font-bold mb-4"><?= $t['by_month'] ?? 'Complaints by Month' ?></h2>
+            <h2 class="font-bold mb-4"><?= $t['by_month'] ?></h2>
             <canvas id="monthChart" height="220"></canvas>
         </div>
     </div>
 
     <div class="card">
-        <h2 class="font-bold mb-4"><?= $t['recent_complaints'] ?? 'Recent Complaints' ?></h2>
+        <h2 class="font-bold mb-4"><?= $t['recent_complaints'] ?></h2>
         <?php if (!empty($recent)): ?>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm">
