@@ -25,8 +25,19 @@ require_once 'config/db.php';
             </a>
         </div>
     <?php else: ?>
-        <!-- Logged in -->
-        <p class="text-lg">👋 <?= $t['login_success'] ?></p>
+        <!-- Logged in - Show role-specific welcome -->
+        <?php if ($_SESSION['role'] === 'seller'): ?>
+            <p class="text-lg mb-4">👋 Welcome, <?= htmlspecialchars($_SESSION['name'] ?? 'Seller') ?>!</p>
+            <p class="text-gray-100 mb-4">Get started by submitting your first complaint or suggestion below.</p>
+        <?php elseif ($_SESSION['role'] === 'manager'): ?>
+            <p class="text-lg mb-4">👋 Welcome, <?= htmlspecialchars($_SESSION['name'] ?? 'Manager') ?>!</p>
+            <p class="text-gray-100 mb-4">Access your analytics dashboard to view market insights and manage complaints.</p>
+            <a href="modules/analytics/dashboard.php" class="inline-block bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                📊 Go to Analytics Dashboard
+            </a>
+        <?php else: ?>
+            <p class="text-lg">👋 <?= $t['login_success'] ?></p>
+        <?php endif; ?>
     <?php endif; ?>
 </div>
 
@@ -105,12 +116,12 @@ require_once 'config/db.php';
     <?php if (isset($_SESSION['user_id']) && $_SESSION['role'] === 'manager'): ?>
     <div class="card hover:shadow-lg transition bg-secondary text-white">
         <div class="text-4xl mb-3">📊</div>
-        <h2 class="text-xl font-bold mb-2">Manager Dashboard</h2>
+        <h2 class="text-xl font-bold mb-2">Manager Analytics</h2>
         <p class="mb-4">
-            View and respond to all market complaints, manage announcements, and track community events.
+            View detailed market analytics, complaint trends, and performance metrics. Manage all submissions in one place.
         </p>
-        <a href="modules/complaints/list.php" class="text-white font-semibold hover:underline">
-            → Go to Dashboard
+        <a href="modules/analytics/dashboard.php" class="text-white font-semibold hover:underline">
+            → Go to Analytics
         </a>
     </div>
     <?php endif; ?>

@@ -117,11 +117,17 @@ function enableFormDirtyWarning(formId = null) {
 
 // Auto-format phone inputs
 document.addEventListener('DOMContentLoaded', () => {
+    // Enable form dirty warning for all forms
+    enableFormDirtyWarning();
+    
+    // Handle phone input formatting (Cameroon format)
     const phoneInputs = document.querySelectorAll('input[type="tel"]');
     phoneInputs.forEach(input => {
         input.addEventListener('blur', (e) => {
-            const formatted = formatPhoneNumber(e.target.value);
-            console.log('Phone formatted:', formatted);
+            // Only format if the input looks like a phone number
+            if (e.target.value.length >= 9) {
+                e.target.value = formatPhoneNumber(e.target.value);
+            }
         });
     });
 });
