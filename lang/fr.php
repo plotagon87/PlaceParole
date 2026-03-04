@@ -29,6 +29,7 @@ return [
     'phone'                 => 'Numéro de téléphone',
     'stall_number'          => 'Numéro de stand',
     'select_market'         => 'Choisissez votre marché',
+    'select_category'       => 'Sélectionnez une Catégorie',
     'register_market'       => 'Enregistrer un nouveau marché',
     'market_name'           => 'Nom du marché',
     'market_location'       => 'Localisation du marché',
