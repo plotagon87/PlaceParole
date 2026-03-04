@@ -592,6 +592,7 @@ function validatePasswordStrength(string $password): array
                 class="form-input"
                 required
                 aria-required="true"
+                autofocus
             >
                 <option value="">— Choose your market —</option>
                 <?php foreach ($markets as $market): ?>
