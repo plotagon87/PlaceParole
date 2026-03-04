@@ -3,12 +3,9 @@
  * modules/announcements/list.php
  * All users see latest announcements from their market
  */
+require_once '../../config/auth_guard.php';
 require_once '../../templates/header.php';
 require_once '../../config/db.php';
-
-if (!isset($_SESSION['market_id'])) {
-    die("<div style='padding: 20px;'><p>Please <a href='../../modules/auth/login.php'>login</a> to view announcements.</p></div>");
-}
 
 // Fetch announcements for this market
 $stmt = $pdo->prepare("SELECT a.*, u.name AS manager_name FROM announcements a LEFT JOIN users u ON a.manager_id = u.id WHERE a.market_id = ? ORDER BY a.created_at DESC LIMIT 50");

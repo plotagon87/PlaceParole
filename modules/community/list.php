@@ -3,12 +3,9 @@
  * modules/community/list.php
  * Display community events to all market members
  */
+require_once '../../config/auth_guard.php';
 require_once '../../templates/header.php';
 require_once '../../config/db.php';
-
-if (!isset($_SESSION['market_id'])) {
-    die("<div style='padding: 20px;'><p>Please <a href='../../modules/auth/login.php'>login</a> to view community events.</p></div>");
-}
 
 $stmt = $pdo->prepare("SELECT r.*, u.name AS reporter_name FROM community_reports r LEFT JOIN users u ON r.reported_by = u.id WHERE r.market_id = ? ORDER BY r.created_at DESC");
 $stmt->execute([$_SESSION['market_id']]);
@@ -45,7 +42,7 @@ $eventColors = [
                         <div class="text-3xl"><?= $eventIcons[$report['event_type']] ?? '📢' ?></div>
                         <div class="flex-1">
                             <h2 class="text-xl font-bold text-primary">
-                                <?= ucfirst(str_replace('_', ' ', $report['event_type'])) ?>: <?= htmlspecialchars($report['person_name']) ?>
+                                <?= htmlspecialchars(ucfirst(str_replace('_', ' ', $report['event_type']))) ?>: <?= htmlspecialchars($report['person_name']) ?>
                             </h2>
                             <p class="text-sm text-gray-600">
                                 Reported by <?= htmlspecialchars($report['reporter_name'] ?? 'Anonymous') ?> on <?= date('d/m/Y H:i', strtotime($report['created_at'])) ?>

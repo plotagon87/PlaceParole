@@ -13,6 +13,7 @@ $success  = false;
 $ref_code = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $category    = htmlspecialchars($_POST['category']    ?? '');
     $description = htmlspecialchars($_POST['description'] ?? '');
 
@@ -21,10 +22,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         // Generate a unique reference code: MARKET_YEAR_NUMBER
         // Format: MKT-2024-00123
-        $year = date('Y');
-        $refCode = 'MKT-' . $year . '-' . str_pad(rand(1, 9999), 5, '0', STR_PAD_LEFT);
-
-        // Insert the complaint into the database
+            // Using uniqid() instead of rand() prevents collisions
+            function generateRefCode($pdo) {
+                do {
+                    $code = 'MKT-' . date('Y') . '-' . strtoupper(substr(uniqid('', true), -8));
+                    $stmt = $pdo->prepare("SELECT id FROM complaints WHERE ref_code = ? LIMIT 1");
+                    $stmt->execute([$code]);
+                } while ($stmt->fetch());
+                return $code;
+            }
+            $refCode = generateRefCode($pdo);
         $stmt = $pdo->prepare("
             INSERT INTO complaints (market_id, seller_id, ref_code, category, description, channel, status)
             VALUES (?, ?, ?, ?, ?, 'web', 'pending')
@@ -80,6 +87,7 @@ $categories = [
         <?php endif; ?>
 
         <form method="POST" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
             <!-- Category -->
             <div>
                 <label for="category" class="block font-semibold text-gray-700 mb-2"><?= $t['complaint_category'] ?></label>

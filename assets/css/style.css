@@ -1,0 +1,111 @@
+/* assets/css/style.css */
+/* Custom PlaceParole Styles */
+/* Base Tailwind classes are defined in templates/header.php */
+
+:root {
+    --primary: #22863a;
+    --secondary: #ff8c00;
+    --accent: #fbbf24;
+    --success: #16a34a;
+    --warning: #ea580c;
+    --danger: #dc2626;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease-in-out;
+}
+
+/* Utility Classes */
+.glass {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.shadow-soft {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.shadow-hard {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.75rem;
+    }
+    h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .no-print {
+        display: none;
+    }
+    
+    .card {
+        page-break-inside: avoid;
+    }
+}
+
+/* Accessibility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Focus Visible */
+*:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* Dark Mode Support (Optional) */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e0e0e0;
+    }
+    
+    .card {
+        background-color: #2a2a2a;
+        border-color: #444;
+    }
+}

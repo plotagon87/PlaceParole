@@ -6,8 +6,11 @@
  * It creates ONE connection object ($pdo) that is reused everywhere.
  */
 
+// Application base URL — change this if you rename the /PlaceParole folder
+define('BASE_URL', '/PlaceParole');
+
 define('DB_HOST', 'localhost');      // The server MySQL is running on
-define('DB_NAME', 'placeparole_db');   // The name of our database
+define('DB_NAME', 'placeparole');   // The name of our database
 define('DB_USER', 'root');           // MySQL username (default in XAMPP is 'root')
 define('DB_PASS', '');               // MySQL password (default in XAMPP is empty '')
 

@@ -151,7 +151,7 @@ $statusColors = [
                                 <td class="px-4 py-3"><?= $t[$complaint['category']] ?? htmlspecialchars($complaint['category']) ?></td>
                                 <td class="px-4 py-3">
                                     <span class="<?= $statusColors[$complaint['status']] ?? 'status-pending' ?>">
-                                        <?= $t['status_' . str_replace('_', '_', $complaint['status'])] ?>
+                                        <?= $t['status_' . $complaint['status']] ?>
                                     </span>
                                 </td>
                                 <td class="px-4 py-3 text-xs text-gray-600">

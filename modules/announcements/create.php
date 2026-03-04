@@ -12,6 +12,7 @@ $success = false;
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $title = htmlspecialchars($_POST['title'] ?? '');
     $body  = htmlspecialchars($_POST['body']  ?? '');
     $sent_via = implode(',', $_POST['sent_via'] ?? ['web']);
@@ -49,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
 
     <form method="POST" class="space-y-4">
+        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
         <div>
             <label for="title" class="block font-semibold text-gray-700 mb-2"><?= $t['announcement_title'] ?></label>
             <input type="text" id="title" name="title" class="input-field" placeholder="e.g. Market Closure Tomorrow" required>

@@ -9,7 +9,20 @@ require_once '../../config/db.php';
 $error = '';
 $success = false;
 
+// Rate limiting: maximum 5 failed attempts before a 15-minute lockout
+$max_attempts  = 5;
+$lockout_time  = 15 * 60;
+$attempts_key  = 'login_attempts_' . md5($_SERVER['REMOTE_ADDR']);
+$lockout_key   = 'login_lockout_'  . md5($_SERVER['REMOTE_ADDR']);
+
+// Check if the user is currently locked out
+if (isset($_SESSION[$lockout_key]) && time() < $_SESSION[$lockout_key]) {
+    $remaining = ceil(($_SESSION[$lockout_key] - time()) / 60);
+    $error = "Too many failed login attempts. Please wait {$remaining} minute(s) before trying again.";
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $email    = trim($_POST['email']    ?? '');
     $password = trim($_POST['password'] ?? '');
 
@@ -39,7 +52,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             exit;
         } else {
-            $error = $t['error_invalid_login'];
+            // Failed — increment the counter
+            $_SESSION[$attempts_key] = ($_SESSION[$attempts_key] ?? 0) + 1;
+            
+            if ($_SESSION[$attempts_key] >= $max_attempts) {
+                $_SESSION[$lockout_key] = time() + $lockout_time;
+                $error = "Too many failed attempts. Account locked for 15 minutes.";
+            } else {
+                $error = $t['error_invalid_login'];
+            }
         }
     }
 }
@@ -56,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
 
     <form method="POST" class="space-y-4">
+        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
         <!-- Email Input -->
         <div>
             <label for="email" class="block font-semibold text-gray-700 mb-2"><?= $t['email'] ?></label>

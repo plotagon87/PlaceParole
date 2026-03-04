@@ -75,7 +75,7 @@ $statusColors = [
                 <div class="flex justify-between items-center">
                     <span class="font-semibold text-gray-700">Current Status:</span>
                     <span class="<?= $statusColors[$complaint['status']] ?? 'status-pending' ?>">
-                        <?= $t['status_' . str_replace('_', '_', $complaint['status'])] ?>
+                        <?= $t['status_' . $complaint['status']] ?>
                     </span>
                 </div>
             </div>
@@ -142,11 +142,8 @@ $statusColors = [
             </div>
 
             <!-- Track Again Button -->
-            <button type="submit" form="track-form" class="w-full btn-outlined py-2">
-                🔄 Track Another Complaint
-            </button>
+            <a href="track.php" class="w-full btn-outlined py-2 text-center block">🔄 Track Another Complaint</a>
         </div>
-        <form id="track-form" method="POST"></form>
 
     <?php else: ?>
         <!-- Initial State - Waiting for input -->

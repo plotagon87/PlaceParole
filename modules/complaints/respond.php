@@ -23,6 +23,7 @@ $success = false;
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $response = htmlspecialchars($_POST['response'] ?? '');
     $status   = htmlspecialchars($_POST['status']   ?? '');
 
@@ -78,7 +79,7 @@ $statusColors = [
             <div>
                 <span class="text-gray-600 text-sm">Status</span>
                 <div class="<?= $statusColors[$complaint['status']] ?>">
-                    <?= $t['status_' . str_replace('_', '_', $complaint['status'])] ?>
+                    <?= $t['status_' . $complaint['status']] ?>
                 </div>
             </div>
             <div>
@@ -109,6 +110,7 @@ $statusColors = [
         <h2 class="text-xl font-bold text-primary mb-6">✏️ Your Response</h2>
 
         <form method="POST" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
             <!-- Status Selection -->
             <div>
                 <label for="status" class="block font-semibold text-gray-700 mb-2">Update Status</label>

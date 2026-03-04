@@ -9,6 +9,7 @@ require_once '../../config/db.php';
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $market_name     = trim($_POST['market_name']     ?? '');
     $market_location = trim($_POST['market_location'] ?? '');
     $name            = trim($_POST['name']            ?? '');
@@ -55,10 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $password_hash = password_hash($password, PASSWORD_DEFAULT); // Hash the password
             // password_hash() creates a one-way encrypted hash of the password — impossible to decrypt back to original
             $stmt = $pdo->prepare("
-                INSERT INTO users (market_id, name, email, phone, role, password)
-                VALUES (?, ?, ?, ?, 'manager', ?)
+                INSERT INTO users (market_id, name, email, phone, role, password, lang)
+                VALUES (?, ?, ?, ?, 'manager', ?, ?)
             ");
-            $stmt->execute([$market_id, $name, $email, $phone, $password_hash]);
+            $stmt->execute([$market_id, $name, $email, $phone, $password_hash, $_SESSION['lang']]);
 
             $pdo->commit(); // Commit the transaction — both inserts are now permanent
 
@@ -91,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
 
     <form method="POST" class="space-y-4">
+        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
         <!-- Market Section -->
         <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
             <h2 class="font-bold text-gray-700 mb-3">📍 <?= $t['register_market'] ?></h2>

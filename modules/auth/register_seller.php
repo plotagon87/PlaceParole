@@ -12,6 +12,7 @@ $markets = $pdo->query("SELECT id, name, location FROM markets ORDER BY name ASC
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $market_id  = (int) ($_POST['market_id']  ?? 0);
     $name       = trim($_POST['name']         ?? '');
     $email      = trim($_POST['email']        ?? '');
@@ -49,10 +50,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $password_hash = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $pdo->prepare("
-                INSERT INTO users (market_id, name, email, phone, stall_no, role, password)
-                VALUES (?, ?, ?, ?, ?, 'seller', ?)
+                INSERT INTO users (market_id, name, email, phone, stall_no, role, password, lang)
+                VALUES (?, ?, ?, ?, ?, 'seller', ?, ?)
             ");
-            $stmt->execute([$market_id, $name, $email, $phone, $stall_no, $password_hash]);
+            $stmt->execute([$market_id, $name, $email, $phone, $stall_no, $password_hash, $_SESSION['lang']]);
 
             $_SESSION['success'] = $t['register_success'];
             header('Location: login.php');
@@ -81,6 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
 
     <form method="POST" class="space-y-4">
+        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
         <!-- Market Selection -->
         <div>
             <label for="market_id" class="block font-semibold text-gray-700 mb-2"><?= $t['select_market'] ?></label>

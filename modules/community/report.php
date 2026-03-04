@@ -12,6 +12,7 @@ $success = false;
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $event_type = htmlspecialchars($_POST['event_type'] ?? '');
     $person_name = htmlspecialchars($_POST['person_name'] ?? '');
     $description = htmlspecialchars($_POST['description'] ?? '');
@@ -47,6 +48,7 @@ $event_types = ['event_death', 'event_illness', 'event_emergency', 'event_other'
         <?php endif; ?>
 
         <form method="POST" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
             <div>
                 <label for="event_type" class="block font-semibold text-gray-700 mb-2"><?= $t['event_type'] ?></label>
                 <select id="event_type" name="event_type" class="input-field" required>

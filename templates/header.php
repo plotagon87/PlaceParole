@@ -6,6 +6,7 @@
  */
 
 if (session_status() === PHP_SESSION_NONE) session_start();
+require_once __DIR__ . '/../config/db.php'; // Load BASE_URL constant
 require_once __DIR__ . '/../config/lang.php'; // Load language system — $t is now available
 ?><!DOCTYPE html>
 <html lang="<?= $_SESSION['lang'] ?? 'en' ?>">
@@ -87,19 +88,19 @@ require_once __DIR__ . '/../config/lang.php'; // Load language system — $t is 
             <a href="/" class="hover:text-gray-200 transition"><?= $t['nav_home'] ?></a>
             
             <?php if ($_SESSION['role'] === 'seller'): ?>
-                <a href="/PlaceParole/modules/complaints/submit.php" class="hover:text-gray-200 transition"><?= $t['nav_complaints'] ?></a>
-                <a href="/PlaceParole/modules/suggestions/submit.php" class="hover:text-gray-200 transition"><?= $t['nav_suggestions'] ?></a>
-                <a href="/PlaceParole/modules/community/report.php" class="hover:text-gray-200 transition"><?= $t['nav_community'] ?></a>
-                <a href="/PlaceParole/modules/announcements/list.php" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>
+                <a href="<?= BASE_URL ?>/modules/complaints/submit.php" class="hover:text-gray-200 transition"><?= $t['nav_complaints'] ?></a>
+                <a href="<?= BASE_URL ?>/modules/suggestions/submit.php" class="hover:text-gray-200 transition"><?= $t['nav_suggestions'] ?></a>
+                <a href="<?= BASE_URL ?>/modules/community/report.php" class="hover:text-gray-200 transition"><?= $t['nav_community'] ?></a>
+                <a href="<?= BASE_URL ?>/modules/announcements/list.php" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>
             <?php elseif ($_SESSION['role'] === 'manager'): ?>
-                <a href="/PlaceParole/modules/complaints/list.php" class="hover:text-gray-200 transition"><?= $t['nav_complaints'] ?></a>
-                <a href="/PlaceParole/modules/suggestions/list.php" class="hover:text-gray-200 transition"><?= $t['nav_suggestions'] ?></a>
-                <a href="/PlaceParole/modules/announcements/create.php" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>
-                <a href="/PlaceParole/modules/community/list.php" class="hover:text-gray-200 transition"><?= $t['nav_community'] ?></a>
+                <a href="<?= BASE_URL ?>/modules/complaints/list.php" class="hover:text-gray-200 transition"><?= $t['nav_complaints'] ?></a>
+                <a href="<?= BASE_URL ?>/modules/suggestions/list.php" class="hover:text-gray-200 transition"><?= $t['nav_suggestions'] ?></a>
+                <a href="<?= BASE_URL ?>/modules/announcements/create.php" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>
+                <a href="<?= BASE_URL ?>/modules/community/list.php" class="hover:text-gray-200 transition"><?= $t['nav_community'] ?></a>
             <?php endif; ?>
         <?php else: ?>
             <!-- Not Logged In Navigation -->
-            <a href="/PlaceParole/modules/complaints/track.php" class="hover:text-gray-200 transition"><?= $t['track_complaint'] ?></a>
+            <a href="<?= BASE_URL ?>/modules/complaints/track.php" class="hover:text-gray-200 transition"><?= $t['track_complaint'] ?></a>
         <?php endif; ?>
     </div>
 
@@ -119,13 +120,13 @@ require_once __DIR__ . '/../config/lang.php'; // Load language system — $t is 
                     <?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>
                 </button>
                 <div x-show="open" @click.outside="open = false" class="absolute right-0 mt-2 bg-white text-gray-800 rounded-lg shadow-lg overflow-hidden z-40">
-                    <a href="/PlaceParole/modules/auth/logout.php" class="block px-4 py-2 hover:bg-gray-100">
+                    <a href="<?= BASE_URL ?>/modules/auth/logout.php" class="block px-4 py-2 hover:bg-gray-100">
                         <?= $t['nav_logout'] ?>
                     </a>
                 </div>
             </div>
         <?php else: ?>
-            <a href="/PlaceParole/modules/auth/login.php" class="btn-primary">
+              <a href="<?= BASE_URL ?>/modules/auth/login.php" class="btn-primary">
                 <?= $t['login'] ?>
             </a>
         <?php endif; ?>
