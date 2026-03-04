@@ -121,6 +121,14 @@ require_once __DIR__ . '/../config/lang.php'; // Load language system — $t is 
             padding: 1.5rem;
         }
 
+        /* Globally soften Tailwind's default "shadow-lg" used on form cards and tech nav elements.
+           The default was too dark on light backgrounds (appears almost black), causing a heavy overlay
+           effect on pages like complaint submission/track. A lighter shadow improves readability.
+           Use !important to override the CDN-loaded Tailwind class. */
+        .shadow-lg {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05) !important;
+        }
+
         /* Status Badges */
         .status-badge {
             padding: 0.25rem 0.75rem;
