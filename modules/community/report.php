@@ -13,9 +13,9 @@ $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_verify();
-    $event_type = htmlspecialchars($_POST['event_type'] ?? '');
-    $person_name = htmlspecialchars($_POST['person_name'] ?? '');
-    $description = htmlspecialchars($_POST['description'] ?? '');
+    $event_type = $_POST['event_type'] ?? '';
+    $person_name = $_POST['person_name'] ?? '';
+    $description = $_POST['description'] ?? '';
 
     if (!$event_type || !$person_name || !$description) {
         $error = $t['error_required'];

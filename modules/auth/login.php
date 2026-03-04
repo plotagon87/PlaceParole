@@ -7,7 +7,13 @@ require_once '../../templates/header.php';
 require_once '../../config/db.php';
 
 $error = '';
-$success = false;
+$success = '';
+
+// Check for success message from registration
+if (isset($_SESSION['success'])) {
+    $success = $_SESSION['success'];
+    unset($_SESSION['success']); // Clear it after displaying
+}
 
 // Rate limiting: maximum 5 failed attempts before a 15-minute lockout
 $max_attempts  = 5;
@@ -69,6 +75,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-8 mt-10">
     <h1 class="text-3xl font-bold text-primary mb-2"><?= $t['login'] ?></h1>
     <p class="text-gray-600 mb-6"><?= $t['app_tagline'] ?></p>
+
+    <?php if ($success): ?>
+        <div class="bg-green-100 text-green-700 px-4 py-3 rounded-lg mb-6 border border-green-300">
+            <strong>✓ <?= $t['success'] ?>!</strong> <?= $success ?>
+        </div>
+    <?php endif; ?>
 
     <?php if ($error): ?>
         <div class="bg-red-100 text-red-700 px-4 py-3 rounded-lg mb-6 border border-red-300">

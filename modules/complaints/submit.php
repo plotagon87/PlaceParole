@@ -14,8 +14,8 @@ $ref_code = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_verify();
-    $category    = htmlspecialchars($_POST['category']    ?? '');
-    $description = htmlspecialchars($_POST['description'] ?? '');
+    $category    = $_POST['category']    ?? '';
+    $description = $_POST['description'] ?? '';
 
     if (!$category || !$description) {
         $error = $t['error_required'];

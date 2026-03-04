@@ -24,8 +24,8 @@ $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_verify();
-    $response = htmlspecialchars($_POST['response'] ?? '');
-    $status   = htmlspecialchars($_POST['status']   ?? '');
+    $response = $_POST['response'] ?? '';
+    $status   = $_POST['status']   ?? '';
 
     if (!$response || !$status) {
         $error = $t['error_required'];

@@ -13,8 +13,8 @@ $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_verify();
-    $title = htmlspecialchars($_POST['title'] ?? '');
-    $body  = htmlspecialchars($_POST['body']  ?? '');
+    $title = $_POST['title'] ?? '';
+    $body  = $_POST['body']  ?? '';
     $sent_via = implode(',', $_POST['sent_via'] ?? ['web']);
 
     if (!$title || !$body) {

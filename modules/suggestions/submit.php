@@ -13,8 +13,8 @@ $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_verify();
-    $title = htmlspecialchars($_POST['title'] ?? '');
-    $desc  = htmlspecialchars($_POST['description'] ?? '');
+    $title = $_POST['title'] ?? '';
+    $desc  = $_POST['description'] ?? '';
 
     if (!$title || !$desc) {
         $error = $t['error_required'];
