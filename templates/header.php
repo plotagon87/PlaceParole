@@ -36,6 +36,9 @@ require_once __DIR__ . '/../config/lang.php'; // Load language system — $t is 
     
     <!-- Alpine.js for interactive components -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- App.js utilities -->
+    <script src="<?= BASE_URL ?>/assets/js/app.js"></script>
     
     <style>
         body {

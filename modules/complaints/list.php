@@ -135,6 +135,7 @@ $statusColors = [
                             <th class="px-4 py-3 text-left font-semibold">Ref Code</th>
                             <th class="px-4 py-3 text-left font-semibold"><?= $t['seller_name'] ?></th>
                             <th class="px-4 py-3 text-left font-semibold"><?= $t['complaint_category'] ?></th>
+                            <th class="px-4 py-3 text-left font-semibold">Description Preview</th>
                             <th class="px-4 py-3 text-left font-semibold">Status</th>
                             <th class="px-4 py-3 text-left font-semibold"><?= $t['date'] ?></th>
                             <th class="px-4 py-3 text-left font-semibold"><?= $t['actions'] ?></th>
@@ -149,6 +150,10 @@ $statusColors = [
                                     <div class="text-xs text-gray-500">Stall <?= htmlspecialchars($complaint['stall_no'] ?? 'N/A') ?></div>
                                 </td>
                                 <td class="px-4 py-3"><?= $t[$complaint['category']] ?? htmlspecialchars($complaint['category']) ?></td>
+                                <td class="px-4 py-3 text-sm text-gray-700 max-w-xs truncate" title="<?= htmlspecialchars($complaint['description']) ?>">
+                                    <?= htmlspecialchars(substr($complaint['description'], 0, 80)) ?>
+                                    <?php if (strlen($complaint['description']) > 80): ?>…<?php endif; ?>
+                                </td>
                                 <td class="px-4 py-3">
                                     <span class="<?= $statusColors[$complaint['status']] ?? 'status-pending' ?>">
                                         <?= $t['status_' . $complaint['status']] ?>

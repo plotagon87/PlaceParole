@@ -68,10 +68,51 @@ function validateEmail(email) {
 
 /**
  * formatPhoneNumber(phone)
- * Format phone number (basic)
+ * Format phone number for Cameroon: +237 6XX XXX XXX
  */
 function formatPhoneNumber(phone) {
-    return phone.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '+$1 $2 $3 $4');
+    // Remove all non-digits
+    const digits = phone.replace(/\D/g, '');
+    // Cameroon format: +237 followed by rest
+    if (digits.length >= 9) {
+        return '+237 ' + digits.slice(-9, -5) + ' ' + digits.slice(-5);
+    }
+    return phone;
+}
+
+/**
+ * enableFormDirtyWarning()
+ * Show confirmation when user tries to leave a form with unsaved changes
+ */
+function enableFormDirtyWarning(formId = null) {
+    const forms = formId ? [document.getElementById(formId)] : document.querySelectorAll('form');
+    
+    forms.forEach(form => {
+        if (!form) return;
+        
+        let isDirty = false;
+        const inputs = form.querySelectorAll('input:not([type="hidden"]), textarea, select');
+        
+        inputs.forEach(input => {
+            input.addEventListener('change', () => {
+                isDirty = true;
+            });
+        });
+        
+        // Clear the dirty flag when form is submitted
+        form.addEventListener('submit', () => {
+            isDirty = false;
+        });
+        
+        // Warn before leaving if form is dirty
+        window.addEventListener('beforeunload', (e) => {
+            if (isDirty) {
+                e.preventDefault();
+                e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+                return e.returnValue;
+            }
+        });
+    });
 }
 
 // Auto-format phone inputs
