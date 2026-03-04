@@ -9,7 +9,7 @@
 $host = 'localhost';
 $user = 'root';
 $pass = '';
-$dbname = 'placeparole_db';
+$dbname = 'placeparole';
 
 // Create connection to MySQL (without selecting a database first)
 try {
