@@ -12,6 +12,7 @@ $message_type = 'success';
 
 // Handle coordination action (managers only)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SESSION['role'] === 'manager') {
+    // CSRF protection: verify the token was included and matches the session
     csrf_verify();
     $report_id = (int) ($_POST['report_id'] ?? 0);
 

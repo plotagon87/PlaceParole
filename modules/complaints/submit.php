@@ -9,8 +9,10 @@ seller_only(); // Only sellers can access this page
 require_once '../../templates/header.php';
 require_once '../../config/db.php';
 
-$success  = false;
-$ref_code = '';
+// Initialize variables used in page rendering
+$error    = '';     // Holds error message if something goes wrong
+$success  = false;  // Set to true only after successful complaint submission
+$ref_code = '';     // Holds the generated reference code
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_verify();
@@ -20,18 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$category || !$description) {
         $error = $t['error_required'];
     } else {
-        // Generate a unique reference code: MARKET_YEAR_NUMBER
-        // Format: MKT-2024-00123
-            // Using uniqid() instead of rand() prevents collisions
-            function generateRefCode($pdo) {
-                do {
-                    $code = 'MKT-' . date('Y') . '-' . strtoupper(substr(uniqid('', true), -8));
-                    $stmt = $pdo->prepare("SELECT id FROM complaints WHERE ref_code = ? LIMIT 1");
-                    $stmt->execute([$code]);
-                } while ($stmt->fetch());
-                return $code;
-            }
-            $refCode = generateRefCode($pdo);
+        // Generate a unique reference code using the function defined above (outside if-blocks)
+        $refCode = generateRefCode($pdo);
         $stmt = $pdo->prepare("
             INSERT INTO complaints (market_id, seller_id, ref_code, category, description, channel, status)
             VALUES (?, ?, ?, ?, ?, 'web', 'pending')
@@ -47,6 +39,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $success = true;
         $ref_code = $refCode;
     }
+}
+
+/**
+ * generateRefCode($pdo): string
+ * Generates a unique reference code for a complaint
+ * Format: MKT-YEAR-RANDOMCODE
+ * Example: MKT-2024-a1b2c3d4
+ */
+function generateRefCode($pdo) {
+    do {
+        $code = 'MKT-' . date('Y') . '-' . strtoupper(substr(uniqid('', true), -8));
+        $stmt = $pdo->prepare("SELECT id FROM complaints WHERE ref_code = ? LIMIT 1");
+        $stmt->execute([$code]);
+    } while ($stmt->fetch());
+    return $code;
 }
 
 // Categories for the dropdown
