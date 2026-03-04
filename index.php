@@ -17,13 +17,13 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
     <?php if (!isset($_SESSION['user_id'])): ?>
         <!-- Not logged in -->
         <div class="flex gap-4 flex-wrap">
-            <a href="modules/auth/register_seller.php<?= $langParam ?>" class="btn-secondary px-6 py-3 text-lg">
+            <a href="<?= BASE_URL ?>/modules/auth/register_seller.php<?= $langParam ?>" class="btn-secondary px-6 py-3 text-lg">
                 📝 <?= $t['register'] ?> (<?= $t['seller'] ?>)
             </a>
-            <a href="modules/auth/register_manager.php<?= $langParam ?>" class="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition text-lg">
+            <a href="<?= BASE_URL ?>/modules/auth/register_manager.php<?= $langParam ?>" class="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition text-lg">
                 🏪 <?= $t['register_market'] ?>
             </a>
-            <a href="modules/complaints/track.php<?= $langParam ?>" class="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition text-lg">
+            <a href="<?= BASE_URL ?>/modules/complaints/track.php<?= $langParam ?>" class="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition text-lg">
                 🔍 <?= $t['track_complaint'] ?>
             </a>
         </div>
