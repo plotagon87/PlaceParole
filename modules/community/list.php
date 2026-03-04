@@ -1,11 +1,33 @@
 <?php
 /**
  * modules/community/list.php
- * Display community events to all market members
+ * Display community events to all market members (sellers see all, managers can coordinate)
  */
 require_once '../../config/auth_guard.php';
 require_once '../../templates/header.php';
 require_once '../../config/db.php';
+
+$message = '';
+$message_type = 'success';
+
+// Handle coordination action (managers only)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SESSION['role'] === 'manager') {
+    csrf_verify();
+    $report_id = (int) ($_POST['report_id'] ?? 0);
+
+    if ($report_id) {
+        $stmt = $pdo->prepare("UPDATE community_reports SET status = 'coordinated' WHERE id = ? AND market_id = ?");
+        $result = $stmt->execute([$report_id, $_SESSION['market_id']]);
+        
+        if ($result) {
+            $message = '✓ Event marked as coordinated!';
+            $message_type = 'success';
+        } else {
+            $message = 'Error updating event status.';
+            $message_type = 'error';
+        }
+    }
+}
 
 $stmt = $pdo->prepare("SELECT r.*, u.name AS reporter_name FROM community_reports r LEFT JOIN users u ON r.reported_by = u.id WHERE r.market_id = ? ORDER BY r.created_at DESC");
 $stmt->execute([$_SESSION['market_id']]);

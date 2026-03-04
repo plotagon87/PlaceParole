@@ -9,6 +9,28 @@ require_once '../../templates/header.php';
 require_once '../../config/db.php';
 
 $filterStatus = $_GET['status'] ?? '';
+$message = '';
+$message_type = 'success';
+
+// Handle approval/rejection actions
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
+    $suggestion_id = (int) ($_POST['suggestion_id'] ?? 0);
+    $action = $_POST['action'] ?? '';
+
+    if ($suggestion_id && in_array($action, ['approved', 'rejected'])) {
+        $stmt = $pdo->prepare("UPDATE suggestions SET status = ? WHERE id = ? AND market_id = ?");
+        $result = $stmt->execute([$action, $suggestion_id, $_SESSION['market_id']]);
+        
+        if ($result) {
+            $message = $action === 'approved' ? '✓ Suggestion approved!' : '✗ Suggestion rejected.';
+            $message_type = 'success';
+        } else {
+            $message = 'Error updating suggestion status.';
+            $message_type = 'error';
+        }
+    }
+}
 
 $sql = "SELECT s.*, u.name AS seller_name FROM suggestions s LEFT JOIN users u ON s.seller_id = u.id WHERE s.market_id = ?";
 $params = [$_SESSION['market_id']];
@@ -33,6 +55,13 @@ $statusColors = [
 
 <div>
     <h1 class="text-3xl font-bold text-primary mb-6">💡 <?= $t['nav_suggestions'] ?></h1>
+
+    <!-- Success/Error Message -->
+    <?php if ($message): ?>
+        <div class="<?= $message_type === 'success' ? 'bg-green-100 text-green-700 border-green-300' : 'bg-red-100 text-red-700 border-red-300' ?> px-4 py-3 rounded-lg mb-6 border">
+            <?= $message ?>
+        </div>
+    <?php endif; ?>
 
     <!-- Filters -->
     <div class="card mb-6">
@@ -60,9 +89,31 @@ $statusColors = [
                         </span>
                     </div>
                     <p class="text-gray-700 mb-3"><?= nl2br(htmlspecialchars($sug['description'])) ?></p>
-                    <div class="text-sm text-gray-600">
+                    <div class="text-sm text-gray-600 mb-4">
                         <span>From: <strong><?= htmlspecialchars($sug['seller_name'] ?? 'Unknown') ?></strong> — <?= date('d/m/Y', strtotime($sug['created_at'])) ?></span>
                     </div>
+                    
+                    <!-- Action Buttons (only for pending suggestions) -->
+                    <?php if ($sug['status'] === 'pending'): ?>
+                        <div class="flex gap-2 border-t pt-4">
+                            <form method="POST" class="flex-1">
+                                <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
+                                <input type="hidden" name="suggestion_id" value="<?= $sug['id'] ?>">
+                                <input type="hidden" name="action" value="approved">
+                                <button type="submit" class="w-full bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600 transition font-semibold">
+                                    ✓ Approve
+                                </button>
+                            </form>
+                            <form method="POST" class="flex-1">
+                                <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
+                                <input type="hidden" name="suggestion_id" value="<?= $sug['id'] ?>">
+                                <input type="hidden" name="action" value="rejected">
+                                <button type="submit" class="w-full bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition font-semibold">
+                                    ✗ Reject
+                                </button>
+                            </form>
+                        </div>
+                    <?php endif; ?>
                 </div>
             <?php endforeach; ?>
         </div>
