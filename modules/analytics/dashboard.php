@@ -146,4 +146,3 @@ $monthData = array_values($months);
 </script>
 
 <?php require_once '../../templates/footer.php'; ?>
-<?php require_once '../../templates/footer.php'; ?>

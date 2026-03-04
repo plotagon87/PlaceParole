@@ -92,7 +92,7 @@ $categories = [
             <div>
                 <label for="category" class="block font-semibold text-gray-700 mb-2"><?= $t['complaint_category'] ?></label>
                 <select id="category" name="category" class="input-field" required>
-                    <option value="">— <?= $t['select_market'] ?> —</option>
+                    <option value="">— <?= $t['select_category'] ?? 'Select a Category' ?> —</option>
                     <?php foreach ($categories as $cat): ?>
                         <option value="<?= $cat ?>"><?= $t[$cat] ?></option>
                     <?php endforeach; ?>

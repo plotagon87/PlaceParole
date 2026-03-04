@@ -41,32 +41,105 @@ require_once __DIR__ . '/../config/lang.php'; // Load language system — $t is 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         }
+
+        /* Button Styles */
         .btn-primary {
-            @apply bg-primary text-white px-4 py-2 rounded-lg font-semibold hover:bg-opacity-90 transition;
+            background-color: #22863a;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: opacity 0.2s;
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
         }
+        .btn-primary:hover { opacity: 0.9; }
+
         .btn-secondary {
-            @apply bg-secondary text-white px-4 py-2 rounded-lg font-semibold hover:bg-opacity-90 transition;
+            background-color: #ff8c00;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: opacity 0.2s;
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
         }
+        .btn-secondary:hover { opacity: 0.9; }
+
         .btn-outlined {
-            @apply border-2 border-primary text-primary px-4 py-2 rounded-lg font-semibold hover:bg-primary hover:text-white transition;
+            border: 2px solid #22863a;
+            color: #22863a;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-block;
+            text-decoration: none;
+            background: transparent;
+            cursor: pointer;
         }
+        .btn-outlined:hover {
+            background-color: #22863a;
+            color: white;
+        }
+
+        /* Input Fields */
         .input-field {
-            @apply w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary;
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+            box-sizing: border-box;
         }
+        .input-field:focus {
+            outline: none;
+            ring: 2px #22863a;
+            border-color: #22863a;
+            box-shadow: 0 0 0 2px rgba(34, 134, 58, 0.1);
+        }
+
+        /* Cards */
         .card {
-            @apply bg-white rounded-2xl shadow-md p-6;
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
         }
+
+        /* Status Badges */
         .status-badge {
-            @apply px-3 py-1 rounded-full text-xs font-bold inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-block;
         }
+
         .status-pending {
-            @apply status-badge bg-red-100 text-red-700;
+            background-color: #fee2e2;
+            color: #991b1b;
         }
+
         .status-in-review {
-            @apply status-badge bg-yellow-100 text-yellow-700;
+            background-color: #fef3c7;
+            color: #92400e;
         }
+
         .status-resolved {
-            @apply status-badge bg-green-100 text-green-700;
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        /* Dark Mode */
+        @media (prefers-color-scheme: dark) {
+            .card { background-color: #2a2a2a; color: #f5f5f5; }
         }
     </style>
 </head>

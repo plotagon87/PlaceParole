@@ -4,11 +4,6 @@
  * Verify that PlaceParole is properly set up
  * Access: http://localhost/PlaceParole/setup_verify.php
  */
-// Only allow this file to run from the command line (CLI), never from a browser
-if (php_sapi_name() !== 'cli') {
-    http_response_code(404); // Pretend the page does not exist
-    exit;
-}
 
 require_once 'config/db.php';
 ?>
