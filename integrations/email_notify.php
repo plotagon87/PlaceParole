@@ -60,15 +60,15 @@ function sendComplaintUpdateEmail(
         $mail->isSMTP();                                      // Use SMTP instead of PHP's mail()
         $mail->Host       = 'smtp.gmail.com';                 // Gmail's outgoing mail server
         $mail->SMTPAuth   = true;                             // Require SMTP authentication
-        $mail->Username   = 'your_email@gmail.com';           // Your Gmail address — CHANGE THIS
-        $mail->Password   = 'your_app_password';              // Gmail App Password — CHANGE THIS
+        $mail->Username   = 'fonutchi87@gmail.com';           // Your Gmail address — CHANGE THIS
+        $mail->Password   = 'Confinnement';              // Gmail App Password — CHANGE THIS
         // NOTE: Do NOT use your regular Gmail password.
         // Generate an App Password at: myaccount.google.com > Security > 2-Step Verification > App passwords
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;   // TLS encryption for security
         $mail->Port       = 587;                              // Gmail's SMTP port for TLS
 
         // ── Email Content ──────────────────────────────────────────────────
-        $mail->setFrom('your_email@gmail.com', 'PlaceParole Market Platform');
+        $mail->setFrom('fonutchi87@gmail.com', 'PlaceParole Market Platform');
         $mail->addAddress($toEmail, $toName);                 // Recipient
 
         $mail->isHTML(true);                                  // Send HTML email
