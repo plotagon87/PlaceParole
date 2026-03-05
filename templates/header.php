@@ -51,6 +51,15 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
     <script src="<?= BASE_URL ?>/assets/js/app.js"></script>
     
     <style>
+        :root {
+            --primary: #22863a;
+            --secondary: #ff8c00;
+            --accent: #fbbf24;
+            --success: #16a34a;
+            --warning: #ea580c;
+            --danger: #dc2626;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         }
@@ -164,11 +173,11 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
 
         /* Dark Mode */
         @media (prefers-color-scheme: dark) {
-            .card { background-color: #2a2a2a; color: #f5f5f5; }
+            /* .card { background-color: #2a2a2a; color: #f5f5f5; } */
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen">
+<body class="bg-gray-900 text-gray-100 min-h-screen">
 
 <!-- Navigation Bar -->
 <div x-data="{ mobileMenuOpen: false }">
