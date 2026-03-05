@@ -4,6 +4,9 @@
  * Display community events to all market members (sellers see all, managers can coordinate)
  */
 require_once '../../config/auth_guard.php';
+
+// page contains POST forms for coordination
+$pageHasForm = true;
 require_once '../../templates/header.php';
 require_once '../../config/db.php';
 

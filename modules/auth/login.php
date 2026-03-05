@@ -80,6 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// login form on this page
+$pageHasForm = true;
 require_once '../../templates/header.php';
 ?>
 

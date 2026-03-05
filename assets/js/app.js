@@ -115,8 +115,74 @@ function enableFormDirtyWarning(formId = null) {
     });
 }
 
-// Auto-format phone inputs
+// Dark‑mode helpers (matching style.css section 15)
+function applyTheme(theme) {
+    const html = document.documentElement;
+    // remove any previous listener if present
+    if (html._prefsMediaListener) {
+        window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', html._prefsMediaListener);
+        delete html._prefsMediaListener;
+    }
+
+    if (theme === 'dark') {
+        html.setAttribute('data-theme', 'dark');
+    } else if (theme === 'light') {
+        html.removeAttribute('data-theme');
+    } else if (theme === 'system') {
+        html.removeAttribute('data-theme');
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        const applyMq = e => {
+            if (e.matches) html.setAttribute('data-theme', 'dark');
+            else html.removeAttribute('data-theme');
+        };
+        // apply initial state
+        if (mq.matches) html.setAttribute('data-theme', 'dark');
+        // store listener for later removal
+        html._prefsMediaListener = applyMq;
+        mq.addEventListener('change', applyMq);
+    }
+}
+
+function getStoredTheme() {
+    return localStorage.getItem('theme') || 'system';
+}
+
+function setStoredTheme(theme) {
+    localStorage.setItem('theme', theme);
+}
+
+function updateThemeUI(theme) {
+    const iconMap = { light: '☀️', dark: '🌙', system: '🖥️' };
+    document.querySelectorAll('#theme-toggle, #theme-toggle-mobile').forEach(btn => {
+        if (btn) btn.textContent = iconMap[theme] || iconMap.system;
+    });
+}
+
+function setTheme(theme) {
+    setStoredTheme(theme);
+    applyTheme(theme);
+    updateThemeUI(theme);
+}
+
+function cycleTheme() {
+    const themes = ['light', 'dark', 'system'];
+    let current = getStoredTheme();
+    let idx = themes.indexOf(current);
+    idx = (idx + 1) % themes.length;
+    const next = themes[idx];
+    console.log('theme cycle:', current, '→', next);
+    setTheme(next);
+}
+
+// Auto-format phone inputs and other DOMContentLoaded tasks
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize theme (light / dark / system) and update icons
+    setTheme(getStoredTheme());
+    // expose for inline handlers (if still used anywhere)
+    window.cycleTheme = cycleTheme;
+    window.setTheme = setTheme;
+
     // Enable form dirty warning for all forms
     enableFormDirtyWarning();
     
@@ -138,5 +204,16 @@ function setLanguage(lang) {
     url.searchParams.set('lang', lang);
     window.location.href = url.toString();
 }
+
+// Debug helper – prints current theme state to console
+function debugTheme() {
+    const stored = getStoredTheme();
+    const effective = document.documentElement.getAttribute('data-theme') || 'light';
+    const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    console.log('theme → stored:', stored, 'effective attr:', effective, 'os preference:', prefers);
+}
+
+// expose debugTheme for console
+window.debugTheme = debugTheme;
 
 console.log('PlaceParole App loaded ✅');

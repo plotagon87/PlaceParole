@@ -224,7 +224,7 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
         <!-- Right Side: Language & User Menu (Desktop only) -->
         <div class="hidden md:flex items-center gap-4">
             <!-- Language Toggle -->
-            <div class="flex gap-2">
+            <div class="flex gap-2 items-center">
                 <?php
                     // Helper function to build language toggle URL while preserving other query parameters
                     function buildLangUrl($lang) {
@@ -237,6 +237,32 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
                 <a href="<?= buildLangUrl('en') ?>" class="<?= ($_SESSION['lang'] ?? 'en') === 'en' ? 'font-bold' : 'opacity-70 hover:opacity-100' ?> transition">EN</a>
                 <span class="opacity-70">/</span>
                 <a href="<?= buildLangUrl('fr') ?>" class="<?= ($_SESSION['lang'] ?? 'en') === 'fr' ? 'font-bold' : 'opacity-70 hover:opacity-100' ?> transition">FR</a>
+
+                <!-- Theme selector dropdown (light/dark/system) -->
+                <div x-data="{ open: false }" class="relative ml-4">
+                    <button
+                        id="theme-toggle"
+                        class="text-white transition opacity-70 hover:opacity-100"
+                        aria-label="Change colour theme"
+                        @click="open = !open"
+                    >🌓</button>
+                    <div
+                        x-show="open"
+                        @click.outside="open = false"
+                        x-transition
+                        class="absolute right-0 mt-2 w-36 bg-white text-gray-800 rounded-lg shadow-lg z-50"
+                    >
+                        <button class="w-full text-left px-4 py-2 hover:bg-gray-100" @click="setTheme('light'); open = false">
+                            ☀️ Light
+                        </button>
+                        <button class="w-full text-left px-4 py-2 hover:bg-gray-100" @click="setTheme('dark'); open = false">
+                            🌙 Dark
+                        </button>
+                        <button class="w-full text-left px-4 py-2 hover:bg-gray-100" @click="setTheme('system'); open = false">
+                            🖥️ System
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- User Menu / Auth Links -->
@@ -287,10 +313,36 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
                 <hr class="my-2 opacity-30">
                 
                 <!-- Language Toggle Mobile -->
-                <div class="flex gap-4 py-2">
+                <div class="flex gap-4 py-2 items-center">
                     <a href="<?= buildLangUrl('en') ?>" class="<?= ($_SESSION['lang'] ?? 'en') === 'en' ? 'font-bold' : 'opacity-70' ?>" @click="mobileMenuOpen = false">EN</a>
                     <span class="opacity-30">/</span>
                     <a href="<?= buildLangUrl('fr') ?>" class="<?= ($_SESSION['lang'] ?? 'en') === 'fr' ? 'font-bold' : 'opacity-70' ?>" @click="mobileMenuOpen = false">FR</a>
+
+                    <!-- Mobile theme selector dropdown -->
+                    <div x-data="{ open: false }" class="relative ml-4">
+                        <button
+                            id="theme-toggle-mobile"
+                            class="text-white opacity-70 hover:opacity-100"
+                            aria-label="Change colour theme"
+                            @click="open = !open"
+                        >🌓</button>
+                        <div
+                            x-show="open"
+                            @click.outside="open = false"
+                            x-transition
+                            class="absolute right-0 mt-2 w-36 bg-white text-gray-800 rounded-lg shadow-lg z-50"
+                        >
+                            <button class="w-full text-left px-4 py-2 hover:bg-gray-100" @click="setTheme('light'); open = false">
+                                ☀️ Light
+                            </button>
+                            <button class="w-full text-left px-4 py-2 hover:bg-gray-100" @click="setTheme('dark'); open = false">
+                                🌙 Dark
+                            </button>
+                            <button class="w-full text-left px-4 py-2 hover:bg-gray-100" @click="setTheme('system'); open = false">
+                                🖥️ System
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <a href="<?= BASE_URL ?>/modules/auth/logout.php" class="block py-2 hover:text-gray-200 transition text-red-200" @click="mobileMenuOpen = false">

@@ -5,6 +5,8 @@
  */
 require_once '../../config/auth_guard.php';
 seller_only();
+
+$pageHasForm = true;
 require_once '../../templates/header.php';
 require_once '../../config/db.php';
 

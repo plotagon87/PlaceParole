@@ -108,4 +108,14 @@
         background-color: #2a2a2a;
         border-color: #444;
     }
+
+    /* make primary/secondary buttons pop on dark backgrounds */
+    .btn-primary {
+        background-color: #4ade80; /* lighter green for contrast */
+        color: #0f172a;
+    }
+    .btn-secondary {
+        background-color: #ffd580; /* lighter orange */
+        color: #1f2937;
+    }
 }

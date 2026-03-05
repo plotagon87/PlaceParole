@@ -4,6 +4,8 @@
  * Anyone can track a complaint using its reference code
  * No login required
  */
+// allows applying stylesheet only when needed
+$pageHasForm = true;
 require_once '../../templates/header.php';
 require_once '../../config/db.php';
 

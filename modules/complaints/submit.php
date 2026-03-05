@@ -6,6 +6,9 @@
  */
 require_once '../../config/auth_guard.php';
 seller_only(); // Only sellers can access this page
+
+// This page contains a form, so enable global stylesheet
+$pageHasForm = true;
 require_once '../../templates/header.php';
 require_once '../../config/db.php';
 

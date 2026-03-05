@@ -5,6 +5,9 @@
  */
 require_once '../../config/auth_guard.php';
 manager_only(); // Only managers can access this page
+
+// form present on this page
+$pageHasForm = true;
 require_once '../../templates/header.php';
 require_once '../../config/db.php';
 

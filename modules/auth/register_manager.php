@@ -22,6 +22,8 @@ error_reporting(E_ALL);
 // csrf functions (token generation/verification) — safe for public pages
 require_once '../../config/csrf.php';
 
+// registration form page
+$pageHasForm = true;
 require_once '../../templates/header.php';   // Starts session, loads $t (translations), renders nav
 require_once '../../config/db.php';           // Provides $pdo — the PDO database connection
 

@@ -5,6 +5,9 @@
  */
 require_once '../../config/auth_guard.php';
 manager_only();
+
+// contains filter form and action buttons
+$pageHasForm = true;
 require_once '../../templates/header.php';
 require_once '../../config/db.php';
 
