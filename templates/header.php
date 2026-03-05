@@ -79,6 +79,7 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
                 
                 <?php if ($_SESSION['role'] === 'seller'): ?>
                     <a href="<?= BASE_URL ?>/modules/complaints/submit.php" class="hover:text-gray-200 transition"><?= $t['nav_complaints'] ?></a>
+                    <a href="<?= BASE_URL ?>/modules/complaints/my_complaints.php" class="hover:text-gray-200 transition">📋 My History</a>
                     <a href="<?= BASE_URL ?>/modules/suggestions/submit.php" class="hover:text-gray-200 transition"><?= $t['nav_suggestions'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/community/report.php" class="hover:text-gray-200 transition"><?= $t['nav_community'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/announcements/list.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>
@@ -146,6 +147,9 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
                         <?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>
                     </button>
                     <div x-show="open" @click.outside="open = false" class="absolute right-0 mt-2 bg-white text-gray-800 rounded-lg shadow-lg overflow-hidden z-40">
+                        <a href="<?= BASE_URL ?>/modules/auth/profile.php" class="block px-4 py-2 hover:bg-gray-100">
+                            👤 <?= $t['nav_profile'] ?? 'My Profile' ?>
+                        </a>
                         <a href="<?= BASE_URL ?>/modules/auth/logout.php" class="block px-4 py-2 hover:bg-gray-100">
                             <?= $t['nav_logout'] ?>
                         </a>
@@ -219,6 +223,9 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
                     </div>
                 </div>
 
+                <a href="<?= BASE_URL ?>/modules/auth/profile.php" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false">
+                    👤 <?= $t['nav_profile'] ?? 'My Profile' ?>
+                </a>
                 <a href="<?= BASE_URL ?>/modules/auth/logout.php" class="block py-2 hover:text-gray-200 transition text-red-200" @click="mobileMenuOpen = false">
                     🚪 <?= $t['nav_logout'] ?>
                 </a>

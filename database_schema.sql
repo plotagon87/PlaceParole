@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS complaints (
     channel     ENUM('web', 'sms', 'gmail') DEFAULT 'web',
     status      ENUM('pending', 'in_review', 'resolved') DEFAULT 'pending',
     response    TEXT,
+    photo_path  VARCHAR(255) NULL,                -- Path to attached complaint photo
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (seller_id)  REFERENCES users(id),

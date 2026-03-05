@@ -39,6 +39,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare("UPDATE complaints SET response = ?, status = ?, updated_at = NOW() WHERE id = ?");
         $stmt->execute([$response, $status, $complaint['id']]);
 
+        // Send email notification to the seller about the update
+        require_once '../../integrations/email_notify.php';
+
+        // Fetch the seller's email and name to send the notification
+        $sellerStmt = $pdo->prepare("SELECT name, email FROM users WHERE id = ? LIMIT 1");
+        $sellerStmt->execute([$complaint['seller_id']]);
+        $seller = $sellerStmt->fetch();
+
+        if ($seller && $seller['email']) {
+            sendComplaintUpdateEmail(
+                $seller['email'],
+                $seller['name'],
+                $complaint['ref_code'],
+                $status,
+                $response
+            );
+        }
+
         $success = true;
         // Refresh complaint data
         $stmt = $pdo->prepare("SELECT * FROM complaints WHERE id = ? LIMIT 1");
@@ -106,6 +124,15 @@ $statusColors = [
                 <?= nl2br(htmlspecialchars($complaint['description'])) ?>
             </p>
         </div>
+
+        <!-- Complaint Photo (if attached) -->
+        <?php if ($complaint['photo_path']): ?>
+            <div class="bg-gray-50 p-4 rounded-lg border mb-6">
+                <h2 class="font-bold text-gray-800 mb-2">📸 Attached Photo</h2>
+                <img src="<?= BASE_URL ?>/<?= htmlspecialchars($complaint['photo_path']) ?>"
+                     alt="Complaint photo" class="rounded-lg max-w-full border shadow-sm">
+            </div>
+        <?php endif; ?>
     </div>
 
     <!-- Response Form -->

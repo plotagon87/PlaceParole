@@ -22,21 +22,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $category    = $_POST['category']    ?? '';
     $description = $_POST['description'] ?? '';
 
+    // Handle photo upload (optional)
+    $photo_path = null;
+    if (!empty($_FILES['photo']['name'])) {
+        $allowed_types = ['image/jpeg', 'image/png', 'image/webp'];
+        $max_size      = 2 * 1024 * 1024; // 2 megabytes maximum
+
+        if (!in_array($_FILES['photo']['type'], $allowed_types)) {
+            $error = 'Only JPEG, PNG, and WebP images are allowed.';
+        } elseif ($_FILES['photo']['size'] > $max_size) {
+            $error = 'Photo must be smaller than 2MB.';
+        } else {
+            // Generate a unique filename to prevent overwriting existing files
+            $ext       = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
+            $filename  = uniqid('complaint_', true) . '.' . $ext;
+            $dest      = __DIR__ . '/../../uploads/complaints/' . $filename;
+
+            if (move_uploaded_file($_FILES['photo']['tmp_name'], $dest)) {
+                $photo_path = 'uploads/complaints/' . $filename;
+            } else {
+                $error = 'Photo upload failed. Please try again.';
+            }
+        }
+    }
+
     if (!$category || !$description) {
         $error = $t['error_required'];
-    } else {
+    } elseif (empty($error)) {
         // Generate a unique reference code using the function defined above (outside if-blocks)
         $refCode = generateRefCode($pdo);
         $stmt = $pdo->prepare("
-            INSERT INTO complaints (market_id, seller_id, ref_code, category, description, channel, status)
-            VALUES (?, ?, ?, ?, ?, 'web', 'pending')
+            INSERT INTO complaints (market_id, seller_id, ref_code, category, description, channel, status, photo_path)
+            VALUES (?, ?, ?, ?, ?, 'web', 'pending', ?)
         ");
         $stmt->execute([
             $_SESSION['market_id'],
             $_SESSION['user_id'],
             $refCode,
             $category,
-            $description
+            $description,
+            $photo_path
         ]);
 
         $success = true;
@@ -96,7 +121,7 @@ $categories = [
             </div>
         <?php endif; ?>
 
-        <form method="POST" class="space-y-4">
+        <form method="POST" enctype="multipart/form-data" class="space-y-4">
             <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
             <!-- Category -->
             <div>
@@ -120,6 +145,13 @@ $categories = [
                     placeholder="Describe the problem clearly and provide details..."
                     required
                 ></textarea>
+            </div>
+
+            <!-- Photo Attachment (optional) -->
+            <div>
+                <label for="photo" class="block font-semibold text-gray-700 mb-2">📸 Attach a Photo (optional)</label>
+                <input type="file" id="photo" name="photo" accept="image/jpeg,image/png,image/webp" class="input-field">
+                <p class="text-xs text-gray-500 mt-2">Supported: JPEG, PNG, WebP. Maximum 2MB.</p>
             </div>
 
             <!-- Submit Button -->
