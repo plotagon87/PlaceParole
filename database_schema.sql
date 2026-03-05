@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
     name        VARCHAR(100) NOT NULL,
     phone       VARCHAR(20) UNIQUE,
     email       VARCHAR(150) UNIQUE,
-    role        ENUM('seller', 'manager') NOT NULL,
+    role        ENUM('seller', 'manager', 'admin') NOT NULL,
     stall_no    VARCHAR(20),                     -- Stall number, for sellers only
     password    VARCHAR(255) NOT NULL,           -- Always stored hashed, never plain text
     lang        ENUM('en', 'fr') DEFAULT 'en',  -- User's preferred language, saved on registration
@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS complaints (
     status      ENUM('pending', 'in_review', 'resolved') DEFAULT 'pending',
     response    TEXT,
     photo_path  VARCHAR(255) NULL,                -- Path to attached complaint photo
+    sla_deadline DATETIME NULL,                    -- 72-hour SLA deadline for responding to complaint
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (seller_id)  REFERENCES users(id),

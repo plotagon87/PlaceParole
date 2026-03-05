@@ -37,4 +37,16 @@ function seller_only() {
         die("<div style='font-family: Arial; padding: 20px; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 5px;'><h2>❌ Access Denied</h2><p>Only sellers can access this page.</p></div>");
     }
 }
+
+/**
+ * admin_only()
+ * Optional: restrict a page to admin users only
+ * Usage: admin_only();
+ */
+function admin_only() {
+    if ($_SESSION['role'] !== 'admin') {
+        http_response_code(403);
+        die("<div style='font-family: Arial; padding: 20px; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 5px;'><h2>❌ Access Denied</h2><p>Only super admins can access this page.</p></div>");
+    }
+}
 ?>

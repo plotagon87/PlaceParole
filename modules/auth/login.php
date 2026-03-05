@@ -60,7 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             session_regenerate_id(true);
 
             // Redirect based on role
-            if ($user['role'] === 'manager') {
+            if ($user['role'] === 'admin') {
+                header('Location: ../../modules/admin/overview.php');
+            } elseif ($user['role'] === 'manager') {
                 header('Location: ../../modules/complaints/list.php');
             } else {
                 header('Location: ../../index.php');

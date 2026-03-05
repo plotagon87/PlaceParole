@@ -177,6 +177,7 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
                 
                 <?php if ($_SESSION['role'] === 'seller'): ?>
                     <a href="<?= BASE_URL ?>/modules/complaints/submit.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_complaints'] ?></a>
+                    <a href="<?= BASE_URL ?>/modules/complaints/my_complaints.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false">📋 My History</a>
                     <a href="<?= BASE_URL ?>/modules/suggestions/submit.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_suggestions'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/community/report.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_community'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/announcements/list.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_announcements'] ?></a>
