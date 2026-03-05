@@ -19,6 +19,9 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
+// csrf functions (token generation/verification) — safe for public pages
+require_once '../../config/csrf.php';
+
 require_once '../../templates/header.php';   // Starts session, loads $t (translations), renders nav
 require_once '../../config/db.php';           // Provides $pdo — the PDO database connection
 
@@ -619,7 +622,7 @@ function validateManagerPasswordStrength(string $password): array
     </div>
     <div class="auth-footer-link" style="margin-top:0.5rem;border:none;padding:0;">
         Are you a seller?
-        <a href="register_seller.php">Register as seller →</a>
+        <a href="register_seller.php" style="display:none;">Register as seller →</a>
     </div>
 
 </div>

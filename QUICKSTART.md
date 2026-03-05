@@ -9,6 +9,15 @@
 
 Follow these steps to get PlaceParole running:
 
+### 0️⃣ **Build Frontend Assets** (new step)
+- Node.js/npm installed on your development machine
+- Run the Tailwind CLI to compile `assets/css/src/input.css` into `assets/css/tailwind.css`:
+  ```bash
+  npm install -D tailwindcss postcss autoprefixer
+  npx tailwindcss -i ./assets/css/src/input.css -o ./assets/css/tailwind.css --minify
+  ```
+- Download or bundle Alpine.js into `assets/js/alpine.min.js` (see README for details)
+
 ### 1️⃣ **Database Setup** ✅
 - XAMPP MySQL is running
 - Database `placeparole_` created with all 6 tables

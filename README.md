@@ -72,12 +72,14 @@ This platform solves that problem by providing:
 
 ### Frontend (Client Side — the part the user sees and interacts with in the browser)
 - **HTML5 / CSS3** — Structure and styling of web pages
-- **Tailwind CSS** — A utility-first CSS (Cascading Style Sheets) framework where you style elements by combining small, single-purpose classes directly in your HTML (HyperText Markup Language). For example: `class="bg-green-600 text-white px-4 py-2 rounded-lg"` instead of writing a separate CSS file
-  - Load via CDN (Content Delivery Network — a server that hosts the file so you don't have to): `<script src="https://cdn.tailwindcss.com"></script>`
+- **Tailwind CSS** — A utility-first CSS framework where you style elements by combining small, single-purpose classes directly in your HTML (e.g. `class="bg-green-600 text-white px-4 py-2 rounded-lg"`).
+  - During development it’s okay to use the CDN snippet (`<script src="https://cdn.tailwindcss.com"></script>`), but **the CDN build is not intended for production** because it generates styles on‑the‑fly and requires access to the internet.
+  - For deployment you should install Tailwind as a dependency and compile a static stylesheet. See the "Installation & Setup" section later in this document for commands using the Tailwind CLI or PostCSS.
   - **Color palette configured for this project:** Green (primary), Orange (accent), White (background) — matching Cameroon's national colors
 - **JavaScript (JS)** — For interactive UI elements (e.g., live form validation, dynamic complaint status updates)
 - **AJAX (Asynchronous JavaScript And XML)** — Allows parts of a page to update without a full page reload
-- **Alpine.js** *(optional but recommended)* — A tiny JavaScript framework (3KB — kilobytes) that pairs perfectly with Tailwind for dropdowns, modals (pop-up dialogs), and toggles without writing complex JS
+- **Alpine.js** *(optional but recommended)* — A tiny JavaScript framework (3KB) that pairs perfectly with Tailwind for dropdowns, modals, and toggles without writing complex JS.
+  - The standard CDN build evaluates strings (`eval()`), which conflicts with a strict CSP (`Content-Security-Policy`). To run with CSP enabled you either need to add `'unsafe-eval'` to your policy or bundle Alpine locally via npm so that it doesn’t require dynamic evaluation.
 
 ### Integrations (External Services Connected to the Platform)
 - **Free SMS API** — See the [API Integrations](#api-integrations) section for the full list of free options and code examples

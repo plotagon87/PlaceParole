@@ -21,7 +21,11 @@ Header set Referrer-Policy "strict-origin-when-cross-origin"
 
 # Content-Security-Policy: Restrict which scripts and styles can be loaded
 # This helps prevent Cross-Site Scripting (XSS) attacks
-Header set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self';"
+# Alpine.js (CDN build) uses `eval()` to evaluate expressions from markup, which
+# violates strict CSP.  You can avoid needing this by bundling Alpine locally or
+# by adding 'unsafe-eval' to the script-src directive temporarily during
+# development/upgrade.  Remove 'unsafe-eval' when you switch to a CSP‑safe build.
+Header set Content-Security-Policy "default-src 'self' https://cdn.tailwindcss.com https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self';"
 
 # Optional: Strict-Transport-Security (HSTS)
 # Uncomment this line only after confirming HTTPS is properly configured

@@ -24,27 +24,28 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%2322863a'>🗣</text></svg>">
     
-    <!-- Tailwind CSS via CDN -->
+    <!-- Tailwind CSS (built locally for production) -->
+    <!--
+        The warning in the console indicates the CDN version is not intended for
+        production. To generate a compiled stylesheet run the Tailwind CLI or
+        PostCSS plugin during your build step, e.g.:
+
+            npm install -D tailwindcss postcss autoprefixer
+            npx tailwindcss init
+            npx tailwindcss -i ./assets/css/src/input.css -o ./assets/css/tailwind.css --minify
+
+        Put your `@tailwind base; @tailwind components; @tailwind utilities;`
+        directives in `assets/css/src/input.css` and include the resulting
+        `tailwind.css` file below.
+    -->
+    <!-- <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/tailwind.css"> -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Custom Tailwind Configuration -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        // PlaceParole Color Palette - Cameroon Colors (Green & Orange)
-                        primary: '#22863a',    // Dark Green
-                        secondary: '#ff8c00',  // Orange
-                        accent: '#fbbf24',     // Amber
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <!-- Alpine.js for interactive components -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Custom overrides & utilities -->
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
+
+    <!-- Alpine.js ships with a CSP‑safe build when installed via npm/bundler -->
+    <!-- In the meantime you can download a copy and serve it from assets/js/ -->
+    <script defer src="<?= BASE_URL ?>/assets/js/alpine.min.js"></script>
 
     <!-- App.js utilities -->
     <script src="<?= BASE_URL ?>/assets/js/app.js"></script>

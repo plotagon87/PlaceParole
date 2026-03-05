@@ -3,8 +3,10 @@
  * modules/auth/login.php
  * Login page for both sellers and managers
  */
-require_once '../../templates/header.php';
+if (session_status() === PHP_SESSION_NONE) session_start();
 require_once '../../config/db.php';
+require_once '../../config/lang.php';
+require_once '../../config/csrf.php';
 
 // preserve language query parameter for links on this page
 $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
@@ -77,6 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+require_once '../../templates/header.php';
 ?>
 
 <div class="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-8 mt-10">
