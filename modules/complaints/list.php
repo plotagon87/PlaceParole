@@ -34,7 +34,8 @@ $statsStmt = $pdo->prepare("SELECT
     COUNT(*) as total,
     SUM(CASE WHEN status='pending' THEN 1 ELSE 0 END) as pending,
     SUM(CASE WHEN status='in_review' THEN 1 ELSE 0 END) as in_review,
-    SUM(CASE WHEN status='resolved' THEN 1 ELSE 0 END) as resolved
+    SUM(CASE WHEN status='resolved' THEN 1 ELSE 0 END) as resolved,
+    SUM(CASE WHEN status != 'resolved' AND sla_deadline IS NOT NULL AND sla_deadline < NOW() THEN 1 ELSE 0 END) as overdue
     FROM complaints WHERE market_id = ?");
 $statsStmt->execute([$_SESSION['market_id']]);
 $stats = $statsStmt->fetch();
@@ -79,9 +80,11 @@ $statusColors = [
             <div class="text-3xl font-bold text-yellow-600"><?= $stats['in_review'] ?? 0 ?></div>
             <p class="text-gray-600 text-sm mt-2">In Review</p>
         </div>
-        <div class="card text-center border-2 border-green-200">
-            <div class="text-3xl font-bold text-green-600"><?= $stats['resolved'] ?? 0 ?></div>
-            <p class="text-gray-600 text-sm mt-2"><?= $t['status_resolved'] ?></p>
+        <div class="card text-center <?= ($stats['overdue'] ?? 0) > 0 ? 'border-2 border-red-500' : 'border-2 border-green-200' ?>">
+            <div class="text-3xl font-bold <?= ($stats['overdue'] ?? 0) > 0 ? 'text-red-600' : 'text-green-600' ?>">
+                <?= $stats['overdue'] ?? 0 ?>
+            </div>
+            <p class="text-gray-600 text-sm mt-2">⚠️ Overdue</p>
         </div>
     </div>
 
@@ -142,8 +145,13 @@ $statusColors = [
                         </tr>
                     </thead>
                     <tbody class="divide-y">
-                        <?php foreach ($complaints as $complaint): ?>
-                            <tr class="hover:bg-gray-50 transition <?= $complaint['status'] === 'pending' ? 'bg-red-50' : '' ?>">
+                        <?php foreach ($complaints as $complaint): 
+                            // Check if complaint is overdue (pending or in_review past the SLA deadline)
+                            $isOverdue = ($complaint['status'] !== 'resolved')
+                                      && !empty($complaint['sla_deadline'])
+                                      && strtotime($complaint['sla_deadline']) < time();
+                        ?>
+                            <tr class="hover:bg-gray-50 transition <?= $isOverdue ? 'bg-red-100 border-l-4 border-l-red-600' : ($complaint['status'] === 'pending' ? 'bg-red-50' : '') ?>">
                                 <td class="px-4 py-3"><strong><?= htmlspecialchars($complaint['ref_code']) ?></strong></td>
                                 <td class="px-4 py-3">
                                     <div><?= htmlspecialchars($complaint['seller_name'] ?? 'Unknown') ?></div>
@@ -158,6 +166,11 @@ $statusColors = [
                                     <span class="<?= $statusColors[$complaint['status']] ?? 'status-pending' ?>">
                                         <?= $t['status_' . $complaint['status']] ?>
                                     </span>
+                                    <?php if ($isOverdue): ?>
+                                        <span class="ml-2 text-xs bg-red-600 text-white px-2 py-1 rounded-full font-bold">
+                                            ⚠️ OVERDUE
+                                        </span>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="px-4 py-3 text-xs text-gray-600">
                                     <?= date('d/m/Y H:i', strtotime($complaint['created_at'])) ?>

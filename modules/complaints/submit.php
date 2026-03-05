@@ -52,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Generate a unique reference code using the function defined above (outside if-blocks)
         $refCode = generateRefCode($pdo);
         $stmt = $pdo->prepare("
-            INSERT INTO complaints (market_id, seller_id, ref_code, category, description, channel, status, photo_path)
-            VALUES (?, ?, ?, ?, ?, 'web', 'pending', ?)
+            INSERT INTO complaints (market_id, seller_id, ref_code, category, description, channel, status, photo_path, sla_deadline)
+            VALUES (?, ?, ?, ?, ?, 'web', 'pending', ?, DATE_ADD(NOW(), INTERVAL 72 HOUR))
         ");
         $stmt->execute([
             $_SESSION['market_id'],
