@@ -3,12 +3,148 @@
 /* Base Tailwind classes are defined in templates/header.php */
 
 :root {
-    --primary: #22863a;
-    --secondary: #ff8c00;
-    --accent: #fbbf24;
-    --success: #16a34a;
-    --warning: #ea580c;
-    --danger: #dc2626;
+    /* ══════════════════════════════════════════════════════════════════════════════
+       CORE BRAND COLOURS — Cameroonian flag inspired
+       ══════════════════════════════════════════════════════════════════════════════ */
+    --color-primary:        #16a34a;   /* Forest green — main brand, buttons, nav */
+    --color-primary-dark:   #15803d;   /* Darker green — hover states */
+    --color-primary-light:  #dcfce7;   /* Mint — card tints, success backgrounds */
+    --color-primary-ring:   rgba(22, 163, 74, 0.20); /* Focus rings on inputs */
+
+    --color-accent:         #dc2626;   /* Cameroonian red — alerts, urgent badges */
+    --color-accent-warm:    #ea580c;   /* Sunset orange — secondary actions, CTA buttons */
+    --color-accent-yellow:  #ca8a04;   /* Gold — announcement highlights, star ratings */
+
+    --color-gold:           #eab308;   /* Cameroon flag yellow — decorative, progress bars */
+    --color-gold-light:     #fef9c3;   /* Pale yellow — announcement panel backgrounds */
+
+    /* ──────────────────────────────────────────────────────────────────────────────
+       PAGE & SURFACE COLOURS
+       ────────────────────────────────────────────────────────────────────────────── */
+    --color-bg:             #f0fdf4;   /* Very light green tint — page body */
+    --color-bg-alt:         #fafafa;   /* Near white — alternate section backgrounds */
+    --color-surface:        #ffffff;   /* Pure white — all cards and panels */
+    --color-surface-raised: #ffffff;   /* Elevated modals/dropdowns with stronger shadow */
+    --color-surface-sunken: #f3f4f6;   /* Input field backgrounds, table rows */
+    --color-border:         #e5e7eb;   /* Subtle dividers between sections */
+    --color-border-strong:  #d1d5db;   /* More visible borders on form inputs */
+
+    /* ──────────────────────────────────────────────────────────────────────────────
+       TEXT COLOURS
+       ────────────────────────────────────────────────────────────────────────────── */
+    --color-text-heading:   #052e16;   /* Very dark green — page titles, card headings */
+    --color-text-body:      #1f2937;   /* Near-black — all paragraph and label text */
+    --color-text-secondary: #374151;   /* Dark gray — descriptions, sub-labels */
+    --color-text-muted:     #6b7280;   /* Medium gray — timestamps, placeholders */
+    --color-text-disabled:  #9ca3af;   /* Light gray — disabled inputs, inactive tabs */
+    --color-text-inverse:   #ffffff;   /* White — text on coloured backgrounds */
+    --color-text-link:      #16a34a;   /* Green — hyperlinks */
+    --color-text-link-hover:#15803d;   /* Darker green — hovered links */
+
+    /* ──────────────────────────────────────────────────────────────────────────────
+       STATUS / SEMANTIC COLOURS
+       ────────────────────────────────────────────────────────────────────────────── */
+    /* PENDING — warm red-orange, signals attention needed */
+    --color-pending-bg:     #fef2f2;
+    --color-pending-text:   #7f1d1d;
+    --color-pending-border: #fca5a5;
+    --color-pending-dot:    #dc2626;
+
+    /* IN REVIEW — amber, signals work in progress */
+    --color-review-bg:      #fffbeb;
+    --color-review-text:    #78350f;
+    --color-review-border:  #fcd34d;
+    --color-review-dot:     #d97706;
+
+    /* RESOLVED — green, signals completion */
+    --color-resolved-bg:    #f0fdf4;
+    --color-resolved-text:  #14532d;
+    --color-resolved-border:#86efac;
+    --color-resolved-dot:   #16a34a;
+
+    /* APPROVED — blue-green, signals official endorsement */
+    --color-approved-bg:    #ecfdf5;
+    --color-approved-text:  #065f46;
+    --color-approved-border:#6ee7b7;
+
+    /* REJECTED — neutral gray, non-alarming dismissal */
+    --color-rejected-bg:    #f9fafb;
+    --color-rejected-text:  #374151;
+    --color-rejected-border:#d1d5db;
+
+    /* ──────────────────────────────────────────────────────────────────────────────
+       COMMUNITY EVENT COLOURS
+       ────────────────────────────────────────────────────────────────────────────── */
+    /* DEATH — dignified dark gray, respectful not alarming */
+    --color-event-death-bg:     #1f2937;
+    --color-event-death-text:   #f9fafb;
+    --color-event-death-border: #4b5563;
+
+    /* ILLNESS — soft yellow, medical but not alarming */
+    --color-event-illness-bg:   #fffbeb;
+    --color-event-illness-text: #92400e;
+    --color-event-illness-border:#fcd34d;
+
+    /* EMERGENCY — bold red, immediate attention */
+    --color-event-emergency-bg:   #fef2f2;
+    --color-event-emergency-text: #7f1d1d;
+    --color-event-emergency-border:#fca5a5;
+
+    /* OTHER — calm blue, neutral informational */
+    --color-event-other-bg:     #eff6ff;
+    --color-event-other-text:   #1e40af;
+    --color-event-other-border: #93c5fd;
+
+    /* ──────────────────────────────────────────────────────────────────────────────
+       NAVIGATION BAR
+       ────────────────────────────────────────────────────────────────────────────── */
+    --color-nav-bg:         #15803d;   /* Deep green — distinguishable from page body */
+    --color-nav-text:       #ffffff;   /* White — all nav links and labels */
+    --color-nav-hover:      rgba(255,255,255,0.85); /* Slightly dimmed white on hover */
+    --color-nav-active:     #ffffff;   /* Full white — current page indicator */
+    --color-nav-mobile-bg:  #14532d;   /* Even darker green — mobile drawer */
+    --color-nav-border:     rgba(255,255,255,0.12); /* Subtle dividers inside the nav */
+
+    /* ──────────────────────────────────────────────────────────────────────────────
+       MANAGER DASHBOARD SPECIFIC
+       ────────────────────────────────────────────────────────────────────────────── */
+    --color-stat-total-bg:    #f0fdf4;  /* Total complaints card */
+    --color-stat-total-num:   #15803d;
+    --color-stat-pending-bg:  #fef2f2;  /* Pending count card */
+    --color-stat-pending-num: #dc2626;
+    --color-stat-review-bg:   #fffbeb;  /* In-review count card */
+    --color-stat-review-num:  #d97706;
+    --color-stat-done-bg:     #ecfdf5;  /* Resolved count card */
+    --color-stat-done-num:    #16a34a;
+
+    /* ──────────────────────────────────────────────────────────────────────────────
+       CHART COLOURS — Analytics Dashboard
+       ────────────────────────────────────────────────────────────────────────────── */
+    --color-chart-1: #16a34a;   /* Green — primary data series */
+    --color-chart-2: #dc2626;   /* Red — secondary series */
+    --color-chart-3: #d97706;   /* Amber — tertiary series */
+    --color-chart-4: #2563eb;   /* Blue — quaternary series */
+    --color-chart-5: #7c3aed;   /* Purple — fifth series */
+    --color-chart-bg: rgba(22, 163, 74, 0.08); /* Translucent green — chart area fill */
+    --color-chart-grid: #e5e7eb; /* Light gray — gridlines */
+
+    /* ──────────────────────────────────────────────────────────────────────────────
+       SHADOWS
+       ────────────────────────────────────────────────────────────────────────────── */
+    --shadow-card:   0 1px 3px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.04);
+    --shadow-lift:   0 4px 12px rgba(0,0,0,0.08), 0 12px 24px rgba(0,0,0,0.06);
+    --shadow-nav:    0 2px 8px rgba(21,128,61,0.25);  /* Green-tinted nav shadow */
+    --shadow-focus:  0 0 0 3px rgba(22,163,74,0.20);  /* Input focus ring */
+
+    /* ──────────────────────────────────────────────────────────────────────────────
+       LEGACY ALIASES — For backwards compatibility with existing code
+       ────────────────────────────────────────────────────────────────────────────── */
+    --primary: var(--color-primary);
+    --secondary: var(--color-accent-warm);
+    --accent: var(--color-gold);
+    --success: var(--color-primary);
+    --warning: var(--color-accent-warm);
+    --danger: var(--color-accent);
 }
 
 /* Animations */
@@ -97,25 +233,80 @@
     outline-offset: 2px;
 }
 
-/* Dark Mode Support (Optional) */
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #1a1a1a;
-        color: #e0e0e0;
-    }
-    
-    .card {
-        background-color: #2a2a2a;
-        border-color: #444;
-    }
+/* Dark Mode Support — applied when [data-theme="dark"] is set */
+[data-theme="dark"] {
+    --color-bg:             #0f172a;   /* Very dark navy-blue */
+    --color-bg-alt:         #1a1f2e;   /* Slightly lighter dark bg */
+    --color-surface:        #1f2937;   /* Dark card backgrounds */
+    --color-surface-raised: #2d3748;   /* Even darker for modals */
+    --color-surface-sunken: #111827;   /* Dark input backgrounds */
+    --color-border:         #374151;   /* Darker borders */
+    --color-border-strong:  #4b5563;   /* More visible borders in dark */
 
-    /* make primary/secondary buttons pop on dark backgrounds */
-    .btn-primary {
-        background-color: #4ade80; /* lighter green for contrast */
-        color: #0f172a;
-    }
-    .btn-secondary {
-        background-color: #ffd580; /* lighter orange */
-        color: #1f2937;
-    }
+    --color-text-heading:   #e5e7eb;   /* Light gray for headings */
+    --color-text-body:      #d1d5db;   /* Light gray for body text */
+    --color-text-secondary: #9ca3af;   /* Medium gray for secondary */
+    --color-text-muted:     #6b7280;   /* Darker gray for muted */
+    --color-text-disabled:  #4b5563;   /* Very dark for disabled */
+
+    /* Lighten buttons for dark mode visibility */
+    --color-primary:        #4ade80;   /* Brighter green */
+    --color-primary-light:  #86efac;   /* Even brighter for contrast */
+    --color-accent-warm:    #ffa94d;   /* Brighter orange */
+    --color-gold:           #fbbf24;   /* Brighter yellow */
+
+    /* Community event cards in dark mode */
+    --color-event-death-bg:     #2d3748;
+    --color-event-death-text:   #e5e7eb;  /* Light text for dark bg */
+    --color-event-illness-bg:   #3d2817;  /* Dark brown instead of light yellow */
+    --color-event-illness-text: #fcd34d;  /* Bright gold text */
+    --color-event-emergency-bg: #422323;  /* Dark red instead of light pink */
+    --color-event-emergency-text: #fca5a5; /* Light red text */
+    --color-event-other-bg:     #1e3a5f;  /* Dark blue */
+    --color-event-other-text:   #93c5fd;  /* Light blue text */
+}
+
+/* Dark mode overrides for community event card backgrounds */
+[data-theme="dark"] .bg-gray-50 {
+    background-color: var(--color-event-death-bg) !important;
+    color: var(--color-event-death-text) !important;
+}
+
+[data-theme="dark"] .bg-yellow-50 {
+    background-color: var(--color-event-illness-bg) !important;
+    color: var(--color-event-illness-text) !important;
+}
+
+[data-theme="dark"] .bg-red-50 {
+    background-color: var(--color-event-emergency-bg) !important;
+    color: var(--color-event-emergency-text) !important;
+}
+
+[data-theme="dark"] .bg-blue-50 {
+    background-color: var(--color-event-other-bg) !important;
+    color: var(--color-event-other-text) !important;
+}
+
+/* Ensure ALL text inside dark mode event cards has good contrast */
+[data-theme="dark"] .bg-gray-50 *,
+[data-theme="dark"] .bg-yellow-50 *,
+[data-theme="dark"] .bg-red-50 *,
+[data-theme="dark"] .bg-blue-50 * {
+    color: inherit !important;
+}
+
+/* Specifically target the event title headings */
+[data-theme="dark"] .bg-gray-50 h2,
+[data-theme="dark"] .bg-yellow-50 h2,
+[data-theme="dark"] .bg-red-50 h2,
+[data-theme="dark"] .bg-blue-50 h2 {
+    color: #ffffff !important;
+}
+
+/* Target the flex-1 divs that contain the event text */
+[data-theme="dark"] .bg-gray-50 .flex-1,
+[data-theme="dark"] .bg-yellow-50 .flex-1,
+[data-theme="dark"] .bg-red-50 .flex-1,
+[data-theme="dark"] .bg-blue-50 .flex-1 {
+    color: #ffffff !important;
 }

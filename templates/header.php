@@ -119,12 +119,29 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
             font-size: 1rem;
             transition: all 0.2s;
             box-sizing: border-box;
+            color: #1f2937;
+            background-color: white;
+        }
+        [data-theme="dark"] .input-field {
+            color: #1f2937;
+            background-color: white;
         }
         .input-field:focus {
             outline: none;
             ring: 2px #22863a;
             border-color: #22863a;
             box-shadow: 0 0 0 2px rgba(34, 134, 58, 0.1);
+        }
+
+        /* Labels & Form Text */
+        label {
+            color: var(--color-text-body);
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        [data-theme="dark"] label {
+            color: #e5e7eb;
         }
 
         /* Cards */
