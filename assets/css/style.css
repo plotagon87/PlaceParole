@@ -1,153 +1,564 @@
-/* assets/css/style.css */
-/* Custom PlaceParole Styles */
-/* Base Tailwind classes are defined in templates/header.php */
+/* ══════════════════════════════════════════════════════════════════════════════
+   assets/css/style.css — PlaceParole Frontend Styles
+   ══════════════════════════════════════════════════════════════════════════════
+   Complete design system for the Cameroonian Market Feedback Platform.
+   This file is the single source of truth for all styling — no inline styles.
+   ══════════════════════════════════════════════════════════════════════════════ */
 
+/* ──────────────────────────────────────────────────────────────────────────────
+   SECTION 1 — CSS RESET
+   ──────────────────────────────────────────────────────────────────────────────
+   Resets default browser styles for consistent cross-browser appearance.
+   Box-sizing ensures padding/borders don't affect element dimensions.
+   Opacity reset prevents accidental transparency inheritance.
+   Antialiased fonts for crisp text rendering on all devices.
+   ────────────────────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+    box-sizing: border-box; /* Ensures padding and borders are included in width/height calculations */
+    margin: 0; /* Removes default margins */
+    padding: 0; /* Removes default padding */
+    opacity: 1; /* Prevents accidental transparency from parent elements */
+}
+
+* {
+    -webkit-font-smoothing: antialiased; /* Smooths font edges on webkit browsers */
+    -moz-osx-font-smoothing: grayscale; /* Smooths font edges on macOS Firefox */
+}
+
+/* ──────────────────────────────────────────────────────────────────────────────
+   SECTION 2 — CSS CUSTOM PROPERTIES (:root)
+   ──────────────────────────────────────────────────────────────────────────────
+   All color, shadow, and design token variables defined here.
+   These are the foundation of the entire design system.
+   ────────────────────────────────────────────────────────────────────────────── */
 :root {
     /* ══════════════════════════════════════════════════════════════════════════════
-       CORE BRAND COLOURS — Cameroonian flag inspired
+       BRAND COLORS — Cameroonian flag inspired
        ══════════════════════════════════════════════════════════════════════════════ */
     --color-primary:        #16a34a;   /* Forest green — main brand, buttons, nav */
     --color-primary-dark:   #15803d;   /* Darker green — hover states */
     --color-primary-light:  #dcfce7;   /* Mint — card tints, success backgrounds */
-    --color-primary-ring:   rgba(22, 163, 74, 0.20); /* Focus rings on inputs */
+    --color-accent:         #dc2626;   /* Cameroonian red — alerts, urgent */
+    --color-accent-warm:    #ea580c;   /* Sunset orange — secondary CTAs */
+    --color-gold:           #eab308;   /* Cameroon yellow — highlights */
 
-    --color-accent:         #dc2626;   /* Cameroonian red — alerts, urgent badges */
-    --color-accent-warm:    #ea580c;   /* Sunset orange — secondary actions, CTA buttons */
-    --color-accent-yellow:  #ca8a04;   /* Gold — announcement highlights, star ratings */
+    /* ══════════════════════════════════════════════════════════════════════════════
+       BACKGROUNDS
+       ══════════════════════════════════════════════════════════════════════════════ */
+    --color-bg:             #f0fdf4;   /* Page body — light green tint */
+    --color-surface:        #ffffff;   /* Cards and panels */
+    --color-surface-sunken: #f3f4f6;   /* Input fields, table row alt */
+    --color-border:         #e5e7eb;   /* Dividers */
+    --color-border-strong:  #d1d5db;   /* Form input borders */
 
-    --color-gold:           #eab308;   /* Cameroon flag yellow — decorative, progress bars */
-    --color-gold-light:     #fef9c3;   /* Pale yellow — announcement panel backgrounds */
+    /* ══════════════════════════════════════════════════════════════════════════════
+       TEXT COLORS
+       ══════════════════════════════════════════════════════════════════════════════ */
+    --color-text-heading:   #052e16;   /* Page titles */
+    --color-text-body:      #1f2937;   /* All body text */
+    --color-text-muted:     #6b7280;   /* Timestamps, placeholders */
+    --color-text-inverse:   #ffffff;   /* Text on colored backgrounds */
+    --color-text-link:      #16a34a;   /* Hyperlinks */
+    --color-text-link-hover:#15803d;   /* Hovered links */
 
-    /* ──────────────────────────────────────────────────────────────────────────────
-       PAGE & SURFACE COLOURS
-       ────────────────────────────────────────────────────────────────────────────── */
-    --color-bg:             #f0fdf4;   /* Very light green tint — page body */
-    --color-bg-alt:         #fafafa;   /* Near white — alternate section backgrounds */
-    --color-surface:        #ffffff;   /* Pure white — all cards and panels */
-    --color-surface-raised: #ffffff;   /* Elevated modals/dropdowns with stronger shadow */
-    --color-surface-sunken: #f3f4f6;   /* Input field backgrounds, table rows */
-    --color-border:         #e5e7eb;   /* Subtle dividers between sections */
-    --color-border-strong:  #d1d5db;   /* More visible borders on form inputs */
+    /* ══════════════════════════════════════════════════════════════════════════════
+       NAVIGATION
+       ══════════════════════════════════════════════════════════════════════════════ */
+    --color-nav-bg:         #15803d;   /* Navigation background */
+    --color-nav-text:       #ffffff;   /* Navigation text */
 
-    /* ──────────────────────────────────────────────────────────────────────────────
-       TEXT COLOURS
-       ────────────────────────────────────────────────────────────────────────────── */
-    --color-text-heading:   #052e16;   /* Very dark green — page titles, card headings */
-    --color-text-body:      #1f2937;   /* Near-black — all paragraph and label text */
-    --color-text-secondary: #374151;   /* Dark gray — descriptions, sub-labels */
-    --color-text-muted:     #6b7280;   /* Medium gray — timestamps, placeholders */
-    --color-text-disabled:  #9ca3af;   /* Light gray — disabled inputs, inactive tabs */
-    --color-text-inverse:   #ffffff;   /* White — text on coloured backgrounds */
-    --color-text-link:      #16a34a;   /* Green — hyperlinks */
-    --color-text-link-hover:#15803d;   /* Darker green — hovered links */
+    /* ══════════════════════════════════════════════════════════════════════════════
+       STATUS COLORS — For badges and semantic states
+       ══════════════════════════════════════════════════════════════════════════════ */
+    --color-pending-bg:     #fef2f2;   /* Pending status background */
+    --color-pending-text:   #7f1d1d;   /* Pending status text */
+    --color-review-bg:      #fffbeb;   /* In-review status background */
+    --color-review-text:    #78350f;   /* In-review status text */
+    --color-resolved-bg:    #f0fdf4;   /* Resolved status background */
+    --color-resolved-text:  #14532d;   /* Resolved status text */
+    --color-approved-bg:    #ecfdf5;   /* Approved status background */
+    --color-approved-text:  #065f46;   /* Approved status text */
+    --color-rejected-bg:    #f9fafb;   /* Rejected status background */
+    --color-rejected-text:  #374151;   /* Rejected status text */
 
-    /* ──────────────────────────────────────────────────────────────────────────────
-       STATUS / SEMANTIC COLOURS
-       ────────────────────────────────────────────────────────────────────────────── */
-    /* PENDING — warm red-orange, signals attention needed */
-    --color-pending-bg:     #fef2f2;
-    --color-pending-text:   #7f1d1d;
-    --color-pending-border: #fca5a5;
-    --color-pending-dot:    #dc2626;
+    /* ══════════════════════════════════════════════════════════════════════════════
+       COMMUNITY EVENT COLORS
+       ══════════════════════════════════════════════════════════════════════════════ */
+    --color-event-death-bg:     #1f2937;   /* Death event background */
+    --color-event-death-text:   #f9fafb;   /* Death event text */
+    --color-event-illness-bg:   #fffbeb;   /* Illness event background */
+    --color-event-illness-text: #92400e;   /* Illness event text */
+    --color-event-emergency-bg: #fef2f2;   /* Emergency event background */
+    --color-event-emergency-text:#7f1d1d; /* Emergency event text */
+    --color-event-other-bg:     #eff6ff;   /* Other event background */
+    --color-event-other-text:   #1e40af;   /* Other event text */
 
-    /* IN REVIEW — amber, signals work in progress */
-    --color-review-bg:      #fffbeb;
-    --color-review-text:    #78350f;
-    --color-review-border:  #fcd34d;
-    --color-review-dot:     #d97706;
-
-    /* RESOLVED — green, signals completion */
-    --color-resolved-bg:    #f0fdf4;
-    --color-resolved-text:  #14532d;
-    --color-resolved-border:#86efac;
-    --color-resolved-dot:   #16a34a;
-
-    /* APPROVED — blue-green, signals official endorsement */
-    --color-approved-bg:    #ecfdf5;
-    --color-approved-text:  #065f46;
-    --color-approved-border:#6ee7b7;
-
-    /* REJECTED — neutral gray, non-alarming dismissal */
-    --color-rejected-bg:    #f9fafb;
-    --color-rejected-text:  #374151;
-    --color-rejected-border:#d1d5db;
-
-    /* ──────────────────────────────────────────────────────────────────────────────
-       COMMUNITY EVENT COLOURS
-       ────────────────────────────────────────────────────────────────────────────── */
-    /* DEATH — dignified dark gray, respectful not alarming */
-    --color-event-death-bg:     #1f2937;
-    --color-event-death-text:   #f9fafb;
-    --color-event-death-border: #4b5563;
-
-    /* ILLNESS — soft yellow, medical but not alarming */
-    --color-event-illness-bg:   #fffbeb;
-    --color-event-illness-text: #92400e;
-    --color-event-illness-border:#fcd34d;
-
-    /* EMERGENCY — bold red, immediate attention */
-    --color-event-emergency-bg:   #fef2f2;
-    --color-event-emergency-text: #7f1d1d;
-    --color-event-emergency-border:#fca5a5;
-
-    /* OTHER — calm blue, neutral informational */
-    --color-event-other-bg:     #eff6ff;
-    --color-event-other-text:   #1e40af;
-    --color-event-other-border: #93c5fd;
-
-    /* ──────────────────────────────────────────────────────────────────────────────
-       NAVIGATION BAR
-       ────────────────────────────────────────────────────────────────────────────── */
-    --color-nav-bg:         #15803d;   /* Deep green — distinguishable from page body */
-    --color-nav-text:       #ffffff;   /* White — all nav links and labels */
-    --color-nav-hover:      rgba(255,255,255,0.85); /* Slightly dimmed white on hover */
-    --color-nav-active:     #ffffff;   /* Full white — current page indicator */
-    --color-nav-mobile-bg:  #14532d;   /* Even darker green — mobile drawer */
-    --color-nav-border:     rgba(255,255,255,0.12); /* Subtle dividers inside the nav */
-
-    /* ──────────────────────────────────────────────────────────────────────────────
-       MANAGER DASHBOARD SPECIFIC
-       ────────────────────────────────────────────────────────────────────────────── */
+    /* ══════════════════════════════════════════════════════════════════════════════
+       DASHBOARD STAT COLORS
+       ══════════════════════════════════════════════════════════════════════════════ */
     --color-stat-total-bg:    #f0fdf4;  /* Total complaints card */
-    --color-stat-total-num:   #15803d;
+    --color-stat-total-num:   #15803d;  /* Total count number */
     --color-stat-pending-bg:  #fef2f2;  /* Pending count card */
-    --color-stat-pending-num: #dc2626;
+    --color-stat-pending-num: #dc2626;  /* Pending count number */
     --color-stat-review-bg:   #fffbeb;  /* In-review count card */
-    --color-stat-review-num:  #d97706;
+    --color-stat-review-num:  #d97706;  /* In-review count number */
     --color-stat-done-bg:     #ecfdf5;  /* Resolved count card */
-    --color-stat-done-num:    #16a34a;
+    --color-stat-done-num:    #16a34a;  /* Resolved count number */
 
-    /* ──────────────────────────────────────────────────────────────────────────────
-       CHART COLOURS — Analytics Dashboard
-       ────────────────────────────────────────────────────────────────────────────── */
-    --color-chart-1: #16a34a;   /* Green — primary data series */
-    --color-chart-2: #dc2626;   /* Red — secondary series */
-    --color-chart-3: #d97706;   /* Amber — tertiary series */
-    --color-chart-4: #2563eb;   /* Blue — quaternary series */
-    --color-chart-5: #7c3aed;   /* Purple — fifth series */
-    --color-chart-bg: rgba(22, 163, 74, 0.08); /* Translucent green — chart area fill */
-    --color-chart-grid: #e5e7eb; /* Light gray — gridlines */
+    /* ══════════════════════════════════════════════════════════════════════════════
+       CHART COLORS — For analytics dashboard
+       ══════════════════════════════════════════════════════════════════════════════ */
+    --color-chart-1: #16a34a;   /* Primary data series */
+    --color-chart-2: #dc2626;   /* Secondary series */
+    --color-chart-3: #d97706;   /* Tertiary series */
+    --color-chart-4: #2563eb;   /* Quaternary series */
+    --color-chart-5: #7c3aed;   /* Fifth series */
 
-    /* ──────────────────────────────────────────────────────────────────────────────
-       SHADOWS
-       ────────────────────────────────────────────────────────────────────────────── */
-    --shadow-card:   0 1px 3px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.04);
-    --shadow-lift:   0 4px 12px rgba(0,0,0,0.08), 0 12px 24px rgba(0,0,0,0.06);
-    --shadow-nav:    0 2px 8px rgba(21,128,61,0.25);  /* Green-tinted nav shadow */
-    --shadow-focus:  0 0 0 3px rgba(22,163,74,0.20);  /* Input focus ring */
-
-    /* ──────────────────────────────────────────────────────────────────────────────
-       LEGACY ALIASES — For backwards compatibility with existing code
-       ────────────────────────────────────────────────────────────────────────────── */
-    --primary: var(--color-primary);
-    --secondary: var(--color-accent-warm);
-    --accent: var(--color-gold);
-    --success: var(--color-primary);
-    --warning: var(--color-accent-warm);
-    --danger: var(--color-accent);
+    /* ══════════════════════════════════════════════════════════════════════════════
+       SHADOW TOKENS
+       ══════════════════════════════════════════════════════════════════════════════ */
+    --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.04); /* Subtle card shadows */
+    --shadow-lift: 0 4px 12px rgba(0,0,0,0.08), 0 12px 24px rgba(0,0,0,0.06); /* Elevated hover state */
+    --shadow-nav:  0 2px 8px rgba(21,128,61,0.25); /* Navigation shadow */
+    --shadow-focus: 0 0 0 3px rgba(22,163,74,0.20); /* Input focus ring */
 }
 
-/* Animations */
+/* ──────────────────────────────────────────────────────────────────────────────
+   SECTION 3 — BODY BASE STYLES
+   ──────────────────────────────────────────────────────────────────────────────
+   Sets the foundation for the entire page layout and typography.
+   !important ensures these win over any Tailwind utility classes.
+   ────────────────────────────────────────────────────────────────────────────── */
+body {
+    background-color: var(--color-bg) !important; /* Light green page background */
+    color: var(--color-text-body) !important; /* Dark text for readability */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* Modern system font stack */
+    line-height: 1.6; /* Comfortable line spacing */
+    min-height: 100vh; /* Full viewport height */
+}
+
+/* ──────────────────────────────────────────────────────────────────────────────
+   SECTION 4 — TYPOGRAPHY
+   ──────────────────────────────────────────────────────────────────────────────
+   Consistent heading styles and link colors throughout the application.
+   ────────────────────────────────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--color-text-heading); /* Dark green headings */
+    font-weight: 700; /* Bold headings */
+}
+
+a {
+    color: var(--color-text-link); /* Green links */
+    text-decoration: none; /* Remove underline by default */
+}
+
+a:hover {
+    color: var(--color-text-link-hover); /* Darker green on hover */
+}
+
+/* ──────────────────────────────────────────────────────────────────────────────
+   SECTION 5 — CARD COMPONENT
+   ──────────────────────────────────────────────────────────────────────────────
+   The main content container used throughout the application.
+   Cards have subtle shadows and hover effects for interactivity.
+   ────────────────────────────────────────────────────────────────────────────── */
+.card {
+    background-color: var(--color-surface) !important; /* White background */
+    color: var(--color-text-body) !important; /* Dark text */
+    border-radius: 1rem; /* Rounded corners */
+    padding: 1.5rem; /* Generous padding */
+    box-shadow: var(--shadow-card); /* Subtle shadow */
+    border: 1px solid var(--color-border); /* Subtle border */
+    transition: box-shadow 0.25s ease, transform 0.25s ease; /* Smooth hover transition */
+}
+
+.card:hover {
+    box-shadow: var(--shadow-lift); /* Deeper shadow on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* ──────────────────────────────────────────────────────────────────────────────
+   SECTION 6 — BUTTON COMPONENTS
+   ──────────────────────────────────────────────────────────────────────────────
+   Three button variants: primary (green), secondary (orange), outlined (bordered).
+   All buttons have consistent sizing, transitions, and accessibility features.
+   ────────────────────────────────────────────────────────────────────────────── */
+.btn-primary, .btn-secondary, .btn-outlined {
+    display: inline-block; /* Inline block for proper spacing */
+    padding: 0.625rem 1.25rem; /* Comfortable padding */
+    border-radius: 0.5rem; /* Rounded corners */
+    font-weight: 600; /* Semi-bold text */
+    font-size: 0.875rem; /* Consistent font size */
+    text-decoration: none; /* Remove link underlines */
+    border: 2px solid transparent; /* Transparent border for consistent sizing */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: all 0.2s ease; /* Smooth transitions for all properties */
+    position: relative; /* For ripple effect positioning */
+    overflow: hidden; /* Contain ripple effect */
+}
+
+.btn-primary {
+    background-color: var(--color-primary); /* Green background */
+    color: var(--color-text-inverse); /* White text */
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-dark); /* Darker green on hover */
+    box-shadow: var(--shadow-lift); /* Lift shadow */
+    transform: translateY(-1px); /* Slight lift */
+}
+
+.btn-primary:active {
+    transform: translateY(0); /* Press down effect */
+    box-shadow: var(--shadow-card); /* Return to normal shadow */
+}
+
+.btn-primary:focus-visible {
+    outline: 2px solid var(--color-primary); /* Green focus ring */
+    outline-offset: 2px; /* Offset from button edge */
+}
+
+.btn-secondary {
+    background-color: var(--color-accent-warm); /* Orange background */
+    color: var(--color-text-inverse); /* White text */
+}
+
+.btn-secondary:hover {
+    background-color: #c2410c; /* Darker orange on hover */
+    box-shadow: var(--shadow-lift); /* Lift shadow */
+    transform: translateY(-1px); /* Slight lift */
+}
+
+.btn-secondary:active {
+    transform: translateY(0); /* Press down effect */
+    box-shadow: var(--shadow-card); /* Return to normal shadow */
+}
+
+.btn-secondary:focus-visible {
+    outline: 2px solid var(--color-accent-warm); /* Orange focus ring */
+    outline-offset: 2px; /* Offset from button edge */
+}
+
+.btn-outlined {
+    background-color: transparent; /* Transparent background */
+    color: var(--color-primary); /* Green text */
+    border-color: var(--color-primary); /* Green border */
+}
+
+.btn-outlined:hover {
+    background-color: var(--color-primary); /* Fill with green on hover */
+    color: var(--color-text-inverse); /* White text on hover */
+    box-shadow: var(--shadow-lift); /* Lift shadow */
+    transform: translateY(-1px); /* Slight lift */
+}
+
+.btn-outlined:active {
+    transform: translateY(0); /* Press down effect */
+    box-shadow: var(--shadow-card); /* Return to normal shadow */
+}
+
+.btn-outlined:focus-visible {
+    outline: 2px solid var(--color-primary); /* Green focus ring */
+    outline-offset: 2px; /* Offset from button edge */
+}
+
+/* ──────────────────────────────────────────────────────────────────────────────
+   SECTION 7 — INPUT FIELDS
+   ──────────────────────────────────────────────────────────────────────────────
+   Form input styling with focus states and placeholder colors.
+   Uses !important to override Tailwind's input styles.
+   ────────────────────────────────────────────────────────────────────────────── */
+.input-field {
+    background-color: var(--color-surface) !important; /* White background */
+    color: var(--color-text-body) !important; /* Dark text */
+    border: 1.5px solid var(--color-border-strong); /* Gray border */
+    border-radius: 0.5rem; /* Rounded corners */
+    padding: 0.625rem 0.875rem; /* Comfortable padding */
+    width: 100%; /* Full width */
+    font-size: 1rem; /* Standard font size */
+    transition: border-color 0.2s, box-shadow 0.2s; /* Smooth focus transition */
+    box-sizing: border-box; /* Include padding in width */
+}
+
+.input-field:focus {
+    border-color: var(--color-primary); /* Green border on focus */
+    box-shadow: var(--shadow-focus); /* Green focus ring */
+    outline: none; /* Remove default outline */
+}
+
+.input-field::placeholder {
+    color: var(--color-text-muted); /* Gray placeholder text */
+}
+
+/* ──────────────────────────────────────────────────────────────────────────────
+   SECTION 8 — STATUS BADGE COMPONENTS
+   ──────────────────────────────────────────────────────────────────────────────
+   Small badges used to show status of complaints, suggestions, etc.
+   Each status has its own color scheme for quick visual identification.
+   ────────────────────────────────────────────────────────────────────────────── */
+.status-pending, .status-in-review, .status-resolved, .status-approved, .status-rejected {
+    padding: 0.25rem 0.75rem; /* Small padding */
+    border-radius: 9999px; /* Fully rounded */
+    font-weight: 700; /* Bold text */
+    font-size: 0.75rem; /* Small font size */
+    display: inline-block; /* Inline block for proper spacing */
+}
+
+.status-pending {
+    background-color: var(--color-pending-bg); /* Light red background */
+    color: var(--color-pending-text); /* Dark red text */
+}
+
+.status-in-review {
+    background-color: var(--color-review-bg); /* Light yellow background */
+    color: var(--color-review-text); /* Dark orange text */
+}
+
+.status-resolved {
+    background-color: var(--color-resolved-bg); /* Light green background */
+    color: var(--color-resolved-text); /* Dark green text */
+}
+
+.status-approved {
+    background-color: var(--color-approved-bg); /* Light green background */
+    color: var(--color-approved-text); /* Dark green text */
+}
+
+.status-rejected {
+    background-color: var(--color-rejected-bg); /* Light gray background */
+    color: var(--color-rejected-text); /* Dark gray text */
+}
+
+/* ──────────────────────────────────────────────────────────────────────────────
+   SECTION 9 — NAVIGATION
+   ──────────────────────────────────────────────────────────────────────────────
+   Top navigation bar styling with sticky positioning and shadow.
+   ────────────────────────────────────────────────────────────────────────────── */
+nav {
+    background-color: var(--color-nav-bg); /* Dark green background */
+    color: var(--color-nav-text); /* White text */
+    position: sticky; /* Sticks to top when scrolling */
+    top: 0; /* Stick to very top */
+    z-index: 50; /* Above other content */
+    box-shadow: var(--shadow-nav); /* Green-tinted shadow */
+}
+
+nav a {
+    color: var(--color-nav-text); /* White links */
+    opacity: 0.85; /* Slightly transparent by default */
+    transition: opacity 0.2s ease; /* Smooth opacity change */
+}
+
+nav a:hover {
+    opacity: 1; /* Full opacity on hover */
+}
+
+/* ──────────────────────────────────────────────────────────────────────────────
+   SECTION 10 — TABLE STYLES
+   ──────────────────────────────────────────────────────────────────────────────
+   Clean table styling with alternating row colors and hover effects.
+   ────────────────────────────────────────────────────────────────────────────── */
+table {
+    width: 100%; /* Full width */
+    border-collapse: collapse; /* Remove space between cells */
+}
+
+th {
+    background-color: var(--color-surface-sunken); /* Light gray header background */
+    color: var(--color-text-heading); /* Dark heading text */
+}
+
+tr:hover {
+    background-color: rgba(22,163,74,0.04); /* Very light green hover background */
+}
+
+td, th {
+    padding: 0.75rem 1rem; /* Comfortable cell padding */
+    border-bottom: 1px solid var(--color-border); /* Subtle bottom border */
+    text-align: left; /* Left align text */
+}
+
+/* ──────────────────────────────────────────────────────────────────────────────
+   SECTION 11 — ALERT / NOTIFICATION BOXES
+   ──────────────────────────────────────────────────────────────────────────────
+   Colored alert boxes for success, error, warning, and info messages.
+   ────────────────────────────────────────────────────────────────────────────── */
+.alert-success {
+    background-color: var(--color-resolved-bg); /* Light green background */
+    color: var(--color-resolved-text); /* Dark green text */
+    border: 1px solid #86efac; /* Green border */
+    border-radius: 0.5rem; /* Rounded corners */
+    padding: 1rem; /* Generous padding */
+}
+
+.alert-error {
+    background-color: var(--color-pending-bg); /* Light red background */
+    color: var(--color-pending-text); /* Dark red text */
+    border: 1px solid #fca5a5; /* Red border */
+    border-radius: 0.5rem; /* Rounded corners */
+    padding: 1rem; /* Generous padding */
+}
+
+.alert-warning {
+    background-color: var(--color-review-bg); /* Light yellow background */
+    color: var(--color-review-text); /* Dark orange text */
+    border: 1px solid #fcd34d; /* Yellow border */
+    border-radius: 0.5rem; /* Rounded corners */
+    padding: 1rem; /* Generous padding */
+}
+
+.alert-info {
+    background-color: var(--color-event-other-bg); /* Light blue background */
+    color: var(--color-event-other-text); /* Dark blue text */
+    border: 1px solid #93c5fd; /* Blue border */
+    border-radius: 0.5rem; /* Rounded corners */
+    padding: 1rem; /* Generous padding */
+}
+
+/* ──────────────────────────────────────────────────────────────────────────────
+   SECTION 12 — ANIMATIONS
+   ──────────────────────────────────────────────────────────────────────────────
+   Keyframe animations for page transitions, interactions, and loading states.
+   ────────────────────────────────────────────────────────────────────────────── */
+
+/* Page entry animation — applied to <main> for smooth page loads */
+@keyframes pageSlideUp {
+    from {
+        opacity: 0; /* Start invisible */
+        transform: translateY(20px); /* Start 20px below */
+    }
+    to {
+        opacity: 1; /* End visible */
+        transform: translateY(0); /* End at normal position */
+    }
+}
+
+main {
+    animation: pageSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; /* Smooth slide up on page load */
+}
+
+/* Card stagger animation — applied to .card with nth-child delays */
+@keyframes cardFadeIn {
+    from {
+        opacity: 0; /* Start invisible */
+        transform: translateY(16px) scale(0.98); /* Start below and slightly smaller */
+    }
+    to {
+        opacity: 1; /* End visible */
+        transform: translateY(0) scale(1); /* End at normal size and position */
+    }
+}
+
+.card {
+    animation: cardFadeIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both; /* Fade in with bounce */
+}
+
+.card:nth-child(1) { animation-delay: 0.05s; } /* Stagger first card */
+.card:nth-child(2) { animation-delay: 0.10s; } /* Stagger second card */
+.card:nth-child(3) { animation-delay: 0.15s; } /* Stagger third card */
+.card:nth-child(4) { animation-delay: 0.20s; } /* Stagger fourth card */
+.card:nth-child(5) { animation-delay: 0.25s; } /* Stagger fifth card */
+
+/* Button ripple effect on primary and secondary buttons */
+.btn-primary::after, .btn-secondary::after {
+    content: ''; /* Create pseudo-element */
+    position: absolute; /* Position absolutely */
+    inset: 0; /* Cover entire button */
+    background: rgba(255,255,255,0.2); /* White overlay */
+    transform: scaleX(0); /* Start scaled to zero width */
+    transform-origin: left; /* Scale from left edge */
+    transition: transform 0.3s ease; /* Smooth scale transition */
+}
+
+.btn-primary:hover::after, .btn-secondary:hover::after {
+    transform: scaleX(1); /* Scale to full width on hover */
+}
+
+/* Success pulse animation for success alerts and confirmation messages */
+@keyframes successPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(22,163,74,0.4); /* Start with no shadow */
+    }
+    70% {
+        box-shadow: 0 0 0 12px rgba(22,163,74,0); /* Expand shadow and fade */
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(22,163,74,0); /* End with no shadow */
+    }
+}
+
+.pulse-success {
+    animation: successPulse 1.5s ease infinite; /* Pulse every 1.5 seconds */
+}
+
+/* Notification slide-in for alerts */
+@keyframes alertSlide {
+    from {
+        opacity: 0; /* Start invisible */
+        transform: translateX(-16px); /* Start from left */
+    }
+    to {
+        opacity: 1; /* End visible */
+        transform: translateX(0); /* End at normal position */
+    }
+}
+
+.alert-success, .alert-error, .alert-warning {
+    animation: alertSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; /* Slide in from left */
+}
+
+/* Loading spinner for async operations */
+@keyframes spin {
+    to {
+        transform: rotate(360deg); /* Rotate 360 degrees */
+    }
+}
+
+.spinner {
+    width: 24px; /* 24px diameter */
+    height: 24px; /* 24px diameter */
+    border: 3px solid var(--color-primary-light); /* Light green border */
+    border-top-color: var(--color-primary); /* Dark green top border */
+    border-radius: 50%; /* Perfect circle */
+    animation: spin 0.7s linear infinite; /* Spin continuously */
+    display: inline-block; /* Display as inline block */
+}
+
+/* Shimmer skeleton loader for content loading */
+@keyframes shimmer {
+    0% {
+        background-position: -400px 0; /* Start off-screen left */
+    }
+    100% {
+        background-position: 400px 0; /* Move to off-screen right */
+    }
+}
+
+.skeleton {
+    background: linear-gradient(90deg, #f0fdf4 25%, #dcfce7 50%, #f0fdf4 75%); /* Gradient background */
+    background-size: 400px 100%; /* Size of shimmer */
+    animation: shimmer 1.4s ease infinite; /* Continuous shimmer */
+    border-radius: 0.5rem; /* Rounded corners */
+}
+
+/* Status badge bounce for newly changed statuses */
+@keyframes badgeBounce {
+    0%, 100% {
+        transform: scale(1); /* Normal size */
+    }
+    40% {
+        transform: scale(1.15); /* Scale up */
+    }
+    70% {
+        transform: scale(0.95); /* Scale down slightly */
+    }
+}
+
+.status-badge-new {
+    animation: badgeBounce 0.5s cubic-bezier(0.34,1.56,0.64,1); /* Bounce effect */
+}
+
+/* Keep existing fade-in and slide-in keyframes for backwards compatibility */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -178,62 +589,20 @@
     animation: slideIn 0.3s ease-in-out;
 }
 
-/* Utility Classes */
-.glass {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.shadow-soft {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-}
-
-.shadow-hard {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-/* Responsive Typography */
-@media (max-width: 768px) {
-    h1 {
-        font-size: 1.75rem;
-    }
-    h2 {
-        font-size: 1.5rem;
+/* Respect reduced motion preferences for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important; /* Disable animations */
+        transition-duration: 0.01ms !important; /* Disable transitions */
     }
 }
 
-/* Print Styles */
-@media print {
-    .no-print {
-        display: none;
-    }
-    
-    .card {
-        page-break-inside: avoid;
-    }
-}
-
-/* Accessibility */
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-}
-
-/* Focus Visible */
-*:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-}
-
-/* Dark Mode Support — applied when [data-theme="dark"] is set */
+/* ──────────────────────────────────────────────────────────────────────────────
+   SECTION 13 — DARK MODE
+   ──────────────────────────────────────────────────────────────────────────────
+   Dark mode overrides activated only when [data-theme="dark"] is set on <html>.
+   Never triggered by @media (prefers-color-scheme: dark).
+   ────────────────────────────────────────────────────────────────────────────── */
 [data-theme="dark"] {
     --color-bg:             #0f172a;   /* Very dark navy-blue */
     --color-bg-alt:         #1a1f2e;   /* Slightly lighter dark bg */
@@ -309,4 +678,150 @@
 [data-theme="dark"] .bg-red-50 .flex-1,
 [data-theme="dark"] .bg-blue-50 .flex-1 {
     color: #ffffff !important;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────────
+   SECTION 14 — COMMUNITY EVENT CARD COLORS
+   ──────────────────────────────────────────────────────────────────────────────
+   Specific styling for community event announcement cards.
+   ────────────────────────────────────────────────────────────────────────────── */
+.event-death {
+    background-color: var(--color-event-death-bg); /* Dark background */
+    color: var(--color-event-death-text); /* Light text */
+    border: 1px solid #4b5563; /* Dark border */
+    border-radius: 0.5rem; /* Rounded corners */
+    padding: 1rem; /* Padding */
+}
+
+.event-illness {
+    background-color: var(--color-event-illness-bg); /* Yellow background */
+    color: var(--color-event-illness-text); /* Dark text */
+    border: 1px solid #fcd34d; /* Yellow border */
+    border-radius: 0.5rem; /* Rounded corners */
+    padding: 1rem; /* Padding */
+}
+
+.event-emergency {
+    background-color: var(--color-event-emergency-bg); /* Red background */
+    color: var(--color-event-emergency-text); /* Dark text */
+    border: 1px solid #fca5a5; /* Red border */
+    border-radius: 0.5rem; /* Rounded corners */
+    padding: 1rem; /* Padding */
+}
+
+.event-other {
+    background-color: var(--color-event-other-bg); /* Blue background */
+    color: var(--color-event-other-text); /* Dark text */
+    border: 1px solid #93c5fd; /* Blue border */
+    border-radius: 0.5rem; /* Rounded corners */
+    padding: 1rem; /* Padding */
+}
+
+/* ──────────────────────────────────────────────────────────────────────────────
+   SECTION 15 — DASHBOARD STAT CARDS
+   ──────────────────────────────────────────────────────────────────────────────
+   Styling for the manager dashboard statistic cards.
+   ────────────────────────────────────────────────────────────────────────────── */
+.stat-total {
+    background-color: var(--color-stat-total-bg); /* Light green background */
+    color: var(--color-stat-total-num); /* Dark green text */
+    border: 1px solid #86efac; /* Green border */
+    border-radius: 0.5rem; /* Rounded corners */
+    padding: 1rem; /* Padding */
+}
+
+.stat-pending {
+    background-color: var(--color-stat-pending-bg); /* Light red background */
+    color: var(--color-stat-pending-num); /* Dark red text */
+    border: 1px solid #fca5a5; /* Red border */
+    border-radius: 0.5rem; /* Rounded corners */
+    padding: 1rem; /* Padding */
+}
+
+.stat-review {
+    background-color: var(--color-stat-review-bg); /* Light yellow background */
+    color: var(--color-stat-review-num); /* Dark orange text */
+    border: 1px solid #fcd34d; /* Yellow border */
+    border-radius: 0.5rem; /* Rounded corners */
+    padding: 1rem; /* Padding */
+}
+
+.stat-done {
+    background-color: var(--color-stat-done-bg); /* Light green background */
+    color: var(--color-stat-done-num); /* Dark green text */
+    border: 1px solid #6ee7b7; /* Green border */
+    border-radius: 0.5rem; /* Rounded corners */
+    padding: 1rem; /* Padding */
+}
+
+/* ──────────────────────────────────────────────────────────────────────────────
+   SECTION 16 — UTILITY CLASSES
+   ──────────────────────────────────────────────────────────────────────────────
+   Additional utility classes for specific design needs.
+   ────────────────────────────────────────────────────────────────────────────── */
+.glass {
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+    backdrop-filter: blur(10px); /* Blur background */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+}
+
+.shadow-soft {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Soft shadow */
+}
+
+.shadow-hard {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Hard shadow */
+}
+
+.sr-only {
+    position: absolute; /* Remove from document flow */
+    width: 1px; /* Minimal width */
+    height: 1px; /* Minimal height */
+    padding: 0; /* No padding */
+    margin: -1px; /* Negative margin */
+    overflow: hidden; /* Hide overflow */
+    clip: rect(0, 0, 0, 0); /* Clip to nothing */
+    white-space: nowrap; /* No wrapping */
+    border-width: 0; /* No border */
+}
+
+.truncate {
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Show ellipsis for truncated text */
+    white-space: nowrap; /* No wrapping */
+}
+
+*:focus-visible {
+    outline: 2px solid var(--color-primary); /* Green focus outline */
+    outline-offset: 2px; /* Offset from element */
+}
+
+/* ──────────────────────────────────────────────────────────────────────────────
+   SECTION 17 — RESPONSIVE TYPOGRAPHY
+   ──────────────────────────────────────────────────────────────────────────────
+   Adjust heading sizes on smaller screens for better readability.
+   ────────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.75rem; /* Smaller h1 on mobile */
+    }
+
+    h2 {
+        font-size: 1.5rem; /* Smaller h2 on mobile */
+    }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────────
+   SECTION 18 — PRINT STYLES
+   ──────────────────────────────────────────────────────────────────────────────
+   Optimize the layout for printing by hiding unnecessary elements.
+   ────────────────────────────────────────────────────────────────────────────── */
+@media print {
+    .no-print {
+        display: none; /* Hide elements not needed in print */
+    }
+
+    .card {
+        page-break-inside: avoid; /* Prevent cards from breaking across pages */
+    }
 }
