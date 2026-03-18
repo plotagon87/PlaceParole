@@ -17,6 +17,10 @@ $error    = '';     // Holds error message if something goes wrong
 $success  = false;  // Set to true only after successful complaint submission
 $ref_code = '';     // Holds the generated reference code
 
+if (empty($_SESSION['market_id'])) {
+    $error = 'Your seller account is not linked to a market. Please contact an administrator.';
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_verify();
     $category    = $_POST['category']    ?? '';
@@ -115,7 +119,7 @@ $categories = [
         </div>
     <?php else: ?>
         <!-- Complaint Form -->
-        <?php if (isset($error)): ?>
+        <?php if (!empty($error)): ?>
             <div class="bg-red-100 text-red-700 px-4 py-3 rounded-lg mb-6 border border-red-300">
                 <strong><?= $t['error'] ?>:</strong> <?= $error ?>
             </div>
