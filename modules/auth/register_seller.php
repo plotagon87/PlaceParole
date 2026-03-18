@@ -21,15 +21,19 @@ error_reporting(E_ALL);
 
 // csrf functions (token generation/verification) — safe for public pages
 require_once '../../config/csrf.php';
+require_once '../../config/lang.php';
+require_once '../../config/db.php';           // Provides $pdo — the database connection object
 
 // registration form page
 $pageHasForm = true;
-require_once '../../templates/header.php';   // Loads session, language ($t), navigation bar
-require_once '../../config/db.php';           // Provides $pdo — the database connection object
 
 // ── Load all available markets for the dropdown ──────────────────────────────
 // fetchAll() retrieves every row from the query result as an associative array
 $markets = $pdo->query("SELECT id, name, location FROM markets ORDER BY name ASC")->fetchAll();
+
+// ── Handle form submission
+// ... (processing logic continues)
+
 
 // ── Initialise error and form-value holders ───────────────────────────────────
 $errors     = [];   // Array that accumulates validation error messages
@@ -244,6 +248,9 @@ function validatePasswordStrength(string $password): array
 
     return $errors;
 }
+
+// Now include the site header (prints HTML) only after all redirect logic is done.
+require_once '../../templates/header.php';
 ?>
 
 <!-- ══════════════════════════════════════════════════════════════════════════

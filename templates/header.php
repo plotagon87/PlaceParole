@@ -88,7 +88,11 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
                     <a href="<?= BASE_URL ?>/modules/complaints/list.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_complaints'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/suggestions/list.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_suggestions'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/announcements/create.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>
-                    <a href="<?= BASE_URL ?>/modules/community/list.php<?= $langParam ?>"class="hover:text-gray-200 transition"><?= $t['nav_community'] ?></a>
+                    <a href="<?= BASE_URL ?>/modules/community/list.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_community'] ?></a>
+                <?php elseif ($_SESSION['role'] === 'admin'): ?>
+                    <a href="<?= BASE_URL ?>/modules/admin/overview.php<?= $langParam ?>" class="hover:text-gray-200 transition">Admin Overview</a>
+                    <a href="<?= BASE_URL ?>/modules/analytics/dashboard.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_analytics'] ?? 'Analytics' ?></a>
+                    <a href="<?= BASE_URL ?>/modules/announcements/list.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>
                 <?php endif; ?>
             <?php else: ?>
                 <!-- Not Logged In Navigation -->
@@ -187,6 +191,10 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
                     <a href="<?= BASE_URL ?>/modules/suggestions/list.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_suggestions'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/announcements/create.php" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_announcements'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/community/list.php" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_community'] ?></a>
+                <?php elseif ($_SESSION['role'] === 'admin'): ?>
+                    <a href="<?= BASE_URL ?>/modules/admin/overview.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false">Admin Overview</a>
+                    <a href="<?= BASE_URL ?>/modules/analytics/dashboard.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_analytics'] ?? 'Analytics' ?></a>
+                    <a href="<?= BASE_URL ?>/modules/announcements/list.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_announcements'] ?></a>
                 <?php endif; ?>
 
                 <hr class="my-2 opacity-30">
