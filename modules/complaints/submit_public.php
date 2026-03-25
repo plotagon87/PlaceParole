@@ -1,11 +1,9 @@
 <?php
 /**
- * modules/complaints/submit.php
- * Sellers submit a complaint via web form
- * A unique reference code is generated and shown
+ * modules/complaints/submit_public.php
+ * Public form for users to submit complaints
+ * Users can select market and seller
  */
-require_once '../../config/auth_guard.php';
-seller_only(); // Only sellers can access this page
 
 // This page contains a form, so enable global stylesheet
 $pageHasForm = true;
@@ -16,15 +14,23 @@ require_once '../../config/db.php';
 $error    = '';     // Holds error message if something goes wrong
 $success  = false;  // Set to true only after successful complaint submission
 $ref_code = '';     // Holds the generated reference code
-$canSubmit = true;  // Only true when seller account is valid
 
-if (empty($_SESSION['market_id'])) {
-    $error = 'Your seller account is not linked to a market. Please contact an administrator.';
-    $canSubmit = false;
+// Get all markets for dropdown
+$stmt = $pdo->query("SELECT id, name FROM markets ORDER BY name");
+$markets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Get sellers if market is selected
+$sellers = [];
+$selected_market = $_POST['market_id'] ?? '';
+if ($selected_market) {
+    $stmt = $pdo->prepare("SELECT id, name, stall_no FROM users WHERE role = 'seller' AND market_id = ? ORDER BY name");
+    $stmt->execute([$selected_market]);
+    $sellers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    csrf_verify();
+if (isset($_POST['submit_complaint'])) {
+    $market_id   = $_POST['market_id']   ?? '';
+    $seller_id   = $_POST['seller_id']   ?? '';
     $category    = $_POST['category']    ?? '';
     $description = $_POST['description'] ?? '';
 
@@ -52,18 +58,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    if (!$category || !$description) {
-        $error = $t['error_required'];
+    if (!$market_id || !$seller_id || !$category || !$description) {
+        $error = 'All fields are required.';
     } elseif (empty($error)) {
-        // Generate a unique reference code using the function defined above (outside if-blocks)
+        // Generate a unique reference code
         $refCode = generateRefCode($pdo);
         $stmt = $pdo->prepare("
             INSERT INTO complaints (market_id, seller_id, ref_code, category, description, channel, status, photo_path, sla_deadline)
             VALUES (?, ?, ?, ?, ?, 'web', 'pending', ?, DATE_ADD(NOW(), INTERVAL 72 HOUR))
         ");
         if ($stmt->execute([
-            $_SESSION['market_id'],
-            $_SESSION['user_id'],
+            $market_id,
+            $seller_id,
             $refCode,
             $category,
             $description,
@@ -103,49 +109,76 @@ $categories = [
 ?>
 
 <div class="max-w-lg mx-auto bg-white rounded-2xl shadow-lg p-8">
-    <h1 class="text-3xl font-bold text-primary mb-2"><?= $t['submit_complaint'] ?></h1>
+    <h1 class="text-3xl font-bold text-primary mb-2">Submit a Complaint</h1>
     <p class="text-gray-600 mb-6">Help us improve your market by reporting issues</p>
 
     <?php if ($success): ?>
         <!-- Success Message -->
         <div class="bg-green-100 border-2 border-green-400 text-green-800 rounded-lg p-6 text-center mb-6">
             <div class="text-5xl mb-3">✅</div>
-            <h2 class="text-2xl font-bold mb-2"><?= $t['complaint_sent'] ?></h2>
-            <p class="text-lg mb-4"><?= $t['your_ref_code'] ?>:</p>
+            <h2 class="text-2xl font-bold mb-2">Complaint Sent!</h2>
+            <p class="text-lg mb-4">Your reference code:</p>
             <div class="bg-primary text-white text-2xl font-bold px-4 py-3 rounded-lg mb-4 tracking-wider">
                 <?= $ref_code ?>
             </div>
-            <p class="text-sm text-gray-700 mb-4"><?= $t['keep_ref_code'] ?></p>
+            <p class="text-sm text-gray-700 mb-4">Keep this code to track your complaint status.</p>
             <div class="flex gap-3">
-                <a href="track.php" class="flex-1 btn-primary py-2">🔍 <?= $t['track_complaint'] ?></a>
-                <a href="../../index.php" class="flex-1 btn-outlined py-2">← <?= $t['back'] ?></a>
+                <a href="track.php" class="flex-1 btn-primary py-2">🔍 Track Complaint</a>
+                <a href="../../index.php" class="flex-1 btn-outlined py-2">← Back</a>
             </div>
         </div>
     <?php else: ?>
         <!-- Complaint Form -->
         <?php if (!empty($error)): ?>
             <div class="bg-red-100 text-red-700 px-4 py-3 rounded-lg mb-6 border border-red-300">
-                <strong><?= $t['error'] ?>:</strong> <?= $error ?>
+                <strong>Error:</strong> <?= $error ?>
             </div>
         <?php endif; ?>
 
-        <?php if ($canSubmit): ?>
         <form method="POST" enctype="multipart/form-data" class="space-y-4">
-            <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
+            <!-- Market -->
+            <div>
+                <label for="market_id" class="block font-semibold text-gray-700 mb-2">Market</label>
+                <select id="market_id" name="market_id" class="input-field" required>
+                    <option value="">— Select Market —</option>
+                    <?php foreach ($markets as $market): ?>
+                        <option value="<?= $market['id'] ?>" <?= $selected_market == $market['id'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($market['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <button type="submit" name="load_sellers" class="btn-primary py-2 px-4">Load Sellers</button>
+
+            <?php if ($selected_market && $sellers): ?>
+            <!-- Seller -->
+            <div>
+                <label for="seller_id" class="block font-semibold text-gray-700 mb-2">Seller</label>
+                <select id="seller_id" name="seller_id" class="input-field" required>
+                    <option value="">— Select Seller —</option>
+                    <?php foreach ($sellers as $seller): ?>
+                        <option value="<?= $seller['id'] ?>">
+                            <?= htmlspecialchars($seller['name']) ?> (Stall: <?= htmlspecialchars($seller['stall_no']) ?>)
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
             <!-- Category -->
             <div>
-                <label for="category" class="block font-semibold text-gray-700 mb-2"><?= $t['complaint_category'] ?></label>
+                <label for="category" class="block font-semibold text-gray-700 mb-2">Complaint Category</label>
                 <select id="category" name="category" class="input-field" required>
-                    <option value="">— <?= $t['select_category'] ?> —</option>
+                    <option value="">— Select Category —</option>
                     <?php foreach ($categories as $cat): ?>
-                        <option value="<?= $cat ?>"><?= $t[$cat] ?></option>
+                        <option value="<?= $cat ?>"><?= $t[$cat] ?? $cat ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
 
             <!-- Description -->
             <div>
-                <label for="description" class="block font-semibold text-gray-700 mb-2"><?= $t['complaint_description'] ?></label>
+                <label for="description" class="block font-semibold text-gray-700 mb-2">Description</label>
                 <textarea 
                     id="description" 
                     name="description" 
@@ -164,16 +197,13 @@ $categories = [
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="w-full btn-primary py-3 text-lg font-bold" id="submitComplaintBtn">
-                📤 <?= $t['submit'] ?>
+            <button type="submit" name="submit_complaint" class="w-full btn-primary py-3 text-lg font-bold">
+                📤 Submit Complaint
             </button>
+            <?php elseif ($selected_market && empty($sellers)): ?>
+                <p class="text-red-500">No sellers available for the selected market.</p>
+            <?php endif; ?>
         </form>
-        <?php else: ?>
-            <div class="bg-yellow-50 border border-yellow-300 p-4 rounded-lg text-yellow-800">
-                <strong>⚠️ <?= $t['error'] ?>:</strong> <?= $error ?>
-                <p class="mt-2 text-sm">Please contact your market manager to link your seller account to the market before submitting complaints.</p>
-            </div>
-        <?php endif; ?>
 
         <!-- Info Box -->
         <div class="bg-blue-50 border-l-4 border-primary p-4 rounded mt-6">
@@ -187,4 +217,5 @@ $categories = [
     <?php endif; ?>
 </div>
 
-<?php require_once '../../templates/footer.php'; ?>
+<?php require_once '../../templates/footer.php'; ?></content>
+<parameter name="filePath">c:\xampp\htdocs\PlaceParole\modules\complaints\submit_public.php

@@ -23,6 +23,9 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
             <a href="<?= BASE_URL ?>/modules/auth/register_manager.php<?= $langParam ?>" class="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition text-lg">
                 🏪 <?= $t['register_market'] ?>
             </a>
+            <a href="<?= BASE_URL ?>/modules/complaints/submit_public.php<?= $langParam ?>" class="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition text-lg">
+                📢 Submit Complaint
+            </a>
             <a href="<?= BASE_URL ?>/modules/complaints/track.php<?= $langParam ?>" class="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition text-lg">
                 🔍 <?= $t['track_complaint'] ?>
             </a>
@@ -54,11 +57,12 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
         <p class="text-gray-600 mb-4">
             Voice your concerns to market management. Get a reference code to track your complaint status in real-time.
         </p>
-        <?php if (isset($_SESSION['user_id']) && $_SESSION['role'] === 'seller'): ?>
-            <a href="modules/complaints/submit.php" class="text-primary font-semibold hover:underline">
-                → <?= $t['submit_complaint'] ?>
-            </a>
-        <?php endif; ?>
+        <?php
+        $submit_link = (isset($_SESSION['user_id']) && $_SESSION['role'] === 'seller') ? 'modules/complaints/submit.php' : 'modules/complaints/submit_public.php';
+        ?>
+        <a href="<?= $submit_link ?>" class="text-primary font-semibold hover:underline">
+            → <?= $t['submit_complaint'] ?>
+        </a>
     </div>
 
     <!-- Feature 2: Track Complaint -->
