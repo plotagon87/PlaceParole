@@ -14,7 +14,7 @@ $message = '';
 $message_type = 'success';
 
 // Handle coordination action (managers only)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SESSION['role'] === 'manager') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['role']) && $_SESSION['role'] === 'manager') {
     // CSRF protection: verify the token was included and matches the session
     csrf_verify();
     $report_id = (int) ($_POST['report_id'] ?? 0);
@@ -94,7 +94,7 @@ $eventColors = [
                             </div>
                         <?php endif; ?>
                         
-                        <?php if ($_SESSION['role'] === 'manager' && $report['status'] !== 'coordinated'): ?>
+                        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'manager' && $report['status'] !== 'coordinated'): ?>
                             <form method="POST" class="flex-1">
                                 <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                                 <input type="hidden" name="report_id" value="<?= $report['id'] ?>">

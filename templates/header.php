@@ -77,19 +77,19 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
                 <!-- Logged In Navigation -->
                 <a href="/" class="hover:text-gray-200 transition"><?= $t['nav_home'] ?></a>
                 
-                <?php if ($_SESSION['role'] === 'seller'): ?>
+                <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller'): ?>
                     <a href="<?= BASE_URL ?>/modules/complaints/submit.php" class="hover:text-gray-200 transition"><?= $t['nav_complaints'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/complaints/my_complaints.php" class="hover:text-gray-200 transition">📋 My History</a>
                     <a href="<?= BASE_URL ?>/modules/suggestions/submit.php" class="hover:text-gray-200 transition"><?= $t['nav_suggestions'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/community/report.php" class="hover:text-gray-200 transition"><?= $t['nav_community'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/announcements/list.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>
-                <?php elseif ($_SESSION['role'] === 'manager'): ?>
+                <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'manager'): ?>
                     <a href="<?= BASE_URL ?>/modules/analytics/dashboard.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_analytics'] ?? 'Analytics' ?></a>
                     <a href="<?= BASE_URL ?>/modules/complaints/list.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_complaints'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/suggestions/list.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_suggestions'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/announcements/create.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/community/list.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_community'] ?></a>
-                <?php elseif ($_SESSION['role'] === 'admin'): ?>
+                <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                     <a href="<?= BASE_URL ?>/modules/admin/overview.php<?= $langParam ?>" class="hover:text-gray-200 transition">Admin Overview</a>
                     <a href="<?= BASE_URL ?>/modules/analytics/dashboard.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_analytics'] ?? 'Analytics' ?></a>
                     <a href="<?= BASE_URL ?>/modules/announcements/list.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>

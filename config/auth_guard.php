@@ -22,7 +22,7 @@ if (!isset($_SESSION['user_id'])) {
  * Usage at the top of a manager-only page: require_once 'auth_guard.php'; manager_only();
  */
 function manager_only() {
-    if ($_SESSION['role'] !== 'manager') {
+    if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'manager') {
         die("<div style='font-family: Arial; padding: 20px; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 5px;'><h2>❌ Access Denied</h2><p>Only managers can access this page.</p></div>");
     }
 }
@@ -33,7 +33,7 @@ function manager_only() {
  * Usage: seller_only();
  */
 function seller_only() {
-    if ($_SESSION['role'] !== 'seller') {
+    if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'seller') {
         die("<div style='font-family: Arial; padding: 20px; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 5px;'><h2>❌ Access Denied</h2><p>Only sellers can access this page.</p></div>");
     }
 }
@@ -44,7 +44,7 @@ function seller_only() {
  * Usage: admin_only();
  */
 function admin_only() {
-    if ($_SESSION['role'] !== 'admin') {
+    if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
         http_response_code(403);
         die("<div style='font-family: Arial; padding: 20px; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 5px;'><h2>❌ Access Denied</h2><p>Only super admins can access this page.</p></div>");
     }

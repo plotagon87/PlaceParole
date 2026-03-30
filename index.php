@@ -32,10 +32,10 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
         </div>
     <?php else: ?>
         <!-- Logged in - Show role-specific welcome -->
-        <?php if ($_SESSION['role'] === 'seller'): ?>
+        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller'): ?>
             <p class="text-lg mb-4">👋 Welcome, <?= htmlspecialchars($_SESSION['name'] ?? 'Seller') ?>!</p>
             <p class="text-gray-100 mb-4">Get started by submitting your first complaint or suggestion below.</p>
-        <?php elseif ($_SESSION['role'] === 'manager'): ?>
+        <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'manager'): ?>
             <p class="text-lg mb-4">👋 Welcome, <?= htmlspecialchars($_SESSION['name'] ?? 'Manager') ?>!</p>
             <p class="text-gray-100 mb-4">Access your analytics dashboard to view market insights and manage complaints.</p>
             <a href="modules/analytics/dashboard.php" class="inline-block bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">

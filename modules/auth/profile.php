@@ -20,7 +20,7 @@ $user = $userStmt->fetch();
 
 // If manager, also fetch their market data
 $market = null;
-if ($_SESSION['role'] === 'manager') {
+if (isset($_SESSION['role']) && $_SESSION['role'] === 'manager') {
     $marketStmt = $pdo->prepare("SELECT * FROM markets WHERE id = ? LIMIT 1");
     $marketStmt->execute([$_SESSION['market_id']]);
     $market = $marketStmt->fetch();
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['name'] = $name;
 
         // If manager, also update market details
-        if ($_SESSION['role'] === 'manager' && isset($_POST['market_name'])) {
+        if (isset($_SESSION['role']) && $_SESSION['role'] === 'manager' && isset($_POST['market_name'])) {
             $market_name     = trim(htmlspecialchars($_POST['market_name']     ?? ''));
             $market_location = trim(htmlspecialchars($_POST['market_location'] ?? ''));
 
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Refresh data from database after update
         $userStmt->execute([$_SESSION['user_id']]);
         $user = $userStmt->fetch();
-        if ($_SESSION['role'] === 'manager') {
+        if (isset($_SESSION['role']) && $_SESSION['role'] === 'manager') {
             $marketStmt->execute([$_SESSION['market_id']]);
             $market = $marketStmt->fetch();
         }
