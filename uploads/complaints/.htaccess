@@ -1,0 +1,6 @@
+# Deny execution of any script file that might be disguised as an image
+# This prevents attackers from uploading a PHP file with a .jpg extension
+# and then running it by visiting the URL
+
+Options -ExecCGI
+AddHandler cgi-script .php .php3 .php4 .php5 .phtml .pl .py .jsp .asp .htm .shtml .sh .cgi
