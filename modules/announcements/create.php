@@ -69,38 +69,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     <?php endif; ?>
 
-    <form method="POST" class="space-y-4">
-        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
-        <div>
-            <label for="title" class="block font-semibold text-gray-700 mb-2"><?= $t['announcement_title'] ?></label>
-            <input type="text" id="title" name="title" class="input-field" placeholder="e.g. Market Closure Tomorrow" required>
+    <form method="POST" class="space-y-6" style="display: block; visibility: visible;">
+        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>" style="display: none;">
+        
+        <div class="form-group" style="display: block; margin-bottom: 1.5rem;">
+            <label for="title" class="block font-semibold text-gray-700 mb-2" style="display: block; margin-bottom: 0.5rem;">
+                <?= $t['announcement_title'] ?? 'Title' ?>
+            </label>
+            <input type="text" id="title" name="title" class="input-field" placeholder="e.g. Market Closure Tomorrow" required style="display: block; width: 100%; padding: 0.625rem 0.875rem; border: 1.5px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem;">
         </div>
 
-        <div>
-            <label for="body" class="block font-semibold text-gray-700 mb-2"><?= $t['announcement_body'] ?></label>
-            <textarea id="body" name="body" class="input-field resize-none" rows="6" placeholder="Write your announcement here..." required></textarea>
+        <div class="form-group" style="display: block; margin-bottom: 1.5rem;">
+            <label for="body" class="block font-semibold text-gray-700 mb-2" style="display: block; margin-bottom: 0.5rem;">
+                <?= $t['announcement_body'] ?? 'Message' ?>
+            </label>
+            <textarea id="body" name="body" class="input-field" rows="6" placeholder="Write your announcement here..." required style="display: block; width: 100%; padding: 0.625rem 0.875rem; border: 1.5px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem; font-family: inherit; resize: none;"></textarea>
         </div>
 
-        <div>
-            <label class="block font-semibold text-gray-700 mb-3">📱 <?= $t['announcement_channels'] ?? 'Send via:' ?></label>
-            <div class="space-y-2">
-                <label class="flex items-center gap-3 cursor-pointer">
-                    <input type="checkbox" name="sent_via[]" value="web" checked class="w-5 h-5">
+        <div class="form-group" style="display: block; margin-bottom: 1.5rem;">
+            <label style="display: block; font-weight: 600; color: rgb(55, 65, 81); margin-bottom: 0.75rem;">
+                📱 <?= $t['announcement_channels'] ?? 'Send via:' ?>
+            </label>
+            <div class="channels-group" style="display: block;">
+                <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; margin-bottom: 0.5rem;">
+                    <input type="checkbox" name="sent_via[]" value="web" checked style="display: inline-block; width: 1.25rem; height: 1.25rem; cursor: pointer;">
                     <span><?= $t['channel_web'] ?? 'Web/In-App' ?></span>
                 </label>
-                <label class="flex items-center gap-3 cursor-pointer">
-                    <input type="checkbox" name="sent_via[]" value="sms" class="w-5 h-5">
+                <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; margin-bottom: 0.5rem;">
+                    <input type="checkbox" name="sent_via[]" value="sms" style="display: inline-block; width: 1.25rem; height: 1.25rem; cursor: pointer;">
                     <span><?= $t['channel_sms'] ?? 'SMS' ?></span>
                 </label>
-                <label class="flex items-center gap-3 cursor-pointer">
-                    <input type="checkbox" name="sent_via[]" value="email" class="w-5 h-5">
+                <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+                    <input type="checkbox" name="sent_via[]" value="email" style="display: inline-block; width: 1.25rem; height: 1.25rem; cursor: pointer;">
                     <span><?= $t['channel_email'] ?? 'Email' ?></span>
                 </label>
             </div>
         </div>
 
-        <button type="submit" class="w-full btn-primary py-3 text-lg font-bold">
-            📢 <?= $t['broadcast_announcement'] ?>
+        <button type="submit" class="btn-primary" style="display: block; width: 100%; padding: 0.75rem 1rem; font-size: 1.125rem; font-weight: bold; cursor: pointer;">
+            📢 <?= $t['broadcast_announcement'] ?? 'Broadcast Announcement' ?>
         </button>
     </form>
 </div>

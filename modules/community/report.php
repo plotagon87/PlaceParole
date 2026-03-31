@@ -36,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $success = true;
     }
 }
+?>
 
 <div class="max-w-lg mx-auto bg-white rounded-2xl shadow-lg p-8">
     <h1 class="text-3xl font-bold text-primary mb-2"><?= $t['submit_feedback'] ?? 'Share Your Feedback' ?></h1>
@@ -55,22 +56,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         <?php endif; ?>
 
-        <form method="POST" class="space-y-4">
-            <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
-            <div>
-                <label for="title" class="block font-semibold text-gray-700 mb-2"><?= $t['feedback_title'] ?? 'Feedback Title' ?></label>
-                <input type="text" id="title" name="title" class="input-field" placeholder="<?= $t['feedback_title_placeholder'] ?? 'Brief title of your feedback' ?>" required>
+        <form method="POST" class="space-y-6" style="display: block; visibility: visible;">
+            <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>" style="display: none;">
+            <div class="form-group" style="display: block; margin-bottom: 1.5rem;">
+                <label for="title" class="block font-semibold text-gray-700 mb-2" style="display: block; margin-bottom: 0.5rem;"><?= $t['feedback_title'] ?? 'Feedback Title' ?></label>
+                <input type="text" id="title" name="title" class="input-field" placeholder="<?= $t['feedback_title_placeholder'] ?? 'Brief title of your feedback' ?>" required style="display: block; width: 100%; padding: 0.625rem 0.875rem; border: 1.5px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem;">
             </div>
 
-            <div>
-                <label for="description" class="block font-semibold text-gray-700 mb-2"><?= $t['feedback_message'] ?? 'Your Feedback' ?></label>
-                <textarea id="description" name="description" class="input-field resize-none" rows="6" placeholder="<?= $t['feedback_placeholder'] ?? 'Share your ideas or concerns in detail...' ?>" required></textarea>
+            <div class="form-group" style="display: block; margin-bottom: 1.5rem;">
+                <label for="description" class="block font-semibold text-gray-700 mb-2" style="display: block; margin-bottom: 0.5rem;"><?= $t['feedback_message'] ?? 'Your Feedback' ?></label>
+                <textarea id="description" name="description" class="input-field" rows="6" placeholder="<?= $t['feedback_placeholder'] ?? 'Share your ideas or concerns in detail...' ?>" required style="display: block; width: 100%; padding: 0.625rem 0.875rem; border: 1.5px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem; font-family: inherit; resize: none;"></textarea>
             </div>
 
-            <p class="text-sm text-gray-500">💡 <?= $t['feedback_anonymous'] ?? 'Your feedback will remain anonymous to other market members.' ?></p>
+            <p class="text-sm text-gray-500" style="display: block;">💡 <?= $t['feedback_anonymous'] ?? 'Your feedback will remain anonymous to other market members.' ?></p>
 
-            <button type="submit" class="w-full btn-primary py-3 text-lg font-bold">
-                ✉️ <?= $t['submit'] ?>
+            <button type="submit" class="btn-primary" style="display: block; width: 100%; padding: 0.75rem 1rem; font-size: 1.125rem; font-weight: bold; cursor: pointer;">
+                ✉️ <?= $t['submit'] ?? 'Submit' ?>
             </button>
         </form>
     <?php endif; ?>

@@ -55,20 +55,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         <?php endif; ?>
 
-        <form method="POST" class="space-y-4">
-            <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
-            <div>
-                <label for="title" class="block font-semibold text-gray-700 mb-2"><?= $t['suggestion_title'] ?></label>
-                <input type="text" id="title" name="title" class="input-field" placeholder="Brief title of your idea" required>
+        <form method="POST" class="space-y-6" style="display: block; visibility: visible;">
+            <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>" style="display: none;">
+            <div class="form-group" style="display: block; margin-bottom: 1.5rem;">
+                <label for="title" class="block font-semibold text-gray-700 mb-2" style="display: block; margin-bottom: 0.5rem;"><?= $t['suggestion_title'] ?? 'Title' ?></label>
+                <input type="text" id="title" name="title" class="input-field" placeholder="Brief title of your idea" required style="display: block; width: 100%; padding: 0.625rem 0.875rem; border: 1.5px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem;">
             </div>
 
-            <div>
-                <label for="description" class="block font-semibold text-gray-700 mb-2"><?= $t['suggestion_description'] ?></label>
-                <textarea id="description" name="description" class="input-field resize-none" rows="6" placeholder="Explain your idea in detail..." required></textarea>
+            <div class="form-group" style="display: block; margin-bottom: 1.5rem;">
+                <label for="description" class="block font-semibold text-gray-700 mb-2" style="display: block; margin-bottom: 0.5rem;"><?= $t['suggestion_description'] ?? 'Description' ?></label>
+                <textarea id="description" name="description" class="input-field" rows="6" placeholder="Explain your idea in detail..." required style="display: block; width: 100%; padding: 0.625rem 0.875rem; border: 1.5px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem; font-family: inherit; resize: none;"></textarea>
             </div>
 
-            <button type="submit" class="w-full btn-primary py-3 text-lg font-bold">
-                ✈️ <?= $t['submit'] ?>
+            <button type="submit" class="btn-primary" style="display: block; width: 100%; padding: 0.75rem 1rem; font-size: 1.125rem; font-weight: bold; cursor: pointer;">
+                ✈️ <?= $t['submit'] ?? 'Submit' ?>
             </button>
         </form>
     <?php endif; ?>
