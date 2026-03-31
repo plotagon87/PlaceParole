@@ -122,6 +122,7 @@ return [
     'approved'              => 'Approved',
     'rejected'              => 'Rejected',
     'reason'                => 'Reason (optional)',
+    'optional'              => 'optional',
     'approve_success'       => 'Successfully approved',
     'reject_success'        => 'Successfully rejected',
 
