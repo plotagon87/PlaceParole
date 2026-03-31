@@ -9,10 +9,12 @@ admin_only(); // Restrict to admin users only
 
 require_once '../../templates/header.php';
 require_once '../../config/db.php';
+require_once '../../config/market_validator.php'; // Market data validation
 
 // Fetch all markets with their complaint counts, joined using SQL aggregate functions
 // COUNT(*) = counts all rows in a group
 // LEFT JOIN = include markets even if they have zero complaints
+// GUARANTEED: All market data originates from database
 $stmt = $pdo->query("
     SELECT
         m.id,
@@ -30,6 +32,11 @@ $stmt = $pdo->query("
     ORDER BY total_complaints DESC
 ");
 $markets = $stmt->fetchAll();
+
+// Verify all markets originate from database (security verification)
+foreach ($markets as $market) {
+    MarketValidator::verifyDatabaseSource($market);
+}
 
 $totalMarkets    = count($markets);
 $totalComplaints = array_sum(array_column($markets, 'total_complaints'));

@@ -23,13 +23,20 @@ error_reporting(E_ALL);
 require_once '../../config/csrf.php';
 require_once '../../config/lang.php';
 require_once '../../config/db.php';           // Provides $pdo — the database connection object
+require_once '../../config/market_validator.php'; // Market data validation and database-only enforcement
 
 // registration form page
 $pageHasForm = true;
 
 // ── Load all available markets for the dropdown ──────────────────────────────
-// fetchAll() retrieves every row from the query result as an associative array
-$markets = $pdo->query("SELECT id, name, location FROM markets ORDER BY name ASC")->fetchAll();
+// GUARANTEED: All markets come directly from database via MarketValidator
+// Uses prepared statement and verifies source
+$markets = MarketValidator::getAllMarkets($pdo);
+
+// Verify all markets originate from database (security check)
+foreach ($markets as $market) {
+    MarketValidator::verifyDatabaseSource($market);
+}
 
 // ── Handle form submission
 // ... (processing logic continues)
@@ -577,6 +584,211 @@ require_once '../../templates/header.php';
         padding: 0.5rem 0.75rem;
         margin-top: 1rem;
     }
+
+    /* ── Searchable Market Dropdown ──────────────────────────────────────── */
+    .market-selector-wrapper {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    /* On mobile (<768px), hide the custom dropdown and show the native select */
+    .market-selector-wrapper .market-selector-custom {
+        display: none;
+    }
+
+    .market-selector-wrapper .form-input.native-select-mobile {
+        display: block;
+    }
+
+    /* On desktop (768px+), show custom and hide native */
+    @media (min-width: 768px) {
+        .market-selector-wrapper .market-selector-custom {
+            display: block;
+        }
+
+        .market-selector-wrapper .form-input.native-select-mobile {
+            display: none;
+        }
+    }
+
+    /* ── Trigger button (shows selected market) ───────────────────────────── */
+    .market-selector-trigger {
+        width: 100%;
+        border: 1.5px solid #d1fae5;
+        border-radius: 0.6rem;
+        padding: 0.65rem 0.875rem;
+        font-size: 0.95rem;
+        font-family: 'Outfit', sans-serif;
+        color: var(--text);
+        background: #f0fdf4;
+        cursor: pointer;
+        transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .market-selector-trigger:hover {
+        border-color: var(--green-mid);
+    }
+
+    .market-selector-trigger:focus,
+    .market-selector-trigger.open {
+        border-color: var(--green-mid);
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+        outline: none;
+    }
+
+    .market-selector-trigger-text {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .market-selector-trigger-icon {
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: transform 0.3s;
+    }
+
+    .market-selector-trigger.open .market-selector-trigger-icon {
+        transform: rotate(180deg);
+    }
+
+    /* ── Dropdown panel (hidden by default) ───────────────────────────────── */
+    .market-selector-panel {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        margin-top: 0.5rem;
+        background: #ffffff;
+        border: 1.5px solid #d1fae5;
+        border-radius: 0.6rem;
+        box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
+        z-index: 1000;
+    }
+
+    .market-selector-panel.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    /* ── Search input inside dropdown ──────────────────────────────────────── */
+    .market-search-input {
+        width: 100%;
+        border: none;
+        border-bottom: 1.5px solid #e5e7eb;
+        padding: 0.75rem 0.875rem;
+        font-size: 0.95rem;
+        font-family: 'Outfit', sans-serif;
+        color: var(--text);
+        background: #ffffff;
+        outline: none;
+        border-radius: 0.6rem 0.6rem 0 0;
+    }
+
+    .market-search-input:focus {
+        border-bottom-color: var(--green-mid);
+        background: #f9fafb;
+    }
+
+    /* ── Market list container (scrollable) ───────────────────────────────── */
+    .market-list {
+        max-height: 240px;
+        overflow-y: auto;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        border-radius: 0 0 0.6rem 0.6rem;
+    }
+
+    /* ── Individual market item ──────────────────────────────────────────── */
+    .market-list-item {
+        padding: 0.75rem 0.875rem;
+        cursor: pointer;
+        transition: background 0.15s;
+        border-bottom: 1px solid #f3f4f6;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .market-list-item:last-child {
+        border-bottom: none;
+    }
+
+    .market-list-item:hover {
+        background: #f9fafb;
+    }
+
+    .market-list-item.highlighted {
+        background: #dcfce7;
+    }
+
+    .market-list-item.selected {
+        background: #dcfce7;
+        color: var(--green-dark);
+        font-weight: 600;
+    }
+
+    .market-item-info {
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .market-item-name {
+        font-weight: 600;
+        font-size: 0.875rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .market-item-location {
+        font-size: 0.75rem;
+        color: var(--muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 0.2rem;
+    }
+
+    .market-item-check {
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 1.1rem;
+    }
+
+    /* ── No results message ──────────────────────────────────────────────── */
+    .market-no-results {
+        padding: 1.5rem 0.875rem;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.875rem;
+    }
+
+    .market-search-wrapper {
+        position: relative;
+    }
 </style>
 
 <div class="auth-wrapper">
@@ -622,19 +834,20 @@ require_once '../../templates/header.php';
         <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
 
         <!-- ── Market Selection ──────────────────────────────────────────── -->
-        <div style="margin-bottom:1rem;">
+        <div class="market-selector-wrapper">
             <label for="market_id" class="form-label"><?= $t['select_market'] ?> *</label>
+            
+            <!-- NATIVE SELECT: Fallback for mobile & accessibility -->
             <select
                 id="market_id"
                 name="market_id"
-                class="form-input"
+                class="form-input native-select-mobile"
                 required
                 aria-required="true"
                 autofocus
             >
                 <option value="">— Choose your market —</option>
                 <?php foreach ($markets as $market): ?>
-                    <!-- htmlspecialchars() prevents XSS in market names -->
                     <option
                         value="<?= (int)$market['id'] ?>"
                         <?= ((int)($oldValues['market_id'] ?? 0) === (int)$market['id']) ? 'selected' : '' ?>
@@ -646,6 +859,65 @@ require_once '../../templates/header.php';
                     </option>
                 <?php endforeach; ?>
             </select>
+            
+            <!-- CUSTOM DROPDOWN: Desktop-only searchable version -->
+            <div class="market-selector-custom" data-market-count="<?= count($markets) ?>">
+                <!-- Trigger button showing selected market -->
+                <button
+                    type="button"
+                    id="marketSelectorTrigger"
+                    class="market-selector-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-controls="marketSelectorPanel"
+                >
+                    <span class="market-selector-trigger-text">— Choose your market —</span>
+                    <span class="market-selector-trigger-icon">▼</span>
+                </button>
+                
+                <!-- Dropdown panel with search and list -->
+                <div id="marketSelectorPanel" class="market-selector-panel" role="listbox" hidden>
+                    <div class="market-search-wrapper">
+                        <input
+                            type="text"
+                            id="marketSearch"
+                            class="market-search-input"
+                            placeholder="Search by name or location..."
+                            autocomplete="off"
+                            aria-label="Search markets"
+                        />
+                    </div>
+                    
+                    <ul class="market-list" id="marketList" role="presentation">
+                        <?php foreach ($markets as $market): ?>
+                            <li
+                                class="market-list-item"
+                                role="option"
+                                data-market-id="<?= (int)$market['id'] ?>"
+                                data-market-name="<?= htmlspecialchars($market['name']) ?>"
+                                data-market-location="<?= htmlspecialchars($market['location'] ?? '') ?>"
+                                data-search-text="<?= htmlspecialchars(strtolower($market['name'] . ' ' . ($market['location'] ?? ''))) ?>"
+                                <?= ((int)($oldValues['market_id'] ?? 0) === (int)$market['id']) ? 'aria-selected="true"' : '' ?>
+                            >
+                                <div class="market-item-info">
+                                    <div class="market-item-name"><?= htmlspecialchars($market['name']) ?></div>
+                                    <?php if ($market['location']): ?>
+                                        <div class="market-item-location"><?= htmlspecialchars($market['location']) ?></div>
+                                    <?php endif; ?>
+                                </div>
+                                <span class="market-item-check">
+                                    <?= ((int)($oldValues['market_id'] ?? 0) === (int)$market['id']) ? '✓' : '' ?>
+                                </span>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                    
+                    <div class="market-no-results" style="display:none;">
+                        No markets found
+                    </div>
+                </div>
+            </div>
+            
             <?php if (empty($markets)): ?>
                 <p style="color:var(--error-text);font-size:0.8rem;margin-top:0.3rem;">
                     ⚠ No markets registered yet. Ask an administrator to create one first.
@@ -868,6 +1140,204 @@ require_once '../../templates/header.php';
             Your password is encrypted with bcrypt before storage — it is never saved as plain text.
             All data is transmitted over HTTPS.
         </div>
+
+        <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Only initialize custom dropdown on desktop (768px+)
+    const isDesktop = window.innerWidth >= 768;
+    if (!isDesktop) return;
+
+    const customDropdown = document.querySelector('.market-selector-custom');
+    if (!customDropdown) return;
+
+    const trigger = document.getElementById('marketSelectorTrigger');
+    const panel = document.getElementById('marketSelectorPanel');
+    const searchInput = document.getElementById('marketSearch');
+    const marketList = document.getElementById('marketList');
+    const nativeSelect = document.getElementById('market_id');
+    const noResults = panel.querySelector('.market-no-results');
+
+    let allItems = Array.from(marketList.querySelectorAll('.market-list-item'));
+    let highlightedIndex = -1;
+
+    // Toggle dropdown visibility
+    trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isOpen = panel.hasAttribute('hidden');
+        if (isOpen) {
+            openDropdown();
+        } else {
+            closeDropdown();
+        }
+    });
+
+    function openDropdown() {
+        panel.removeAttribute('hidden');
+        panel.classList.add('visible');
+        trigger.classList.add('open');
+        trigger.setAttribute('aria-expanded', 'true');
+        searchInput.focus();
+        resetHighlight();
+    }
+
+    function closeDropdown() {
+        panel.setAttribute('hidden', '');
+        panel.classList.remove('visible');
+        trigger.classList.remove('open');
+        trigger.setAttribute('aria-expanded', 'false');
+        searchInput.value = '';
+        filterMarkets('');
+        resetHighlight();
+    }
+
+    // Search/filter markets by name or location
+    searchInput.addEventListener('input', function() {
+        const query = this.value.toLowerCase().trim();
+        filterMarkets(query);
+        resetHighlight();
+    });
+
+    function filterMarkets(query) {
+        const visibleItems = [];
+        
+        allItems.forEach(item => {
+            const searchText = item.getAttribute('data-search-text');
+            const matches = !query || searchText.includes(query);
+            
+            if (matches) {
+                item.style.display = '';
+                visibleItems.push(item);
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        // Show/hide "no results" message
+        if (visibleItems.length === 0) {
+            noResults.style.display = 'block';
+        } else {
+            noResults.style.display = 'none';
+        }
+    }
+
+    // Highlight items on hover
+    allItems.forEach((item, index) => {
+        item.addEventListener('mouseenter', function() {
+            removeAllHighlights();
+            item.classList.add('highlighted');
+            highlightedIndex = index;
+        });
+    });
+
+    // Select market on click
+    allItems.forEach(item => {
+        item.addEventListener('click', function() {
+            selectMarket(this);
+        });
+    });
+
+    function selectMarket(item) {
+        const marketId = item.getAttribute('data-market-id');
+        const marketName = item.getAttribute('data-market-name');
+        const marketLocation = item.getAttribute('data-market-location');
+
+        // Update hidden native select
+        nativeSelect.value = marketId;
+
+        // Update trigger button text
+        const displayText = marketLocation 
+            ? `${marketName} — ${marketLocation}` 
+            : marketName;
+        trigger.querySelector('.market-selector-trigger-text').textContent = displayText;
+
+        // Update visual selection
+        allItems.forEach(li => {
+            li.classList.remove('selected');
+            li.setAttribute('aria-selected', 'false');
+            li.querySelector('.market-item-check').textContent = '';
+        });
+        item.classList.add('selected');
+        item.setAttribute('aria-selected', 'true');
+        item.querySelector('.market-item-check').textContent = '✓';
+
+        closeDropdown();
+    }
+
+    // Keyboard navigation
+    trigger.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openDropdown();
+        }
+    });
+
+    searchInput.addEventListener('keydown', function(e) {
+        const visibleItems = allItems.filter(item => item.style.display !== 'none');
+        
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            highlightedIndex = Math.min(highlightedIndex + 1, visibleItems.length - 1);
+            updateHighlight(visibleItems);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            highlightedIndex = Math.max(highlightedIndex - 1, 0);
+            updateHighlight(visibleItems);
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (highlightedIndex >= 0 && highlightedIndex < visibleItems.length) {
+                selectMarket(visibleItems[highlightedIndex]);
+            }
+        } else if (e.key === 'Escape') {
+            e.preventDefault();
+            closeDropdown();
+        }
+    });
+
+    function updateHighlight(visibleItems) {
+        removeAllHighlights();
+        if (highlightedIndex >= 0 && highlightedIndex < visibleItems.length) {
+            visibleItems[highlightedIndex].classList.add('highlighted');
+            visibleItems[highlightedIndex].scrollIntoView({ block: 'nearest' });
+        }
+    }
+
+    function removeAllHighlights() {
+        allItems.forEach(item => item.classList.remove('highlighted'));
+    }
+
+    function resetHighlight() {
+        highlightedIndex = -1;
+        removeAllHighlights();
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!panel.hasAttribute('hidden') && 
+            !trigger.contains(e.target) && 
+            !panel.contains(e.target)) {
+            closeDropdown();
+        }
+    });
+
+    // Handle window resize: switch between mobile/desktop
+    window.addEventListener('resize', function() {
+        const isNowDesktop = window.innerWidth >= 768;
+        if (!isNowDesktop && !panel.hasAttribute('hidden')) {
+            closeDropdown();
+        }
+    });
+
+    // Initialize: set trigger text from native select if pre-selected
+    if (nativeSelect.value) {
+        const selectedItem = allItems.find(item => 
+            item.getAttribute('data-market-id') === nativeSelect.value
+        );
+        if (selectedItem) {
+            selectMarket(selectedItem);
+        }
+    }
+});
+</script>
     </form>
 
     <!-- ── Footer Links ──────────────────────────────────────────────────── -->

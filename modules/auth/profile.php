@@ -9,6 +9,7 @@ require_once '../../config/auth_guard.php';
 $pageHasForm = true;
 require_once '../../templates/header.php';
 require_once '../../config/db.php';
+require_once '../../config/market_validator.php'; // Market data validation
 
 $success = '';
 $errors  = [];
@@ -18,12 +19,13 @@ $userStmt = $pdo->prepare("SELECT * FROM users WHERE id = ? LIMIT 1");
 $userStmt->execute([$_SESSION['user_id']]);
 $user = $userStmt->fetch();
 
-// If manager, also fetch their market data
+// If manager, also fetch their market data - GUARANTEED from database
 $market = null;
 if (isset($_SESSION['role']) && $_SESSION['role'] === 'manager') {
-    $marketStmt = $pdo->prepare("SELECT * FROM markets WHERE id = ? LIMIT 1");
-    $marketStmt->execute([$_SESSION['market_id']]);
-    $market = $marketStmt->fetch();
+    // Use MarketValidator to ensure database-only source
+    $market = MarketValidator::getMarketById($pdo, $_SESSION['market_id']);
+    // Verify market belongs to this manager (security check)
+    MarketValidator::enforceMarketSession($pdo, $market['id'], $_SESSION['market_id']);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

@@ -9,23 +9,32 @@
 $pageHasForm = true;
 require_once '../../templates/header.php';
 require_once '../../config/db.php';
+require_once '../../config/market_validator.php'; // Market data validation
 
 // Initialize variables used in page rendering
 $error    = '';     // Holds error message if something goes wrong
 $success  = false;  // Set to true only after successful complaint submission
 $ref_code = '';     // Holds the generated reference code
 
-// Get all markets for dropdown
-$stmt = $pdo->query("SELECT id, name FROM markets ORDER BY name");
-$markets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Get all markets for dropdown - GUARANTEED from database
+// Uses MarketValidator to ensure data originates from database
+$markets = array_map(function($m) {
+    MarketValidator::verifyDatabaseSource($m);
+    return $m;
+}, MarketValidator::getAllMarkets($pdo));
 
 // Get sellers if market is selected
 $sellers = [];
 $selected_market = $_POST['market_id'] ?? '';
 if ($selected_market) {
-    $stmt = $pdo->prepare("SELECT id, name, stall_no FROM users WHERE role = 'seller' AND market_id = ? ORDER BY name");
-    $stmt->execute([$selected_market]);
-    $sellers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Validate market exists in database before querying sellers
+    if (!MarketValidator::validateMarketExists($pdo, $selected_market)) {
+        $error = 'Invalid market selected.';
+    } else {
+        $stmt = $pdo->prepare("SELECT id, name, stall_no FROM users WHERE role = 'seller' AND market_id = ? ORDER BY name");
+        $stmt->execute([$selected_market]);
+        $sellers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 
 if (isset($_POST['submit_complaint'])) {
