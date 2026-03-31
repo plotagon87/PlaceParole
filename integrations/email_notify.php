@@ -13,13 +13,18 @@
  *    cd C:\xampp\htdocs\PlaceParole
  *    composer require phpmailer/phpmailer
  *
- * 2. Update SMTP credentials at the bottom of this file (lines 48-51)
+ * 2. Configure SMTP credentials in the .env file:
+ *    - GMAIL_USERNAME: Your Gmail address
+ *    - GMAIL_PASSWORD: Your Gmail App Password
  *    - Get your Gmail App Password from: https://myaccount.google.com/security
  *    - Use 2-Step Verification to generate one if you don't have it
  */
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
+// Load environment variables from .env file
+require_once __DIR__ . '/../config/env_loader.php';
 
 // Check if PHPMailer is available
 if (!file_exists(__DIR__ . '/../vendor/autoload.php')) {
@@ -57,18 +62,19 @@ function sendComplaintUpdateEmail(
         // ── SMTP Configuration ─────────────────────────────────────────────
         // SMTP (Simple Mail Transfer Protocol) = the protocol used to send emails
         // You can use Gmail's SMTP server for free during development
+        // Credentials are loaded from .env file
         $mail->isSMTP();                                      // Use SMTP instead of PHP's mail()
         $mail->Host       = 'smtp.gmail.com';                 // Gmail's outgoing mail server
         $mail->SMTPAuth   = true;                             // Require SMTP authentication
-        $mail->Username   = 'fonutchi87@gmail.com';           // Your Gmail address — CHANGE THIS
-        $mail->Password   = 'Confinnement';              // Gmail App Password — CHANGE THIS
+        $mail->Username   = getenv('GMAIL_USERNAME');         // Your Gmail address from .env
+        $mail->Password   = getenv('GMAIL_PASSWORD');         // Gmail App Password from .env
         // NOTE: Do NOT use your regular Gmail password.
         // Generate an App Password at: myaccount.google.com > Security > 2-Step Verification > App passwords
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;   // TLS encryption for security
         $mail->Port       = 587;                              // Gmail's SMTP port for TLS
 
         // ── Email Content ──────────────────────────────────────────────────
-        $mail->setFrom('fonutchi87@gmail.com', 'PlaceParole Market Platform');
+        $mail->setFrom(getenv('GMAIL_USERNAME'), getenv('GMAIL_FROM_NAME') ?: 'PlaceParole Market Platform');
         $mail->addAddress($toEmail, $toName);                 // Recipient
 
         $mail->isHTML(true);                                  // Send HTML email
