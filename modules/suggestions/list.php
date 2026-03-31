@@ -1,53 +1,51 @@
 <?php
 /**
  * modules/suggestions/list.php
- * Managers view and manage seller suggestions
+ * All users view approved suggestions from their market
+ * Managers/Admins can see status filters and moderation options
  */
 require_once '../../config/auth_guard.php';
-manager_only();
 
-// contains filter form and action buttons
-$pageHasForm = true;
 require_once '../../templates/header.php';
 require_once '../../config/db.php';
 
-$filterStatus = $_GET['status'] ?? '';
-$message = '';
-$message_type = 'success';
+$pageHasForm = true;
+$is_manager = in_array($_SESSION['role'], ['manager', 'admin']);
+$filter_status = $_GET['status'] ?? 'approved';
 
-// Handle approval/rejection actions
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    csrf_verify();
-    $suggestion_id = (int) ($_POST['suggestion_id'] ?? 0);
-    $action = $_POST['action'] ?? '';
+// If non-managers filter, force to approved-only
+if (!$is_manager) {
+    $filter_status = 'approved';
+}
 
-    if ($suggestion_id && in_array($action, ['approved', 'rejected'])) {
-        $stmt = $pdo->prepare("UPDATE suggestions SET status = ? WHERE id = ? AND market_id = ?");
-        $result = $stmt->execute([$action, $suggestion_id, $_SESSION['market_id']]);
-        
-        if ($result) {
-            $message = $action === 'approved' ? '✓ Suggestion approved!' : '✗ Suggestion rejected.';
-            $message_type = 'success';
-        } else {
-            $message = 'Error updating suggestion status.';
-            $message_type = 'error';
-        }
+// Fetch suggestions based on user role
+$sql = "
+    SELECT 
+        s.*,
+        u.name AS seller_name
+    FROM suggestions s
+    JOIN users u ON s.seller_id = u.id
+    WHERE s.market_id = ? 
+    AND s.deleted_at IS NULL
+";
+$params = [$_SESSION['market_id']];
+
+// Non-managers only see approved suggestions
+if (!$is_manager) {
+    $sql .= " AND s.status = 'approved'";
+} else {
+    // Managers can filter by status
+    if ($filter_status && in_array($filter_status, ['pending', 'approved', 'rejected'])) {
+        $sql .= " AND s.status = ?";
+        $params[] = $filter_status;
     }
 }
 
-$sql = "SELECT s.*, u.name AS seller_name FROM suggestions s LEFT JOIN users u ON s.seller_id = u.id WHERE s.market_id = ?";
-$params = [$_SESSION['market_id']];
-
-if ($filterStatus) {
-    $sql .= " AND s.status = ?";
-    $params[] = $filterStatus;
-}
-
-$sql .= " ORDER BY s.created_at DESC";
+$sql .= " ORDER BY s.created_at DESC LIMIT 100";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
-$suggestions = $stmt->fetchAll();
+$suggestions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $statusColors = [
     'pending'  => 'bg-yellow-100 text-yellow-700',
@@ -56,76 +54,87 @@ $statusColors = [
 ];
 ?>
 
-<div>
-    <h1 class="text-3xl font-bold text-primary mb-6">💡 <?= $t['nav_suggestions'] ?></h1>
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-primary mb-2">💡 <?= $t['nav_suggestions'] ?></h1>
+        <p class="text-gray-600">Market improvement ideas and suggestions</p>
+    </div>
 
-    <!-- Success/Error Message -->
-    <?php if ($message): ?>
-        <div class="<?= $message_type === 'success' ? 'bg-green-100 text-green-700 border-green-300' : 'bg-red-100 text-red-700 border-red-300' ?> px-4 py-3 rounded-lg mb-6 border">
-            <?= $message ?>
+    <!-- Manager-Only Filters -->
+    <?php if ($is_manager): ?>
+        <div class="bg-white rounded-lg shadow p-4 mb-6 border border-blue-200">
+            <form method="GET" class="flex gap-3 flex-wrap">
+                <div class="flex-1 min-w-[200px]">
+                    <select name="status" class="input-field w-full">
+                        <option value="approved" <?= $filter_status === 'approved' ? 'selected' : '' ?>>Approved Only</option>
+                        <option value="pending" <?= $filter_status === 'pending' ? 'selected' : '' ?>>Pending (Need Review)</option>
+                        <option value="rejected" <?= $filter_status === 'rejected' ? 'selected' : '' ?>>Rejected</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary px-6">Filter</button>
+                <a href="list.php" class="btn-outlined px-6">Reset</a>
+            </form>
+            <div class="mt-3 flex gap-3">
+                <a href="../admin/pending_suggestions.php" class="text-blue-600 hover:text-blue-800 font-semibold">
+                    → Pending Suggestions Moderation
+                </a>
+            </div>
         </div>
     <?php endif; ?>
-
-    <!-- Filters -->
-    <div class="card mb-6">
-        <form method="GET" class="flex gap-3">
-            <select name="status" class="input-field flex-1">
-                <option value="">All Statuses</option>
-                <option value="pending" <?= $filterStatus === 'pending' ? 'selected' : '' ?>>Pending</option>
-                <option value="approved" <?= $filterStatus === 'approved' ? 'selected' : '' ?>>Approved</option>
-                <option value="rejected" <?= $filterStatus === 'rejected' ? 'selected' : '' ?>>Rejected</option>
-            </select>
-            <button type="submit" class="btn-primary">Filter</button>
-            <a href="list.php" class="btn-outlined px-4">↺</a>
-        </form>
-    </div>
 
     <!-- Suggestions List -->
     <?php if (!empty($suggestions)): ?>
         <div class="space-y-4">
             <?php foreach ($suggestions as $sug): ?>
-                <div class="card">
-                    <div class="flex justify-between items-start mb-2">
-                        <h2 class="text-xl font-bold text-primary flex-1"><?= htmlspecialchars($sug['title']) ?></h2>
-                        <span class="<?= $statusColors[$sug['status']] ?? 'bg-gray-100 text-gray-700' ?> px-3 py-1 rounded-full text-xs font-bold">
-                            <?= ucfirst($sug['status']) ?>
-                        </span>
-                    </div>
-                    <p class="text-gray-700 mb-3"><?= nl2br(htmlspecialchars($sug['description'])) ?></p>
-                    <div class="text-sm text-gray-600 mb-4">
-                        <span>From: <strong><?= htmlspecialchars($sug['seller_name'] ?? 'Unknown') ?></strong> — <?= date('d/m/Y', strtotime($sug['created_at'])) ?></span>
-                    </div>
-                    
-                    <!-- Action Buttons (only for pending suggestions) -->
-                    <?php if ($sug['status'] === 'pending'): ?>
-                        <div class="flex gap-2 border-t pt-4">
-                            <form method="POST" class="flex-1">
-                                <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
-                                <input type="hidden" name="suggestion_id" value="<?= $sug['id'] ?>">
-                                <input type="hidden" name="action" value="approved">
-                                <button type="submit" class="w-full bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600 transition font-semibold">
-                                    ✓ Approve
-                                </button>
-                            </form>
-                            <form method="POST" class="flex-1">
-                                <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
-                                <input type="hidden" name="suggestion_id" value="<?= $sug['id'] ?>">
-                                <input type="hidden" name="action" value="rejected">
-                                <button type="submit" class="w-full bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition font-semibold">
-                                    ✗ Reject
-                                </button>
-                            </form>
+                <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition">
+                    <div class="flex justify-between items-start gap-4 mb-3">
+                        <div class="flex-1">
+                            <h3 class="text-xl font-bold text-gray-900 mb-1"><?= htmlspecialchars($sug['title']) ?></h3>
+                            <p class="text-sm text-gray-600">
+                                By: <strong><?= htmlspecialchars($sug['seller_name'] ?? 'Unknown') ?></strong> 
+                                · <?= date('M d, Y', strtotime($sug['created_at'])) ?>
+                            </p>
                         </div>
+                        <?php if ($is_manager): ?>
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold <?php
+                                echo $sug['status'] === 'approved' ? 'bg-green-100 text-green-800' : 
+                                     ($sug['status'] === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800');
+                            ?>">
+                                <?= ucfirst($sug['status']) ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+
+                    <p class="text-gray-700 leading-relaxed mb-4">
+                        <?= nl2br(htmlspecialchars($sug['description'])) ?>
+                    </p>
+
+                    <?php if ($sug['seller_id'] == $_SESSION['user_id']): ?>
+                        <p class="text-xs text-blue-600 bg-blue-50 px-3 py-2 rounded inline-block">
+                            ✏️ Your suggestion
+                        </p>
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>
         </div>
     <?php else: ?>
-        <div class="card text-center py-12">
-            <div class="text-5xl mb-3">📭</div>
-            <p class="text-gray-600">No suggestions found.</p>
+        <div class="bg-gray-50 rounded-lg text-center py-16">
+            <div class="text-6xl mb-4">💭</div>
+            <p class="text-gray-600 text-lg mb-2"><?= $t['no_announcements'] ?></p>
+            <p class="text-gray-500"><?php 
+                if ($is_manager && $filter_status === 'pending') {
+                    echo 'All suggestions have been reviewed!';
+                } else {
+                    echo 'No suggestions available yet.';
+                }
+            ?></p>
         </div>
     <?php endif; ?>
+
+    <div class="mt-8 flex gap-3">
+        <a href="submit.php" class="btn-primary">💡 Submit a Suggestion</a>
+        <a href="../../index.php" class="btn-outlined">← Back</a>
+    </div>
 </div>
 
 <?php require_once '../../templates/footer.php'; ?>

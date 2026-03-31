@@ -10,6 +10,7 @@ seller_only();
 $pageHasForm = true;
 require_once '../../templates/header.php';
 require_once '../../config/db.php';
+require_once '../../config/notification_handler.php';
 
 $success = false;
 $error = '';
@@ -22,8 +23,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$title || !$desc) {
         $error = $t['error_required'];
     } else {
-        $stmt = $pdo->prepare("INSERT INTO suggestions (market_id, seller_id, title, description) VALUES (?, ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO suggestions (market_id, seller_id, title, description, status) VALUES (?, ?, ?, ?, 'pending')");
         $stmt->execute([$_SESSION['market_id'], $_SESSION['user_id'], $title, $desc]);
+        $suggestion_id = (int) $pdo->lastInsertId();
+        
+        // Notify managers/admins of pending suggestion
+        if ($suggestion_id > 0) {
+            notifyManagersOfPendingSubmission($_SESSION['market_id'], 'new_suggestion', 'suggestion', $suggestion_id);
+        }
+        
         $success = true;
     }
 }

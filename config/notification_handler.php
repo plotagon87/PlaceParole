@@ -428,4 +428,217 @@ function retryFailedNotifications($max_attempts = 3) {
     }
 }
 
+/**
+ * ============================================================
+ * GENERIC NOTIFICATION FUNCTIONS (for Suggestions, Announcements, Feedback)
+ * ============================================================
+ */
+
+/**
+ * createGenericNotification($market_id, $recipient_id, $notification_type, $subject_type, $subject_id, $channel = 'web')
+ * 
+ * Create a notification for suggestions, announcements, or feedback
+ * 
+ * @param int $market_id - Market ID
+ * @param int $recipient_id - User receiving notification
+ * @param string $notification_type - 'new_suggestion', 'suggestion_approved', 'new_announcement', etc
+ * @param string $subject_type - 'suggestion', 'announcement', 'feedback'
+ * @param int $subject_id - ID in the respective table
+ * @param string $channel - 'web', 'sms', 'email', 'gmail', 'in_app'
+ * @return int - Notification ID or 0 on failure
+ */
+function createGenericNotification($market_id, $recipient_id, $notification_type, $subject_type, $subject_id, $channel = 'web') {
+    global $pdo;
+    
+    try {
+        $stmt = $pdo->prepare("
+            INSERT INTO notifications 
+            (market_id, recipient_id, notification_type, subject_type, subject_id, channel, status, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, 'pending', NOW())
+        ");
+        
+        $stmt->execute([$market_id, $recipient_id, $notification_type, $subject_type, $subject_id, $channel]);
+        return (int) $pdo->lastInsertId();
+    } catch (Exception $e) {
+        error_log("createGenericNotification error: " . $e->getMessage());
+        return 0;
+    }
+}
+
+/**
+ * notifyMarketUsersOfSubmission($market_id, $notification_type, $subject_type, $subject_id, $channels = ['web'])
+ * 
+ * Notify all users in a market of a new/approved submission
+ * Used when suggestion/feedback is approved or announcement is posted
+ * 
+ * @param int $market_id - Market ID
+ * @param string $notification_type - Type of notification
+ * @param string $subject_type - 'suggestion', 'announcement', 'feedback'
+ * @param int $subject_id - ID in respective table
+ * @param array $channels - Channels to notify through
+ * @return array - ['sent' => count, 'failed' => count]
+ */
+function notifyMarketUsersOfSubmission($market_id, $notification_type, $subject_type, $subject_id, $channels = ['web']) {
+    global $pdo;
+    
+    try {
+        // Get all users in the market (skip the submitter for certain notifications)
+        $stmt = $pdo->prepare("
+            SELECT id FROM users 
+            WHERE market_id = ? 
+            ORDER BY id
+        ");
+        
+        $stmt->execute([$market_id]);
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $sent = 0;
+        $failed = 0;
+        
+        foreach ($users as $user) {
+            foreach ($channels as $channel) {
+                $notif_id = createGenericNotification(
+                    $market_id,
+                    $user['id'],
+                    $notification_type,
+                    $subject_type,
+                    $subject_id,
+                    $channel
+                );
+                
+                if ($notif_id > 0) {
+                    $sent++;
+                } else {
+                    $failed++;
+                }
+            }
+        }
+        
+        return ['sent' => $sent, 'failed' => $failed];
+        
+    } catch (Exception $e) {
+        error_log("notifyMarketUsersOfSubmission error: " . $e->getMessage());
+        return ['sent' => 0, 'failed' => 0];
+    }
+}
+
+/**
+ * notifyManagersOfPendingSubmission($market_id, $notification_type, $subject_type, $subject_id)
+ * 
+ * Notify managers/admins of pending submission requiring review
+ * 
+ * @param int $market_id - Market ID
+ * @param string $notification_type - 'new_suggestion', 'new_community_feedback'
+ * @param string $subject_type - 'suggestion', 'feedback'
+ * @param int $subject_id - ID in respective table
+ * @return array - ['sent' => count, 'failed' => count]
+ */
+function notifyManagersOfPendingSubmission($market_id, $notification_type, $subject_type, $subject_id) {
+    global $pdo;
+    
+    try {
+        // Get managers and admins in the market
+        $stmt = $pdo->prepare("
+            SELECT id FROM users 
+            WHERE market_id = ? 
+            AND role IN ('manager', 'admin')
+            ORDER BY id
+        ");
+        
+        $stmt->execute([$market_id]);
+        $managers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $sent = 0;
+        $failed = 0;
+        
+        foreach ($managers as $manager) {
+            $notif_id = createGenericNotification(
+                $market_id,
+                $manager['id'],
+                $notification_type,
+                $subject_type,
+                $subject_id,
+                'web'
+            );
+            
+            if ($notif_id > 0) {
+                $sent++;
+            } else {
+                $failed++;
+            }
+        }
+        
+        return ['sent' => $sent, 'failed' => $failed];
+        
+    } catch (Exception $e) {
+        error_log("notifyManagersOfPendingSubmission error: " . $e->getMessage());
+        return ['sent' => 0, 'failed' => 0];
+    }
+}
+
+/**
+ * getGenericNotifications($user_id, $market_id, $limit = 50)
+ * 
+ * Fetch notifications for suggestions/announcements/feedback
+ * 
+ * @param int $user_id - User ID
+ * @param int $market_id - Market ID (for scoping)
+ * @param int $limit - Max results
+ * @return array - Notification list
+ */
+function getGenericNotifications($user_id, $market_id, $limit = 50) {
+    global $pdo;
+    
+    try {
+        $stmt = $pdo->prepare("
+            SELECT 
+                n.*,
+                u_submitter.name AS submitter_name,
+                s.title as suggestion_title,
+                a.title as announcement_title,
+                cf.title as feedback_title
+            FROM notifications n
+            LEFT JOIN users u_submitter ON n.subject_type = 'suggestion' AND n.subject_id = s.id
+            LEFT JOIN suggestions s ON n.subject_type = 'suggestion' AND n.subject_id = s.id
+            LEFT JOIN announcements a ON n.subject_type = 'announcement' AND n.subject_id = a.id
+            LEFT JOIN community_feedback cf ON n.subject_type = 'feedback' AND n.subject_id = cf.id
+            WHERE n.recipient_id = ? 
+            AND n.market_id = ?
+            AND n.status IN ('pending', 'sent')
+            ORDER BY n.created_at DESC
+            LIMIT ?
+        ");
+        
+        $stmt->execute([$user_id, $market_id, $limit]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        error_log("getGenericNotifications error: " . $e->getMessage());
+        return [];
+    }
+}
+
+/**
+ * markGenericNotificationAsRead($notification_id)
+ * 
+ * Mark a notification as read
+ * 
+ * @param int $notification_id - Notification ID
+ * @return bool - Success
+ */
+function markGenericNotificationAsRead($notification_id) {
+    global $pdo;
+    
+    try {
+        $stmt = $pdo->prepare("
+            UPDATE notifications 
+            SET status = 'read', read_at = NOW()
+            WHERE id = ?
+        ");
+        return $stmt->execute([$notification_id]);
+    } catch (Exception $e) {
+        error_log("markGenericNotificationAsRead error: " . $e->getMessage());
+        return false;
+    }
+}
+
 ?>

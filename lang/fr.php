@@ -98,6 +98,41 @@ return [
     'announcement_body'     => 'Message',
     'send_via'              => "Envoyer via",
     'broadcast_announcement'=> 'Diffuser une Annonce',
+    'announcement_channels' => 'Envoyer via',
+    'channel_web'           => 'Web/Dans l\'app',
+    'channel_sms'           => 'SMS',
+    'channel_email'         => 'Email',
+    'error_select_channel'  => 'Veuillez sélectionner au moins un canal.',
+
+    // --- Community Feedback ---
+    'submit_feedback'       => 'Partagez Vos Commentaires',
+    'feedback_description'  => 'Partagez vos idées, suggestions ou commentaires sur la communauté du marché',
+    'feedback_title'        => 'Titre des commentaires',
+    'feedback_message'      => 'Vos commentaires',
+    'feedback_title_placeholder' => 'Titre bref de vos commentaires',
+    'feedback_placeholder'  => 'Partagez vos idées ou préoccupations en détail...',
+    'feedback_sent'         => 'Merci ! Vos commentaires ont été reçus et seront examinés par notre équipe.',
+    'feedback_anonymous'    => 'Vos commentaires resteront anonymes pour les autres membres du marché.',
+
+    // --- Pending Moderation ---
+    'pending_suggestions'   => 'Suggestions en attente',
+    'pending_feedback'      => 'Commentaires en attente',
+    'approve'               => 'Approuver',
+    'reject'                => 'Rejeter',
+    'approved'              => 'Approuvé',
+    'rejected'              => 'Rejeté',
+    'reason'                => 'Raison (optionnel)',
+    'approve_success'       => 'Approuvé avec succès',
+    'reject_success'        => 'Rejeté avec succès',
+
+    // --- Notifications ---  
+    'notifications'         => 'Notifications',
+    'no_notifications'      => 'Pas de nouvelles notifications',
+    'new_suggestion_notif'  => 'Nouvelle suggestion en attente d\'approbation',
+    'new_feedback_notif'    => 'Nouveaux commentaires en attente d\'approbation',
+    'new_announcement_notif'=> 'Nouvelle annonce de la gestion',
+    'suggestion_approved'   => 'Votre suggestion a été approuvée',
+    'feedback_approved'     => 'Vos commentaires ont été approuvés',
 
     // --- Dashboard (Manager) ---
     'manager_dashboard'     => 'Tableau de Bord du Gestionnaire',

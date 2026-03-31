@@ -9,6 +9,7 @@ manager_only();
 $pageHasForm = true;
 require_once '../../templates/header.php';
 require_once '../../config/db.php';
+require_once '../../config/notification_handler.php';
 
 $success = false;
 $error = '';
@@ -17,13 +18,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_verify();
     $title = $_POST['title'] ?? '';
     $body  = $_POST['body']  ?? '';
-    $sent_via = implode(',', $_POST['sent_via'] ?? ['web']);
+    $sent_via = $_POST['sent_via'] ?? ['web'];
+    
+    // Ensure sent_via is an array
+    if (is_string($sent_via)) {
+        $sent_via = [$sent_via];
+    }
+    
+    // Convert to comma-separated string for storage
+    $sent_via_str = implode(',', array_filter($sent_via));
 
     if (!$title || !$body) {
         $error = $t['error_required'];
+    } elseif (empty($sent_via)) {
+        $error = $t['error_select_channel'];
     } else {
         $stmt = $pdo->prepare("INSERT INTO announcements (market_id, manager_id, title, body, sent_via) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$_SESSION['market_id'], $_SESSION['user_id'], $title, $body, $sent_via]);
+        $stmt->execute([$_SESSION['market_id'], $_SESSION['user_id'], $title, $body, $sent_via_str]);
+        $announcement_id = (int) $pdo->lastInsertId();
+        
+        // Notify all market users of new announcement via web channel (users can subscribe to SMS/email separately)
+        if ($announcement_id > 0) {
+            notifyMarketUsersOfSubmission($_SESSION['market_id'], 'new_announcement', 'announcement', $announcement_id, ['web']);
+        }
+        
         $success = true;
     }
 }
@@ -61,6 +79,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div>
             <label for="body" class="block font-semibold text-gray-700 mb-2"><?= $t['announcement_body'] ?></label>
             <textarea id="body" name="body" class="input-field resize-none" rows="6" placeholder="Write your announcement here..." required></textarea>
+        </div>
+
+        <div>
+            <label class="block font-semibold text-gray-700 mb-3">📱 <?= $t['announcement_channels'] ?? 'Send via:' ?></label>
+            <div class="space-y-2">
+                <label class="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" name="sent_via[]" value="web" checked class="w-5 h-5">
+                    <span><?= $t['channel_web'] ?? 'Web/In-App' ?></span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" name="sent_via[]" value="sms" class="w-5 h-5">
+                    <span><?= $t['channel_sms'] ?? 'SMS' ?></span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" name="sent_via[]" value="email" class="w-5 h-5">
+                    <span><?= $t['channel_email'] ?? 'Email' ?></span>
+                </label>
+            </div>
         </div>
 
         <button type="submit" class="w-full btn-primary py-3 text-lg font-bold">

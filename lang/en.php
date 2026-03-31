@@ -98,6 +98,41 @@ return [
     'announcement_body'     => 'Message',
     'send_via'              => 'Send via',
     'broadcast_announcement'=> 'Broadcast Announcement',
+    'announcement_channels' => 'Send via',
+    'channel_web'           => 'Web/In-App',
+    'channel_sms'           => 'SMS',
+    'channel_email'         => 'Email',
+    'error_select_channel'  => 'Please select at least one channel.',
+
+    // --- Community Feedback ---
+    'submit_feedback'       => 'Share Your Feedback',
+    'feedback_description'  => 'Share ideas, suggestions, or feedback about the market community',
+    'feedback_title'        => 'Feedback Title',
+    'feedback_message'      => 'Your Feedback',
+    'feedback_title_placeholder' => 'Brief title of your feedback',
+    'feedback_placeholder'  => 'Share your ideas or concerns in detail...',
+    'feedback_sent'         => 'Thank you! Your feedback has been received and will be reviewed by our team.',
+    'feedback_anonymous'    => 'Your feedback will remain anonymous to other market members.',
+
+    // --- Pending Moderation ---
+    'pending_suggestions'   => 'Pending Suggestions',
+    'pending_feedback'      => 'Pending Feedback',
+    'approve'               => 'Approve',
+    'reject'                => 'Reject',
+    'approved'              => 'Approved',
+    'rejected'              => 'Rejected',
+    'reason'                => 'Reason (optional)',
+    'approve_success'       => 'Successfully approved',
+    'reject_success'        => 'Successfully rejected',
+
+    // --- Notifications ---
+    'notifications'         => 'Notifications',
+    'no_notifications'      => 'No new notifications',
+    'new_suggestion_notif'  => 'New suggestion pending approval',
+    'new_feedback_notif'    => 'New feedback pending approval',
+    'new_announcement_notif'=> 'New announcement from management',
+    'suggestion_approved'   => 'Your suggestion was approved',
+    'feedback_approved'     => 'Your feedback was approved',
 
     // --- Dashboard (Manager) ---
     'manager_dashboard'     => 'Manager Dashboard',
