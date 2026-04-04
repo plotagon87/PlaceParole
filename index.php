@@ -58,7 +58,7 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
             Voice your concerns to market management. Get a reference code to track your complaint status in real-time.
         </p>
         <?php
-        $submit_link = (isset($_SESSION['user_id']) && $_SESSION['role'] === 'seller') ? 'modules/complaints/submit.php' : 'modules/complaints/submit_public.php';
+        $submit_link = (isset($_SESSION['user_id']) && isset($_SESSION['role']) && $_SESSION['role'] === 'seller') ? 'modules/complaints/submit.php' : 'modules/complaints/submit_public.php';
         ?>
         <a href="<?= $submit_link ?>" class="text-primary font-semibold hover:underline">
             → <?= $t['submit_complaint'] ?>
@@ -84,7 +84,7 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
         <p class="text-gray-600 mb-4">
             Have an idea to improve the market? Share your innovation suggestions with market management.
         </p>
-        <?php if (isset($_SESSION['user_id']) && $_SESSION['role'] === 'seller'): ?>
+        <?php if (isset($_SESSION['user_id']) && isset($_SESSION['role']) && $_SESSION['role'] === 'seller'): ?>
             <a href="modules/suggestions/submit.php" class="text-primary font-semibold hover:underline">
                 → <?= $t['submit_suggestion'] ?>
             </a>
@@ -98,7 +98,7 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
         <p class="text-gray-600 mb-4">
             Report life events (death, illness, emergency). Bring the market community together for mutual support.
         </p>
-        <?php if (isset($_SESSION['user_id']) && $_SESSION['role'] === 'seller'): ?>
+        <?php if (isset($_SESSION['user_id']) && isset($_SESSION['role']) && $_SESSION['role'] === 'seller'): ?>
             <a href="modules/community/report.php" class="text-primary font-semibold hover:underline">
                 → <?= $t['report_event'] ?>
             </a>
@@ -120,7 +120,7 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
     </div>
 
     <!-- Feature 6: Manager Dashboard -->
-    <?php if (isset($_SESSION['user_id']) && $_SESSION['role'] === 'manager'): ?>
+    <?php if (isset($_SESSION['user_id']) && isset($_SESSION['role']) && $_SESSION['role'] === 'manager'): ?>
     <div class="card hover:shadow-lg transition bg-secondary text-white">
         <div class="text-4xl mb-3">📊</div>
         <h2 class="text-xl font-bold mb-2">Manager Analytics</h2>
@@ -154,6 +154,26 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
         <strong>Market managers</strong> use PlaceParole to listen to sellers, respond to complaints, broadcast announcements, 
         and build a more organized, responsive market community.
     </p>
+
+    <!-- WhatsApp Bot Section -->
+    <div class="mt-8 pt-8 border-t border-gray-200">
+        <h3 class="text-xl font-bold text-primary mb-3">📱 WhatsApp Complaint Bot</h3>
+        <p class="text-gray-700 leading-relaxed mb-3">
+            Can't access the website? No problem! Submit complaints directly via <strong>WhatsApp</strong>.
+        </p>
+        <p class="text-gray-700 leading-relaxed mb-3">
+            Simply send a message to our WhatsApp bot with your complaint. You'll receive:
+        </p>
+        <ul class="list-disc list-inside text-gray-700 space-y-2 mb-3">
+            <li><strong>Instant confirmation</strong> that your complaint was received</li>
+            <li><strong>Reference ID</strong> to track your complaint status</li>
+            <li><strong>Updates via WhatsApp</strong> as managers respond to your complaint</li>
+            <li><strong>No account needed</strong> — just send a message</li>
+        </ul>
+        <p class="text-gray-700 leading-relaxed">
+            <strong>How to use:</strong> Save the WhatsApp number provided by your market manager and send your complaint anytime, anywhere.
+        </p>
+    </div>
 </div>
 
 <?php require_once 'templates/footer.php'; ?>

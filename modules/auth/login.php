@@ -87,6 +87,47 @@ $pageHasForm = true;
 require_once '../../templates/header.php';
 ?>
 
+<!-- ══════════════════════════════════════════════════════════════════════════
+     CSS — Password Visibility Toggle
+     ══════════════════════════════════════════════════════════════════════════ -->
+<style>
+    /* ── Password wrapper (holds input + eye icon) ───────────────────────────── */
+    .password-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .password-wrapper .input-field {
+        padding-right: 2.75rem;   /* Make room for the eye icon button */
+    }
+
+    /* ── Eye icon toggle button ──────────────────────────────────────────────── */
+    .pw-toggle {
+        position: absolute;
+        right: 0.75rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.25rem;
+        display: flex;
+        align-items: center;
+        color: var(--muted);
+        transition: color 0.2s;
+        line-height: 1;
+    }
+    .pw-toggle:hover { color: var(--green-mid); }
+
+    /* ── SVG eye icons ───────────────────────────────────────────────────────── */
+    .pw-toggle svg { width: 20px; height: 20px; }
+    .icon-eye-open  { display: block; }  /* shown when password is hidden */
+    .icon-eye-shut  { display: none; }   /* shown when password is visible */
+
+    /* When toggle is active (password revealed), swap icons */
+    .pw-toggle.revealed .icon-eye-open { display: none; }
+    .pw-toggle.revealed .icon-eye-shut { display: block; }
+</style>
+
 <div class="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-8 mt-10">
     <h1 class="text-3xl font-bold text-primary mb-2"><?= $t['login'] ?></h1>
     <p class="text-gray-600 mb-6"><?= $t['app_tagline'] ?></p>
@@ -122,14 +163,36 @@ require_once '../../templates/header.php';
         <!-- Password Input -->
         <div>
             <label for="password" class="block font-semibold text-gray-700 mb-2"><?= $t['password'] ?></label>
-            <input 
-                type="password" 
-                id="password" 
-                name="password" 
-                class="input-field" 
-                placeholder="••••••••"
-                required
-            >
+            <div class="password-wrapper">
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    class="input-field" 
+                    placeholder="••••••••"
+                    required
+                >
+                <button
+                    type="button"
+                    class="pw-toggle"
+                    id="togglePassword"
+                    onclick="togglePasswordVisibility('password', this)"
+                    aria-label="Toggle password visibility"
+                    title="Show / Hide password"
+                >
+                    <!-- Eye open icon (shown when password is hidden) -->
+                    <svg class="icon-eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <!-- Eye shut (crossed-out) icon (shown when password is visible) -->
+                    <svg class="icon-eye-shut" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                    </svg>
+                </button>
+            </div>
         </div>
 
         <!-- Submit Button -->
@@ -159,5 +222,32 @@ require_once '../../templates/header.php';
         </a>
     </div>
 </div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     JAVASCRIPT — Password Visibility Toggle
+     ══════════════════════════════════════════════════════════════════════════ -->
+<script>
+/**
+ * togglePasswordVisibility(inputId, buttonEl)
+ * Switches an <input> between type="password" (hidden) and type="text" (visible).
+ * Also updates button aria-label and adds/removes the 'revealed' class for styling.
+ */
+function togglePasswordVisibility(inputId, buttonEl) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    
+    if (input.type === 'password') {
+        // Show password
+        input.type = 'text';
+        buttonEl.classList.add('revealed');
+        buttonEl.setAttribute('aria-label', 'Hide password');
+    } else {
+        // Hide password
+        input.type = 'password';
+        buttonEl.classList.remove('revealed');
+        buttonEl.setAttribute('aria-label', 'Show password');
+    }
+}
+</script>
 
 <?php require_once '../../templates/footer.php'; ?>

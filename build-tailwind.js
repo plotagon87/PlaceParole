@@ -1,6 +1,6 @@
 const fs = require('fs');
 const postcss = require('postcss');
-const tailwindcss = require('tailwindcss');
+const tailwindcss = require('@tailwindcss/postcss');
 
 (async () => {
     try {
