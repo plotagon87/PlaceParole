@@ -1,13 +1,19 @@
 # PlaceParole Academic Report
 
 ## 1. Abstract
-This report presents a formal analysis of the PlaceParole project, an integrated complaint and community reporting system. It covers system scope, requirements, architecture, data model, functional behavior, and design diagrams with an academic tone. The report also includes an ERD, Use Case, Class, and Sequence diagrams, explicitly mapped to this project’s modules and code structure.
+This report presents a formal analysis of the PlaceParole project, an integrated complaint and community reporting system. It covers system scope, requirements, architecture, data model, functional behavior, and design diagrams with an academic tone. The report also includes an ERD, Use Case, Class, and Sequence diagrams, explicitly mapped to this project's modules and code structure. The project has been reorganized with dedicated folders for documentation, testing artifacts, and core application logic to improve maintainability and project scalability.
 
 ## 2. Introduction
 PlaceParole is a PHP-based community platform for submitting, tracking, and resolving complaints and suggestions. The system is designed to support multiple user roles (admin, manager, seller, citizen), ensure secure authentication, and provide workflow transparency for complaint lifecycle management.
 
-- **Project context**: `index.php`, `modules/*`, `templates/*`, `config/*`, `integrations/*`
+- **Project context**: `index.php`, `modules/*`, `templates/*`, `config/*`, `integrations/*`, `docs/*`, `tests/*`, `assets/*`
 - **Primary objective**: Provide streamlined complaint handling and reporting with minimal manual overhead.
+- **Project organization**: The project maintains a clean, maintainable structure with dedicated folders for documentation, testing artifacts, and core application logic:
+  - **`docs/`** - 16 markdown documentation files covering implementation guides, technical references, and deployment documentation
+  - **`tests/`** - 20 diagnostic, debugging, and test data files for development and testing phases
+  - **`modules/`** - Core application features organized by functionality
+  - **`config/`** - Configuration and helper utilities
+  - **`integrations/`** - External service integrations (email, SMS, etc.)
 
 ## 3. Problem Statement and Objectives
 The project addresses:
@@ -20,6 +26,7 @@ The project addresses:
 2. Allow users to submit complaints and suggestions.
 3. Provide administrators dashboards for analytics and community oversight.
 4. Support file uploads, notifications, and status updates.
+5. Maintain a well-organized, scalable codebase with clear separation of concerns.
 
 ## 4. Requirements
 
@@ -30,15 +37,18 @@ The project addresses:
 - FR4: Admin/manager Responses (`modules/complaints/respond.php`)
 - FR5: Announcements and Community List (`modules/announcements/*`, `modules/community/*`)
 - FR6: Real-time analytics dashboard (`modules/analytics/dashboard.php`)
+- FR7: Comprehensive project documentation in dedicated `docs/` folder
+- FR8: Organized test and diagnostic utilities in dedicated `tests/` folder
 
 ### 4.2 Non-Functional Requirements
 - NFR1: Data Integrity and Security (`config/db.php`, `config/csrf.php`, `config/auth_guard.php`)
 - NFR2: Usability with responsive front-end (`assets/css/`, `assets/js/alpine.min.js`)
-- NFR3: Maintainability with modular structure.
+- NFR3: Maintainability with modular structure and organized folder hierarchy
+- NFR4: Project organization supporting rapid navigation and onboarding of new developers
 
 ## 5. System Architecture
 PlaceParole follows an MVC-inspired modular PHP architecture:
-- **Model**: Database layer in `config/db.php` and SQL schema (`database_schema.sql`, `test_data*.sql`)
+- **Model**: Database layer in `config/db.php` and SQL schema (`database_schema.sql`, test data in `tests/`)
 - **View**: Templates in `templates/header.php`, `templates/footer.php`, plus module-specific HTML pages.
 - **Controller**: Module PHP files orchestrating request handling and responses.
 
@@ -46,6 +56,62 @@ The app uses:
 - Flat-file routing via module pages.
 - CSRF and session-based auth guards.
 - Database-backed entities: users, complaints, reports, announcements.
+
+### 5.1 Project Organization Structure
+The project has been restructured into clear, purpose-driven folders:
+
+```
+PlaceParole/
+├── docs/                          # 📚 Documentation (16 markdown files)
+│   ├── README.md                  # Documentation index
+│   ├── IMPLEMENTATION_GUIDE.md     # Complete implementation guide
+│   ├── TECHNICAL_REFERENCE.md      # Technical specifications
+│   ├── QUICKSTART.md              # Quick start guide
+│   ├── COMPLAINT_RESPONSE_PLATFORM.md
+│   ├── MARKET_DATA_IMPLEMENTATION.md
+│   ├── FORMS_SUGGESTIONS_FEEDBACK_COMPLETE.md
+│   └── ... (10 more documentation files)
+│
+├── tests/                          # 🧪 Test artifacts (20 files)
+│   ├── README.md                  # Test files guide
+│   ├── diagnostic*.js             # 6 form rendering diagnostic scripts
+│   ├── check_form*.js             # 3 form field detection scripts
+│   ├── inspect_styles.js          # CSS inspection tool
+│   ├── test_form_render.php       # Form rendering tests
+│   ├── test_market_validation.php # Market data validation tests
+│   ├── test_data*.sql             # 5 database seed files
+│   └── ... (more test utilities)
+│
+├── modules/                        # 🎯 Core application features
+│   ├── auth/                      # Authentication
+│   ├── complaints/                # Complaint management
+│   ├── admin/                     # Admin dashboard
+│   ├── analytics/                 # Analytics & reporting
+│   ├── announcements/             # Announcements module
+│   └── ...
+│
+├── config/                         # ⚙️ Configuration
+│   ├── db.php                     # Database connection
+│   ├── auth_guard.php             # Authentication guard
+│   ├── csrf.php                   # CSRF protection
+│   └── ...
+│
+├── integrations/                   # 🔌 External integrations
+│   ├── email_notify.php
+│   ├── sms_send.php
+│   └── ...
+│
+└── assets/                         # 🎨 Frontend resources
+    ├── css/                       # Stylesheets
+    ├── js/                        # JavaScript
+    └── img/                       # Images
+```
+
+This organization provides:
+- **Rapid navigation**: Developers can quickly find documentation or tests without cluttering the root directory
+- **Clear separation of concerns**: Documentation, testing, and development code are isolated
+- **Improved onboarding**: New team members can reference `docs/README.md` and `tests/README.md` for guidance
+- **Scalability**: Easy to add new modules, documentation, and tests without root directory pollution
 
 ## 6. Data Model
 
@@ -103,6 +169,7 @@ erDiagram
 - Registered User
 - Manager
 - Administrator
+- Developer/Tester
 
 ### 7.2 Key Use Cases
 1. Register and Login
@@ -110,6 +177,8 @@ erDiagram
 3. Track Complaint Status
 4. Respond to Complaints
 5. View and Publish Announcements
+6. Access project documentation (`docs/`)
+7. Run diagnostic and test scripts (`tests/`)
 
 ### Use Case Diagram
 ```mermaid
@@ -117,6 +186,7 @@ usecaseDiagram
     actor Citizen
     actor Manager
     actor Admin
+    actor Developer
 
     Citizen --> (Register)
     Citizen --> (Login)
@@ -127,6 +197,9 @@ usecaseDiagram
     Admin --> (Login)
     Admin --> (View Dashboard)
     Admin --> (Publish Announcement)
+    Developer --> (Read Documentation)
+    Developer --> (Run Tests)
+    Developer --> (Access Diagnostics)
 ```
 
 ## 8. Design and Class-Level Abstractions
@@ -137,6 +210,7 @@ usecaseDiagram
 - `Response` (respond, timestamp)
 - `Announcement` (publish, get list)
 - `Notification` (email, SMS)
+- `ProjectManager` (organize and maintain code structure)
 
 ### Class Diagram
 ```mermaid
@@ -170,11 +244,19 @@ classDiagram
         +string content
         +publish()
     }
+    class ProjectStructure {
+        +docs/ folder
+        +tests/ folder
+        +modules/ folder
+        +organizeCode()
+        +maintainStructure()
+    }
 
     User "1" -- "0..*" Complaint : submits
     Complaint "1" -- "0..*" Response : receives
     User "1" -- "0..*" Response : author
     User "1" -- "0..*" Announcement : publishes
+    ProjectStructure "1" -- "1" User : supports
 ```
 
 ## 9. Sequence Flow
@@ -210,11 +292,31 @@ sequenceDiagram
 ```
 
 ## 10. Implementation Mapping (Project Files)
+
+### Core Application Features
 - Authentication & roles: `modules/auth/*`, `config/auth_guard.php`
 - Complaint operations: `modules/complaints/*.php`, `uploads/complaints/`
 - Communication: `integrations/email_notify.php`, `integrations/sms_send.php`
 - Dashboard analytics: `modules/analytics/dashboard.php`
 - UI templates: `templates/header.php`, `templates/footer.php`, CSS/JS in `assets/`
+
+### Documentation & Knowledge Management
+- **Project Documentation**: `docs/` folder (16 markdown files)
+  - Implementation guides: `docs/IMPLEMENTATION_GUIDE.md`
+  - Technical references: `docs/TECHNICAL_REFERENCE.md`
+  - Quick reference: `docs/QUICK_REFERENCE_CARD.md`
+  - Feature documentation: `docs/FORMS_SUGGESTIONS_FEEDBACK_COMPLETE.md`, `docs/MARKET_DATA_IMPLEMENTATION.md`
+  - Deployment & setup: `docs/ENV_SETUP_GUIDE.md`, `docs/DEPLOYMENT_COMPLETE.md`
+  - Index: `docs/README.md` (navigation guide)
+
+### Testing & Diagnostics
+- **Test Suite**: `tests/` folder (20 files)
+  - Diagnostic scripts: `tests/diagnostic*.js` (6 files for form rendering checks)
+  - Form field detection: `tests/check_form*.js` (3 files for field validation)
+  - CSS inspection: `tests/inspect_styles.js`, `tests/find_css_rules.js`
+  - PHP test utilities: `tests/test_form_render.php`, `tests/test_market_validation.php`
+  - Test data: `tests/test_data*.sql` (5 database seed files)
+  - Index: `tests/README.md` (test files guide)
 
 ## 11. Evaluation and Validation
 
@@ -222,11 +324,28 @@ sequenceDiagram
 - CSRF protection (`config/csrf.php`)
 - Role guard (`config/auth_guard.php`)
 - Input sanitization and prepared statements in DB layer (assumed from `db.php` patterns)
+- Organized project structure reduces confusion and helps prevent security oversights
 
 ### 11.2 Quality
-- Modularity supports maintainability and extension.
-- Data model supports ACID integrity for complaint/responses.
-- The project uses both manual and script-driven data population (`test_data*.sql`).
+- **Modularity supports maintainability and extension**: Clear folder structure makes it easy to locate and modify code
+- **Data model supports ACID integrity** for complaint/responses
+- **Comprehensive documentation**: 16 markdown files covering all aspects of the system
+- **Well-organized testing**: All test artifacts consolidated in `tests/` folder
+- **Project scalability**: Clean folder hierarchy allows for growth without complexity
+- **Developer onboarding**: Documentation and test guides facilitate rapid understanding for new team members
 
 ## 12. Conclusions
-PlaceParole effectively implements a formal complaint management lifecycle. It is academically sound in its modular architecture and consistent with real-world municipal e-governance platforms. The diagrams confirm a cohesive design with clear actor responsibilities, stable entity relationships, and robust sequence orchestration.
+PlaceParole effectively implements a formal complaint management lifecycle with a well-organized, scalable project structure. It is academically sound in its modular architecture, consistent with real-world municipal e-governance platforms, and enhanced by thoughtful project organization. 
+
+**Key Improvements in This Version:**
+- Separated documentation into dedicated `docs/` folder (16 files) for easy access and navigation
+- Consolidated test and diagnostic utilities in dedicated `tests/` folder (20 files) to keep the root clean
+- Established clear folder hierarchy supporting MVC pattern and separation of concerns
+- Enhanced developer experience through organized structure and dedicated README files for both folders
+
+The diagrams confirm a cohesive design with clear actor responsibilities, stable entity relationships, and robust sequence orchestration. The reorganization further strengthens the platform's maintainability and prepares it for scaling across larger development teams and long-term maintenance.
+
+---
+
+**Report Updated**: April 2026
+**Project Structure Version**: 2.0 (Documentation & Tests Organized)
