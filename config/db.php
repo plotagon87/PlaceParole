@@ -10,13 +10,13 @@
 require_once __DIR__ . '/env_loader.php';
 
 // Application base URL — change this if you rename the /PlaceParole folder
-define('BASE_URL', getenv('BASE_URL') ?: '/PlaceParole');
+define('BASE_URL', '');                              // Empty string — site is now at root
 
 // Database configuration from environment variables
-define('DB_HOST', getenv('DB_HOST') ?: 'localhost');      // The server MySQL is running on
-define('DB_NAME', getenv('DB_NAME') ?: 'placeparole');   // The name of our database
-define('DB_USER', getenv('DB_USER') ?: 'root');           // MySQL username (default in XAMPP is 'root')
-define('DB_PASS', getenv('DB_PASS') ?: '');               // MySQL password (default in XAMPP is empty '')
+define('DB_HOST', 'sql212.infinityfree.com');        // Your actual MySQL host from Step 4
+define('DB_NAME', 'if0_41577102_placeparole');      // Your actual DB name from Step 4
+define('DB_USER', 'if0_41577102');                  // Your actual MySQL username from Step 4
+define('DB_PASS', 'y8mZ8C10m9XEQt');             // Your actual password from Step 4
 
 try {
     // PDO (PHP Data Objects) = a safe, modern interface for connecting PHP to MySQL
