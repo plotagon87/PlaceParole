@@ -66,7 +66,7 @@ function dashboardApp() {
                 
                 const data = await response.json();
                 if (!data.success) {
-                    alert('Failed to save widget preferences');
+                    alert(window.translations['widget_save_error']);
                 }
             } catch (e) {
                 console.error('Failed to save widget config:', e);
@@ -177,7 +177,7 @@ function renderComplaintDonut() {
     
     fetchDonutData().then(data => {
         if (!data || !data.total) {
-            canvas.parentElement.innerHTML = '<p class="text-gray-500 text-center py-8">No complaint data</p>';
+            canvas.parentElement.innerHTML = '<p class="text-gray-500 text-center py-8">' + window.translations['data_no_complaints'] + '</p>';
             return;
         }
         drawDonutChart(canvas, data);
@@ -296,7 +296,7 @@ function renderGrowthChart() {
     
     fetchGrowthData().then(data => {
         if (!data || !Array.isArray(data) || data.length === 0) {
-            canvas.parentElement.innerHTML = '<p class="text-gray-500 text-center py-8">No growth data</p>';
+            canvas.parentElement.innerHTML = '<p class="text-gray-500 text-center py-8">' + window.translations['data_no_growth'] + '</p>';
             return;
         }
         drawGrowthChart(canvas, data);

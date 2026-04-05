@@ -25,9 +25,9 @@ function formatDate(dateString) {
  */
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
-        alert('Copied: ' + text);
+        alert(window.translations['clipboard_copied'] + text);
     }).catch(err => {
-        console.error('Copy failed:', err);
+        console.error(window.translations['clipboard_error'], err);
     });
 }
 
@@ -108,7 +108,7 @@ function enableFormDirtyWarning(formId = null) {
         window.addEventListener('beforeunload', (e) => {
             if (isDirty) {
                 e.preventDefault();
-                e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+                e.returnValue = window.translations['unsaved_changes_warning'];
                 return e.returnValue;
             }
         });

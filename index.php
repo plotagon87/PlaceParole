@@ -24,22 +24,22 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
                 🏪 <?= $t['register_market'] ?>
             </a>
             <a href="<?= BASE_URL ?>/modules/complaints/submit_public.php<?= $langParam ?>" class="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition text-lg">
-                📢 Submit Complaint
+                <?= $t['submit_complaint_public'] ?>
             </a>
             <a href="<?= BASE_URL ?>/modules/complaints/track.php<?= $langParam ?>" class="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition text-lg">
-                🔍 <?= $t['track_complaint'] ?>
+                <?= $t['track_complaint_public'] ?>
             </a>
         </div>
     <?php else: ?>
         <!-- Logged in - Show role-specific welcome -->
         <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller'): ?>
-            <p class="text-lg mb-4">👋 Welcome, <?= htmlspecialchars($_SESSION['name'] ?? 'Seller') ?>!</p>
-            <p class="text-gray-100 mb-4">Get started by submitting your first complaint or suggestion below.</p>
+            <p class="text-lg mb-4"><?= $t['welcome_prefix'] ?><?= htmlspecialchars($_SESSION['name'] ?? 'Seller') ?>!</p>
+            <p class="text-gray-100 mb-4"><?= $t['welcome_seller_desc'] ?></p>
         <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'manager'): ?>
-            <p class="text-lg mb-4">👋 Welcome, <?= htmlspecialchars($_SESSION['name'] ?? 'Manager') ?>!</p>
-            <p class="text-gray-100 mb-4">Access your analytics dashboard to view market insights and manage complaints.</p>
+            <p class="text-lg mb-4"><?= $t['welcome_prefix'] ?><?= htmlspecialchars($_SESSION['name'] ?? 'Manager') ?>!</p>
+            <p class="text-gray-100 mb-4"><?= $t['welcome_manager_desc'] ?></p>
             <a href="modules/analytics/dashboard.php" class="inline-block bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
-                📊 Go to Analytics Dashboard
+                <?= $t['go_to_analytics'] ?>
             </a>
         <?php else: ?>
             <p class="text-lg">👋 <?= $t['login_success'] ?></p>
@@ -157,21 +157,21 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
 
     <!-- WhatsApp Bot Section -->
     <div class="mt-8 pt-8 border-t border-gray-200">
-        <h3 class="text-xl font-bold text-primary mb-3">📱 WhatsApp Complaint Bot</h3>
+        <h3 class="text-xl font-bold text-primary mb-3"><?= $t['whatsapp_bot_title'] ?></h3>
         <p class="text-gray-700 leading-relaxed mb-3">
-            Can't access the website? No problem! Submit complaints directly via <strong>WhatsApp</strong>.
+            <?= $t['whatsapp_bot_desc1'] ?>
         </p>
         <p class="text-gray-700 leading-relaxed mb-3">
-            Simply send a message to our WhatsApp bot with your complaint. You'll receive:
+            <?= $t['whatsapp_bot_desc2'] ?>
         </p>
         <ul class="list-disc list-inside text-gray-700 space-y-2 mb-3">
-            <li><strong>Instant confirmation</strong> that your complaint was received</li>
-            <li><strong>Reference ID</strong> to track your complaint status</li>
-            <li><strong>Updates via WhatsApp</strong> as managers respond to your complaint</li>
-            <li><strong>No account needed</strong> — just send a message</li>
+            <li><?= $t['whatsapp_benefit1'] ?></li>
+            <li><?= $t['whatsapp_benefit2'] ?></li>
+            <li><?= $t['whatsapp_benefit3'] ?></li>
+            <li><?= $t['whatsapp_benefit4'] ?></li>
         </ul>
         <p class="text-gray-700 leading-relaxed">
-            <strong>How to use:</strong> Save the WhatsApp number provided by your market manager and send your complaint anytime, anywhere.
+            <?= $t['whatsapp_how_to'] ?>
         </p>
     </div>
 </div>

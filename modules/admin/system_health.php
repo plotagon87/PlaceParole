@@ -205,23 +205,23 @@ require_once '../../templates/header.php';
         
         <nav class="flex-1 px-3 py-4 space-y-2 overflow-y-auto">
             <a href="<?= BASE_URL ?>/modules/admin/dashboard.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
-                <span>📊</span> Dashboard
+                <span>📊</span> <?= $t['nav_dashboard'] ?>
             </a>
             <a href="<?= BASE_URL ?>/modules/admin/overview.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
-                <span>🌍</span> Overview
+                <span>🌍</span> <?= $t['nav_overview'] ?>
             </a>
             <a href="<?= BASE_URL ?>/modules/admin/users.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
-                <span>👥</span> Users
+                <span>👥</span> <?= $t['nav_users'] ?>
             </a>
             <a href="<?= BASE_URL ?>/modules/admin/activity_log.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
-                <span>📋</span> Activity Log
+                <span>📋</span> <?= $t['nav_activity_log'] ?>
             </a>
             <a href="<?= BASE_URL ?>/modules/admin/system_health.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-green-50 text-green-700 font-medium">
-                <span>⚙️</span> System Health
+                <span>⚙️</span> <?= $t['nav_system_health'] ?>
             </a>
             <hr class="my-3">
             <a href="<?= BASE_URL ?>/index.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-100 transition text-sm">
-                <span>🏠</span> Back to Site
+                <span>🏠</span> <?= $t['nav_back_to_site'] ?>
             </a>
         </nav>
     </aside>
@@ -230,8 +230,8 @@ require_once '../../templates/header.php';
     <main class="flex-1 ml-60 p-8">
     <div class="max-w-6xl mx-auto">
         <div class="mb-6">
-            <h2 class="text-3xl font-bold text-gray-900">System Health</h2>
-            <p class="text-gray-600 text-sm mt-1">Real-time health status of all platform systems</p>
+            <h2 class="text-3xl font-bold text-gray-900"><?= $t['system_health_title'] ?></h2>
+            <p class="text-gray-600 text-sm mt-1"><?= $t['real_time_health_desc'] ?></p>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -250,20 +250,20 @@ require_once '../../templates/header.php';
                     ">
                         <?php
                         switch ($check['status']) {
-                            case 'ok': echo '✅ OK'; break;
-                            case 'warning': echo '⚠️ Warning'; break;
-                            case 'error': echo '❌ Error'; break;
+                            case 'ok': echo $t['ok_status']; break;
+                            case 'warning': echo $t['warning_status']; break;
+                            case 'error': echo $t['error_status']; break;
                         }
                         ?>
                     </span>
                 </div>
                 
                 <?php if ($check['response_ms']): ?>
-                <p class="text-sm text-gray-600 mb-4">Response: <strong><?= $check['response_ms'] ?>ms</strong></p>
+                <p class="text-sm text-gray-600 mb-4"><?= str_replace('{ms}', $check['response_ms'], $t['response_time']) ?></p>
                 <?php endif; ?>
                 
                 <details class="text-sm">
-                    <summary class="cursor-pointer text-blue-600 hover:text-blue-700 font-medium">Show details</summary>
+                    <summary class="cursor-pointer text-blue-600 hover:text-blue-700 font-medium"><?= $t['show_details'] ?></summary>
                     <pre class="mt-3 bg-gray-50 p-3 rounded text-xs overflow-x-auto text-gray-700"><?= htmlspecialchars(json_encode($check['details'], JSON_PRETTY_PRINT)) ?></pre>
                 </details>
             </div>

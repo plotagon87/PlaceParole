@@ -53,23 +53,23 @@ $totalPending    = array_sum(array_column($markets, 'pending'));
         
         <nav class="flex-1 px-3 py-4 space-y-2 overflow-y-auto">
             <a href="<?= BASE_URL ?>/modules/admin/dashboard.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
-                <span>📊</span> Dashboard
+                <span>📊</span> <?= $t['nav_dashboard'] ?>
             </a>
             <a href="<?= BASE_URL ?>/modules/admin/overview.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-green-50 text-green-700 font-medium">
-                <span>🌍</span> Overview
+                <span>🌍</span> <?= $t['nav_overview'] ?>
             </a>
             <a href="<?= BASE_URL ?>/modules/admin/users.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
-                <span>👥</span> Users
+                <span>👥</span> <?= $t['nav_users'] ?>
             </a>
             <a href="<?= BASE_URL ?>/modules/admin/activity_log.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
-                <span>📋</span> Activity Log
+                <span>📋</span> <?= $t['nav_activity_log'] ?>
             </a>
             <a href="<?= BASE_URL ?>/modules/admin/system_health.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
-                <span>⚙️</span> System Health
+                <span>⚙️</span> <?= $t['nav_system_health'] ?>
             </a>
             <hr class="my-3">
             <a href="<?= BASE_URL ?>/index.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-100 transition text-sm">
-                <span>🏠</span> Back to Site
+                <span>🏠</span> <?= $t['nav_back_to_site'] ?>
             </a>
         </nav>
     </aside>
@@ -101,13 +101,13 @@ $totalPending    = array_sum(array_column($markets, 'pending'));
         <table class="w-full text-sm">
             <thead>
                 <tr class="bg-gray-100">
-                    <th class="px-4 py-3 text-left">Market Name</th>
-                    <th class="px-4 py-3 text-left">Location</th>
-                    <th class="px-4 py-3 text-center">Sellers</th>
-                    <th class="px-4 py-3 text-center">Total Complaints</th>
-                    <th class="px-4 py-3 text-center">Pending</th>
-                    <th class="px-4 py-3 text-center">Resolved</th>
-                    <th class="px-4 py-3 text-left">Created</th>
+                    <th class="px-4 py-3 text-left"><?= $t['market_name'] ?></th>
+                    <th class="px-4 py-3 text-left"><?= $t['location'] ?></th>
+                    <th class="px-4 py-3 text-center"><?= $t['sellers'] ?></th>
+                    <th class="px-4 py-3 text-center"><?= $t['total_complaints'] ?></th>
+                    <th class="px-4 py-3 text-center"><?= $t['pending'] ?></th>
+                    <th class="px-4 py-3 text-center"><?= $t['resolved'] ?></th>
+                    <th class="px-4 py-3 text-left"><?= $t['created'] ?></th>
                 </tr>
             </thead>
             <tbody>

@@ -42,7 +42,7 @@ $oldCategory = '';      // Remembers which category was selected if form fails
 // ── Guard: seller account must be linked to a market ─────────────────────────
 $canSubmit = !empty($_SESSION['market_id']);
 if (!$canSubmit) {
-    $error = 'Your account is not linked to a market. Contact your market manager.';
+    $error = $t['error_no_market_link'];
 }
 
 // ── Handle form submission ────────────────────────────────────────────────────
@@ -526,7 +526,7 @@ $categories = [
     <!-- ── Page Header ────────────────────────────────────────────────── -->
     <div class="page-header">
         <h1>📢 <?= $t['submit_complaint'] ?></h1>
-        <p>Report an issue in your market. You will receive a unique reference code to track progress.</p>
+        <p><?= $t['complaint_intro'] ?></p>
     </div>
 
     <!-- ── Success Screen (replaces form after submission) ───────────── -->
@@ -601,7 +601,7 @@ $categories = [
                     ></textarea>
                     <!-- Live character counter updated by JavaScript -->
                     <div class="char-counter" id="charCount">0 / 1000 characters</div>
-                    <p class="field-hint">Minimum 10 characters. Be as specific as possible — this helps the manager respond faster.</p>
+                    <p class="field-hint"><?= $t['photo_min_chars'] ?></p>
                 </div>
 
                 <!-- SECTION 2: Photo Attachment -->
@@ -619,17 +619,17 @@ $categories = [
                             aria-label="Upload complaint photo"
                         >
                         <span class="upload-icon">🖼️</span>
-                        <span class="upload-label" id="uploadLabel">Click to upload a photo</span>
-                        <span class="upload-hint">JPEG, PNG, or WebP — maximum 2MB</span>
+                        <span class="upload-label" id="uploadLabel"><?= $t['photo_click_upload'] ?></span>
+                        <span class="upload-hint"><?= $t['photo_hint'] ?></span>
                     </div>
 
                     <!-- Photo preview — hidden until a file is selected -->
                     <div id="photoPreviewWrapper">
-                        <img id="photoPreview" src="" alt="Selected photo preview">
+                        <img id="photoPreview" src="" alt="<?= $t['photo_preview_alt'] ?>">
                         <div class="preview-footer">
-                            <span id="previewFileName">No file selected</span>
+                            <span id="previewFileName"><?= $t['photo_no_file'] ?></span>
                             <button type="button" id="removePhoto" style="color:#dc2626;background:none;border:none;cursor:pointer;font-size:0.8rem;font-weight:600;">
-                                ✕ Remove
+                                <?= $t['photo_remove'] ?>
                             </button>
                         </div>
                     </div>
@@ -660,44 +660,44 @@ $categories = [
                 <div class="info-step">
                     <div class="step-number">1</div>
                     <div class="step-text">
-                        <strong>You Submit</strong>
-                        <span>Your complaint is recorded and you receive a unique reference code instantly.</span>
+                        <strong><?= $t['step_you_submit'] ?></strong>
+                        <span><?= $t['step_you_submit_desc'] ?></span>
                     </div>
                 </div>
 
                 <div class="info-step">
                     <div class="step-number">2</div>
                     <div class="step-text">
-                        <strong>Manager Reviews</strong>
-                        <span>The market manager sees your complaint in their dashboard and begins investigating.</span>
+                        <strong><?= $t['step_manager_reviews'] ?></strong>
+                        <span><?= $t['step_manager_reviews_desc'] ?></span>
                     </div>
                 </div>
 
                 <div class="info-step">
                     <div class="step-number">3</div>
                     <div class="step-text">
-                        <strong>You Get Notified</strong>
-                        <span>You receive a WhatsApp message when the status changes or a response is posted.</span>
+                        <strong><?= $t['step_you_track'] ?></strong>
+                        <span><?= $t['step_you_track_desc'] ?></span>
                     </div>
                 </div>
 
                 <div class="info-step">
                     <div class="step-number">4</div>
                     <div class="step-text">
-                        <strong>Track Anytime</strong>
-                        <span>Use your reference code at the track page to check status without logging in.</span>
+                        <strong><?= $t['step_we_resolve'] ?></strong>
+                        <span><?= $t['step_we_resolve_desc'] ?></span>
                     </div>
                 </div>
 
                 <div class="sla-badge">
-                    ⏱ Target response: within 72 hours
+                    <?= $t['sla_target'] ?>
                 </div>
             </div>
 
             <!-- Quick link to track a previous complaint -->
             <div class="form-card" style="margin-top:1rem;text-align:center;">
                 <p style="font-size:0.875rem;color:#6b7280;margin:0 0 0.75rem;">
-                    Already submitted a complaint?
+                    <?= $t['already_submitted'] ?>
                 </p>
                 <a href="track.php" class="btn-outlined" style="border:2px solid #16a34a;color:#16a34a;padding:0.625rem 1.25rem;border-radius:0.5rem;font-weight:600;text-decoration:none;display:inline-block;">
                     🔍 <?= $t['track_complaint'] ?>
@@ -742,7 +742,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (textarea && charCount) {
         textarea.addEventListener('input', function () {
             const current = textarea.value.length;
-            charCount.textContent = current + ' / ' + maxLength + ' characters';
+            charCount.textContent = window.translations['char_counter'].replace('{current}', current).replace('{max}', maxLength);
             charCount.classList.toggle('warning', current > maxLength - 100);
         });
     }
@@ -769,7 +769,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 previewImg.src = e.target.result;        // Set image source to base64 data
                 previewWrapper.classList.add('visible'); // Reveal preview block
                 previewFileName.textContent = file.name; // Show filename
-                uploadLabel.textContent = '✓ Photo selected — click to change';
+                uploadLabel.textContent = window.translations['photo_selected'];
             };
             reader.readAsDataURL(file);
         });
@@ -804,7 +804,7 @@ document.addEventListener('DOMContentLoaded', function () {
             fileInput.value   = '';                          // Clear file input
             previewImg.src    = '';                          // Clear preview src
             previewWrapper.classList.remove('visible');      // Hide preview block
-            uploadLabel.textContent = 'Click to upload a photo'; // Reset label
+            uploadLabel.textContent = window.translations['photo_click_upload']; // Reset label
         });
     }
 

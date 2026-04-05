@@ -65,23 +65,23 @@ require_once '../../templates/header.php';
         
         <nav class="flex-1 px-3 py-4 space-y-2 overflow-y-auto">
             <a href="<?= BASE_URL ?>/modules/admin/dashboard.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
-                <span>📊</span> Dashboard
+                <span>📊</span> <?= $t['nav_dashboard'] ?>
             </a>
             <a href="<?= BASE_URL ?>/modules/admin/overview.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
-                <span>🌍</span> Overview
+                <span>🌍</span> <?= $t['nav_overview'] ?>
             </a>
             <a href="<?= BASE_URL ?>/modules/admin/users.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
-                <span>👥</span> Users
+                <span>👥</span> <?= $t['nav_users'] ?>
             </a>
             <a href="<?= BASE_URL ?>/modules/admin/activity_log.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-green-50 text-green-700 font-medium">
-                <span>📋</span> Activity Log
+                <span>📋</span> <?= $t['nav_activity_log'] ?>
             </a>
             <a href="<?= BASE_URL ?>/modules/admin/system_health.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
-                <span>⚙️</span> System Health
+                <span>⚙️</span> <?= $t['nav_system_health'] ?>
             </a>
             <hr class="my-3">
             <a href="<?= BASE_URL ?>/index.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-100 transition text-sm">
-                <span>🏠</span> Back to Site
+                <span>🏠</span> <?= $t['nav_back_to_site'] ?>
             </a>
         </nav>
     </aside>
@@ -91,29 +91,29 @@ require_once '../../templates/header.php';
     <div class="max-w-7xl mx-auto">
         <div class="flex items-center justify-between mb-6">
             <div>
-                <h2 class="text-3xl font-bold text-gray-900">Activity Log</h2>
-                <p class="text-gray-600 text-sm mt-1">Audit trail of all admin actions</p>
+                <h2 class="text-3xl font-bold text-gray-900"><?= $t['activity_log_title'] ?></h2>
+                <p class="text-gray-600 text-sm mt-1"><?= $t['audit_trail_desc'] ?></p>
             </div>
-            <a href="?export=1&from_date=<?= urlencode($fromDate) ?>&to_date=<?= urlencode($toDate) ?>" class="btn-secondary">📥 Export CSV</a>
+            <a href="?export=1&from_date=<?= urlencode($fromDate) ?>&to_date=<?= urlencode($toDate) ?>" class="btn-secondary"><?= $t['export_csv'] ?></a>
         </div>
         
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
             <form method="GET" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">From Date</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2"><?= $t['from_date'] ?></label>
                         <input type="date" name="from_date" value="<?= htmlspecialchars($fromDate) ?>" class="input-field w-full">
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">To Date</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2"><?= $t['to_date'] ?></label>
                         <input type="date" name="to_date" value="<?= htmlspecialchars($toDate) ?>" class="input-field w-full">
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Action Type</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2"><?= $t['action_type'] ?></label>
                         <select name="action_type" class="input-field w-full">
-                            <option value="">All Actions</option>
+                            <option value=""><?= $t['all_actions'] ?></option>
                             <?php foreach ($actionTypes as $type): ?>
                                 <option value="<?= htmlspecialchars($type) ?>" <?= $actionType === $type ? 'selected' : '' ?>>
                                     <?= htmlspecialchars(ucwords(str_replace('_', ' ', $type))) ?>
@@ -123,9 +123,9 @@ require_once '../../templates/header.php';
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Actor</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2"><?= $t['actor'] ?></label>
                         <select name="actor_id" class="input-field w-full">
-                            <option value="">All Actors</option>
+                            <option value=""><?= $t['all_actors'] ?></option>
                             <?php foreach ($actors as $actor): ?>
                                 <option value="<?= $actor['id'] ?>" <?= $actorId == $actor['id'] ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($actor['name']) ?>
@@ -135,7 +135,7 @@ require_once '../../templates/header.php';
                     </div>
                 </div>
                 
-                <button type="submit" class="btn-primary w-full md:w-auto">🔍 Filter</button>
+                <button type="submit" class="btn-primary w-full md:w-auto"><?= $t['filter'] ?></button>
             </form>
         </div>
         
@@ -144,12 +144,12 @@ require_once '../../templates/header.php';
                 <table class="w-full text-sm">
                     <thead>
                         <tr class="bg-gray-50 border-b border-gray-200">
-                            <th class="text-left py-3 px-4 font-semibold text-gray-700">Timestamp</th>
-                            <th class="text-left py-3 px-4 font-semibold text-gray-700">Actor</th>
-                            <th class="text-left py-3 px-4 font-semibold text-gray-700">Action</th>
-                            <th class="text-left py-3 px-4 font-semibold text-gray-700">Subject</th>
-                            <th class="text-left py-3 px-4 font-semibold text-gray-700">IP Address</th>
-                            <th class="text-center py-3 px-4 font-semibold text-gray-700">Details</th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-700"><?= $t['timestamp'] ?></th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-700"><?= $t['actor'] ?></th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-700"><?= $t['action'] ?></th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-700"><?= $t['subject'] ?></th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-700"><?= $t['ip_address'] ?></th>
+                            <th class="text-center py-3 px-4 font-semibold text-gray-700"><?= $t['details'] ?></th>
                         </tr>
                     </thead>
                     <tbody>

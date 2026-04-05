@@ -118,15 +118,15 @@ $categories = [
 ?>
 
 <div class="max-w-lg mx-auto bg-white rounded-2xl shadow-lg p-8">
-    <h1 class="text-3xl font-bold text-primary mb-2">Submit a Complaint</h1>
-    <p class="text-gray-600 mb-6">Help us improve your market by reporting issues</p>
+    <h1 class="text-3xl font-bold text-primary mb-2"><?= $t['submit_complaint_title'] ?></h1>
+    <p class="text-gray-600 mb-6"><?= $t['help_improve_market'] ?></p>
 
     <?php if ($success): ?>
         <!-- Success Message -->
         <div class="bg-green-100 border-2 border-green-400 text-green-800 rounded-lg p-6 text-center mb-6">
             <div class="text-5xl mb-3">✅</div>
-            <h2 class="text-2xl font-bold mb-2">Complaint Sent!</h2>
-            <p class="text-lg mb-4">Your reference code:</p>
+            <h2 class="text-2xl font-bold mb-2"><?= $t['complaint_sent_title'] ?></h2>
+            <p class="text-lg mb-4"><?= $t['your_ref_code_is'] ?></p>
             <div class="bg-primary text-white text-2xl font-bold px-4 py-3 rounded-lg mb-4 tracking-wider">
                 <?= $ref_code ?>
             </div>

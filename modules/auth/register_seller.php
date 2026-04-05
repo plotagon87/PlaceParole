@@ -811,7 +811,7 @@ require_once '../../templates/header.php';
     <!-- ── Server-side error messages ──────────────────────────────────────── -->
     <?php if (!empty($errors)): ?>
         <div class="alert-error" role="alert" aria-live="polite">
-            <strong>⚠ Please fix the following:</strong>
+            <strong>⚠ <?= $t['form_errors_section'] ?></strong>
             <ul style="margin:0;padding:0;list-style:none;">
                 <?php foreach ($errors as $err): ?>
                     <li>
@@ -1069,23 +1069,23 @@ require_once '../../templates/header.php';
             <div class="strength-criteria" id="strengthCriteria">
                 <span class="criterion" id="crit-length">
                     <span class="criterion-dot"></span>
-                    At least 8 characters
+                    <?= $t['pw_crit_length'] ?>
                 </span>
                 <span class="criterion" id="crit-upper">
                     <span class="criterion-dot"></span>
-                    One uppercase letter
+                    <?= $t['pw_crit_upper'] ?>
                 </span>
                 <span class="criterion" id="crit-lower">
                     <span class="criterion-dot"></span>
-                    One lowercase letter
+                    <?= $t['pw_crit_lower'] ?>
                 </span>
                 <span class="criterion" id="crit-number">
                     <span class="criterion-dot"></span>
-                    One number
+                    <?= $t['pw_crit_number'] ?>
                 </span>
                 <span class="criterion" id="crit-special">
                     <span class="criterion-dot"></span>
-                    One special character
+                    <?= $t['pw_crit_special'] ?>
                 </span>
             </div>
         </div>
@@ -1430,11 +1430,11 @@ function togglePasswordVisibility(inputId, buttonEl) {
     */
     const levels = [
         { bars: 0, colour: '',                         label: '',           style: '' },                    // 0 criteria met
-        { bars: 1, colour: 'var(--strength-weak)',     label: 'Very Weak',  style: 'color:#ef4444' },       // 1
-        { bars: 2, colour: 'var(--strength-weak)',     label: 'Weak',       style: 'color:#ef4444' },       // 2
-        { bars: 3, colour: 'var(--strength-fair)',     label: 'Fair',       style: 'color:#f97316' },       // 3
-        { bars: 4, colour: 'var(--strength-good)',     label: 'Good',       style: 'color:#eab308' },       // 4
-        { bars: 5, colour: 'var(--strength-strong)',   label: '✓ Strong',   style: 'color:#16a34a;font-size:0.85rem' }, // 5
+        { bars: 1, colour: 'var(--strength-weak)',     label: '<?= $t['pw_strength_very_weak'] ?>',  style: 'color:#ef4444' },       // 1
+        { bars: 2, colour: 'var(--strength-weak)',     label: '<?= $t['pw_strength_weak'] ?>',       style: 'color:#ef4444' },       // 2
+        { bars: 3, colour: 'var(--strength-fair)',     label: '<?= $t['pw_strength_fair'] ?>',       style: 'color:#f97316' },       // 3
+        { bars: 4, colour: 'var(--strength-good)',     label: '<?= $t['pw_strength_good'] ?>',       style: 'color:#eab308' },       // 4
+        { bars: 5, colour: 'var(--strength-strong)',   label: '<?= $t['pw_strength_strong'] ?>',   style: 'color:#16a34a;font-size:0.85rem' }, // 5
     ];
 
     // ── Main evaluation function ─────────────────────────────────────────────
@@ -1476,10 +1476,10 @@ function togglePasswordVisibility(inputId, buttonEl) {
         }
 
         if (passwordInput.value === confirmInput.value) {
-            matchHint.textContent   = '✓ Passwords match';
+            matchHint.textContent   = '<?= $t['pw_match'] ?>';
             matchHint.style.cssText = 'color:var(--green-mid);font-weight:600';
         } else {
-            matchHint.textContent   = '✗ Passwords do not match';
+            matchHint.textContent   = '<?= $t['pw_no_match'] ?>';
             matchHint.style.cssText = 'color:var(--error-text);font-weight:600';
         }
     }
@@ -1499,30 +1499,30 @@ function togglePasswordVisibility(inputId, buttonEl) {
             // Check market is selected
             const market = document.getElementById('market_id');
             if (market && !market.value) {
-                clientErrors.push('Please select a market.');
+                clientErrors.push('<?= $t['form_error_market_required'] ?>');
             }
 
             // Check name length
             const name = document.getElementById('name');
             if (name && name.value.trim().length < 3) {
-                clientErrors.push('Full name must be at least 3 characters.');
+                clientErrors.push('<?= $t['form_error_name_length'] ?>');
             }
 
             // Check email format using a basic regex
             const email = document.getElementById('email');
             if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
-                clientErrors.push('Please enter a valid email address.');
+                clientErrors.push('<?= $t['form_error_email_invalid'] ?>');
             }
 
             // Count met criteria for password
             const criteriaMet = criteria.filter(c => c.test(passwordInput.value)).length;
             if (criteriaMet < 5) {
-                clientErrors.push('Password does not meet all strength requirements.');
+                clientErrors.push('<?= $t['form_error_pw_strength'] ?>');
             }
 
             // Check passwords match
             if (passwordInput.value !== confirmInput.value) {
-                clientErrors.push('Passwords do not match.');
+                clientErrors.push('<?= $t['form_error_pw_mismatch'] ?>');
             }
 
             if (clientErrors.length > 0) {
@@ -1537,7 +1537,7 @@ function togglePasswordVisibility(inputId, buttonEl) {
                     form.insertBefore(alertBox, form.firstChild);
                 }
 
-                alertBox.innerHTML = '<strong>⚠ Please fix the following:</strong><ul style="margin:0;padding:0;list-style:none;">'
+                alertBox.innerHTML = '<?= $t['form_errors_section'] ?><ul style="margin:0;padding:0;list-style:none;">'
                     + clientErrors.map(e => `<li><span>•</span> ${e}</li>`).join('')
                     + '</ul>';
 

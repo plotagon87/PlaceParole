@@ -36,7 +36,7 @@ $statusColors = [
 
 <div class="max-w-lg mx-auto bg-white rounded-2xl shadow-lg p-8">
     <h1 class="text-3xl font-bold text-primary mb-2"><?= $t['track_complaint'] ?></h1>
-    <p class="text-gray-600 mb-6">Enter your reference code to check the status of your complaint</p>
+    <p class="text-gray-600 mb-6"><?= $t['track_intro'] ?></p>
 
     <!-- Search Form -->
     <form method="POST" class="mb-8">
@@ -45,7 +45,7 @@ $statusColors = [
                 type="text" 
                 name="ref_code" 
                 class="input-field flex-1" 
-                placeholder="e.g. MKT-2024-00123"
+                placeholder="<?= $t['ref_code_example'] ?>"
                 maxlength="20"
                 required
                 autofocus
@@ -60,7 +60,7 @@ $statusColors = [
         <!-- Not Found -->
         <div class="bg-red-100 border-2 border-red-400 text-red-800 rounded-lg p-6 text-center">
             <div class="text-5xl mb-3">❌</div>
-            <h2 class="text-xl font-bold mb-2">Complaint Not Found</h2>
+            <h2 class="text-xl font-bold mb-2"><?= $t['complaint_not_found'] ?></h2>
             <p class="text-sm mb-4">The reference code <strong><?= htmlspecialchars($refCode) ?></strong> was not found in our system.</p>
             <p class="text-sm text-gray-700">Please double-check the code and try again, or contact market management if you believe this is an error.</p>
         </div>
@@ -71,11 +71,11 @@ $statusColors = [
             <!-- Reference Code & Status -->
             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
                 <div class="flex justify-between items-center mb-2">
-                    <span class="font-semibold text-gray-700">Reference Code:</span>
+                    <span class="font-semibold text-gray-700"><?= $t['label_ref_code'] ?></span>
                     <span class="text-xl font-bold text-primary"><?= htmlspecialchars($complaint['ref_code']) ?></span>
                 </div>
                 <div class="flex justify-between items-center">
-                    <span class="font-semibold text-gray-700">Current Status:</span>
+                    <span class="font-semibold text-gray-700"><?= $t['label_current_status'] ?></span>
                     <span class="<?= $statusColors[$complaint['status']] ?? 'status-pending' ?>">
                         <?= $t['status_' . $complaint['status']] ?>
                     </span>
@@ -87,19 +87,19 @@ $statusColors = [
                 <h3 class="font-bold text-gray-800 mb-2">📝 Complaint Details</h3>
                 <div class="space-y-2 text-sm">
                     <div>
-                        <span class="font-semibold text-gray-700">Category:</span><br>
+                        <span class="font-semibold text-gray-700"><?= $t['label_category'] ?>:</span><br>
                         <?= $t[$complaint['category']] ?? htmlspecialchars($complaint['category']) ?>
                     </div>
                     <div>
-                        <span class="font-semibold text-gray-700">Submitted:</span><br>
+                        <span class="font-semibold text-gray-700"><?= $t['label_submitted'] ?>:</span><br>
                         <?= date('d/m/Y H:i', strtotime($complaint['created_at'])) ?>
                     </div>
                     <div>
-                        <span class="font-semibold text-gray-700">Channel:</span><br>
+                        <span class="font-semibold text-gray-700"><?= $t['label_channel'] ?>:</span><br>
                         <?= ucfirst($complaint['channel']) ?>
                     </div>
                     <div>
-                        <span class="font-semibold text-gray-700">Description:</span><br>
+                        <span class="font-semibold text-gray-700"><?= $t['label_description'] ?>:</span><br>
                         <p class="mt-1 p-2 bg-white rounded border text-gray-700">
                             <?= nl2br(htmlspecialchars($complaint['description'])) ?>
                         </p>
@@ -119,7 +119,7 @@ $statusColors = [
             <?php else: ?>
                 <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
                     <p class="text-sm text-yellow-800">
-                        ⏳ <strong>Your complaint is being reviewed.</strong> Market management will respond shortly.
+                        <?= $t['status_pending_desc'] ?>
                     </p>
                 </div>
             <?php endif; ?>
@@ -130,15 +130,15 @@ $statusColors = [
                 <div class="space-y-2 text-sm">
                     <div class="flex items-center gap-3">
                         <div class="w-4 h-4 rounded-full <?= $complaint['status'] !== 'pending' ? 'bg-green-500' : 'bg-primary' ?>"></div>
-                        <span class="text-gray-700"><strong>Submitted</strong> - <?= date('d/m/Y', strtotime($complaint['created_at'])) ?></span>
+                        <span class="text-gray-700"><strong><?= $t['status_submitted'] ?></strong> - <?= date('d/m/Y', strtotime($complaint['created_at'])) ?></span>
                     </div>
                     <div class="flex items-center gap-3">
                         <div class="w-4 h-4 rounded-full <?= in_array($complaint['status'], ['in_review', 'resolved']) ? 'bg-green-500' : 'bg-gray-300' ?>"></div>
-                        <span class="text-gray-700"><strong>Under Review</strong></span>
+                        <span class="text-gray-700"><strong><?= $t['status_under_review'] ?></strong></span>
                     </div>
                     <div class="flex items-center gap-3">
                         <div class="w-4 h-4 rounded-full <?= $complaint['status'] === 'resolved' ? 'bg-green-500' : 'bg-gray-300' ?>"></div>
-                        <span class="text-gray-700"><strong>Resolved</strong></span>
+                        <span class="text-gray-700"><strong><?= $t['status_resolved'] ?></strong></span>
                     </div>
                 </div>
             </div>

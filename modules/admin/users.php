@@ -120,23 +120,23 @@ require_once '../../templates/header.php';
         
         <nav class="flex-1 px-3 py-4 space-y-2 overflow-y-auto">
             <a href="<?= BASE_URL ?>/modules/admin/dashboard.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
-                <span>📊</span> Dashboard
+                <span>📊</span> <?= $t['nav_dashboard'] ?>
             </a>
             <a href="<?= BASE_URL ?>/modules/admin/overview.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
-                <span>🌍</span> Overview
+                <span>🌍</span> <?= $t['nav_overview'] ?>
             </a>
             <a href="<?= BASE_URL ?>/modules/admin/users.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-green-50 text-green-700 font-medium">
-                <span>👥</span> Users
+                <span>👥</span> <?= $t['nav_users'] ?>
             </a>
             <a href="<?= BASE_URL ?>/modules/admin/activity_log.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
-                <span>📋</span> Activity Log
+                <span>📋</span> <?= $t['nav_activity_log'] ?>
             </a>
             <a href="<?= BASE_URL ?>/modules/admin/system_health.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
-                <span>⚙️</span> System Health
+                <span>⚙️</span> <?= $t['nav_system_health'] ?>
             </a>
             <hr class="my-3">
             <a href="<?= BASE_URL ?>/index.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-100 transition text-sm">
-                <span>🏠</span> Back to Site
+                <span>🏠</span> <?= $t['nav_back_to_site'] ?>
             </a>
         </nav>
     </aside>
@@ -146,26 +146,26 @@ require_once '../../templates/header.php';
     <div class="max-w-7xl mx-auto">
         <div class="flex items-center justify-between mb-6">
             <div>
-                <h2 class="text-3xl font-bold text-gray-900">User Management</h2>
-                <p class="text-gray-600 text-sm mt-1">Manage sellers, managers, and admins</p>
+                <h2 class="text-3xl font-bold text-gray-900"><?= $t['user_management'] ?></h2>
+                <p class="text-gray-600 text-sm mt-1"><?= $t['manage_users_desc'] ?></p>
             </div>
-            <a href="<?= BASE_URL ?>/modules/admin/user_create.php" class="btn-primary">➕ Create User</a>
+            <a href="<?= BASE_URL ?>/modules/admin/user_create.php" class="btn-primary"><?= $t['create_user'] ?></a>
         </div>
         
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
             <form method="GET" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                    <input type="text" name="q" value="<?= htmlspecialchars($searchQuery) ?>" placeholder="Search name, email, phone..." class="input-field">
+                    <input type="text" name="q" value="<?= htmlspecialchars($searchQuery) ?>" placeholder="<?= $t['search_users_placeholder'] ?>" class="input-field">
                     
                     <select name="role" class="input-field">
-                        <option value="all">All Roles</option>
+                        <option value="all"><?= $t['all_roles'] ?></option>
                         <option value="seller" <?= $roleFilter === 'seller' ? 'selected' : '' ?>>Seller</option>
                         <option value="manager" <?= $roleFilter === 'manager' ? 'selected' : '' ?>>Manager</option>
                         <option value="admin" <?= $roleFilter === 'admin' ? 'selected' : '' ?>>Admin</option>
                     </select>
                     
                     <select name="market_id" class="input-field">
-                        <option value="">All Markets</option>
+                        <option value=""><?= $t['all_markets'] ?></option>
                         <?php foreach ($markets as $m): ?>
                             <option value="<?= $m['id'] ?>" <?= $marketFilter == $m['id'] ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($m['name']) ?>
@@ -174,14 +174,14 @@ require_once '../../templates/header.php';
                     </select>
                     
                     <select name="is_active" class="input-field">
-                        <option value="all">All Statuses</option>
+                        <option value="all"><?= $t['all_statuses'] ?></option>
                         <option value="1" <?= $activeFilter === '1' ? 'selected' : '' ?>>Active</option>
                         <option value="0" <?= $activeFilter === '0' ? 'selected' : '' ?>>Inactive</option>
                     </select>
                     
                     <div class="flex gap-2">
-                        <button type="submit" class="btn-primary flex-1">🔍 Search</button>
-                        <a href="<?= BASE_URL ?>/modules/admin/users.php?export=1" class="btn-secondary flex-1 text-center">📥 CSV</a>
+                        <button type="submit" class="btn-primary flex-1"><?= $t['search'] ?></button>
+                        <a href="<?= BASE_URL ?>/modules/admin/users.php?export=1" class="btn-secondary flex-1 text-center"><?= $t['export_csv'] ?></a>
                     </div>
                 </div>
             </form>
@@ -192,18 +192,18 @@ require_once '../../templates/header.php';
                 <table class="w-full text-sm">
                     <thead>
                         <tr class="bg-gray-50 border-b border-gray-200">
-                            <th class="text-left py-3 px-4 font-semibold text-gray-700">Name & Email</th>
-                            <th class="text-left py-3 px-4 font-semibold text-gray-700">Phone</th>
-                            <th class="text-center py-3 px-4 font-semibold text-gray-700">Role</th>
-                            <th class="text-left py-3 px-4 font-semibold text-gray-700">Market</th>
-                            <th class="text-center py-3 px-4 font-semibold text-gray-700">Status</th>
-                            <th class="text-left py-3 px-4 font-semibold text-gray-700">Last Login</th>
-                            <th class="text-center py-3 px-4 font-semibold text-gray-700">Actions</th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-700"><?= $t['name_email'] ?></th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-700"><?= $t['phone'] ?></th>
+                            <th class="text-center py-3 px-4 font-semibold text-gray-700"><?= $t['role'] ?></th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-700"><?= $t['market'] ?></th>
+                            <th class="text-center py-3 px-4 font-semibold text-gray-700"><?= $t['status'] ?></th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-700"><?= $t['last_login'] ?></th>
+                            <th class="text-center py-3 px-4 font-semibold text-gray-700"><?= $t['actions'] ?></th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if (empty($users)): ?>
-                            <tr><td colspan="7" class="py-6 text-center text-gray-500">No users found</td></tr>
+                            <tr><td colspan="7" class="py-6 text-center text-gray-500"><?= $t['no_users_found'] ?></td></tr>
                         <?php else: ?>
                             <?php foreach ($users as $user): ?>
                             <tr class="border-b border-gray-100 hover:bg-gray-50">
@@ -233,7 +233,7 @@ require_once '../../templates/header.php';
                                 </td>
                                 <td class="py-3 px-4 text-center">
                                     <span class="px-2.5 py-1 rounded-full text-xs font-bold <?= $user['is_active'] ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' ?>">
-                                        <?= $user['is_active'] ? '✅ Active' : '🚫 Inactive' ?>
+                                        <?= $user['is_active'] ? $t['active'] : $t['inactive'] ?>
                                     </span>
                                 </td>
                                 <td class="py-3 px-4 text-sm text-gray-600">
@@ -244,7 +244,7 @@ require_once '../../templates/header.php';
                                         elseif ($diff < 86400) echo round($diff / 3600) . 'h ago';
                                         else echo round($diff / 86400) . 'd ago';
                                     } else {
-                                        echo '<span class="text-gray-400">Never</span>';
+                                        echo '<span class="text-gray-400">' . $t['never'] . '</span>';
                                     }
                                     ?>
                                 </td>
@@ -285,7 +285,7 @@ require_once '../../templates/header.php';
 function toggleUserStatus(userId, newStatus) {
     if (!confirm('Are you sure?')) return;
     if (newStatus === 0 && userId === <?= $_SESSION['user_id'] ?>) {
-        alert('You cannot deactivate your own account');
+        alert('<?= $t['account_deactivate_own'] ?>');
         return;
     }
     
@@ -297,9 +297,9 @@ function toggleUserStatus(userId, newStatus) {
     .then(r => r.json())
     .then(d => {
         if (d.success) location.reload();
-        else alert('Error: ' + d.error);
+        else alert('<?= $t['account_error_generic'] ?>' + d.error);
     })
-    .catch(e => alert('Network error: ' + e.message));
+    .catch(e => alert('<?= $t['account_error_network'] ?>' + e.message));
 }
 </script>
     </div>

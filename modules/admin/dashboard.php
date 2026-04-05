@@ -119,8 +119,8 @@ require_once '../../templates/header.php';
         <!-- TOP BAR -->
         <div class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-30">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900">Dashboard</h2>
-                <p class="text-sm text-gray-500 mt-0.5">Welcome back, <?= htmlspecialchars($_SESSION['name']) ?></p>
+                <h2 class="text-2xl font-bold text-gray-900"><?= $t['admin_dashboard'] ?></h2>
+                <p class="text-sm text-gray-500 mt-0.5"><?= $t['welcome_back'] ?><?= htmlspecialchars($_SESSION['name']) ?></p>
             </div>
             
             <div class="flex items-center gap-4">
@@ -137,7 +137,7 @@ require_once '../../templates/header.php';
                     
                     <div x-show="open" @click.outside="open = false" class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
                         <div class="px-4 py-3 border-b border-gray-100">
-                            <h3 class="font-semibold text-gray-900">System Alerts</h3>
+                            <h3 class="font-semibold text-gray-900"><?= $t['system_alerts'] ?></h3>
                         </div>
                         <div class="max-h-96 overflow-y-auto divide-y divide-gray-100">
                             <?php if ($slaBreached > 0): ?>
@@ -190,7 +190,7 @@ require_once '../../templates/header.php';
                     <div class="card">
                         <div class="flex items-start justify-between">
                             <div>
-                                <p class="text-sm font-medium text-gray-600">Total Sellers</p>
+                                <p class="text-sm font-medium text-gray-600"><?= $t['total_sellers'] ?></p>
                                 <p class="text-3xl font-bold text-gray-900 mt-2" id="metric-sellers"><?= $totalSellers ?></p>
                             </div>
                             <span class="text-3xl">👤</span>
@@ -201,34 +201,34 @@ require_once '../../templates/header.php';
                     <div class="card">
                         <div class="flex items-start justify-between">
                             <div>
-                                <p class="text-sm font-medium text-gray-600">Active Managers</p>
+                                <p class="text-sm font-medium text-gray-600"><?= $t['active_managers'] ?></p>
                                 <p class="text-3xl font-bold text-gray-900 mt-2" id="metric-managers"><?= $activeManagers ?></p>
                             </div>
                             <span class="text-3xl">👔</span>
                         </div>
-                        <p class="text-xs text-gray-500 mt-3">Market coordinators</p>
+                        <p class="text-xs text-gray-500 mt-3"><?= $t['market_coordinators'] ?></p>
                     </div>
                     
                     <div class="card">
                         <div class="flex items-start justify-between">
                             <div>
-                                <p class="text-sm font-medium text-gray-600">Open Complaints</p>
+                                <p class="text-sm font-medium text-gray-600"><?= $t['open_complaints'] ?></p>
                                 <p class="text-3xl font-bold text-gray-900 mt-2" id="metric-complaints"><?= $openComplaints ?></p>
                             </div>
                             <span class="text-3xl">🔴</span>
                         </div>
-                        <p class="text-xs text-gray-500 mt-3">Pending + In Review</p>
+                        <p class="text-xs text-gray-500 mt-3"><?= $t['pending_in_review'] ?></p>
                     </div>
                     
                     <div class="card">
                         <div class="flex items-start justify-between">
                             <div>
-                                <p class="text-sm font-medium text-gray-600">Announcements</p>
+                                <p class="text-sm font-medium text-gray-600"><?= $t['announcements'] ?></p>
                                 <p class="text-3xl font-bold text-gray-900 mt-2" id="metric-announcements"><?= $announcementsSent ?></p>
                             </div>
                             <span class="text-3xl">📢</span>
                         </div>
-                        <p class="text-xs text-gray-500 mt-3">Last 30 days</p>
+                        <p class="text-xs text-gray-500 mt-3"><?= $t['last_30_days'] ?></p>
                     </div>
                 </div>
             </section>
@@ -240,9 +240,9 @@ require_once '../../templates/header.php';
                 <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg flex items-start gap-4">
                     <span class="text-3xl">⏰</span>
                     <div class="flex-1">
-                        <h3 class="font-bold text-red-900">SLA Breach Alert</h3>
-                        <p class="text-sm text-red-700 mt-1"><?= $slaBreached ?> complaint(s) have exceeded their SLA deadline and require immediate attention.</p>
-                        <a href="<?= BASE_URL ?>/modules/complaints/list.php?status=sla_breach" class="inline-block mt-2 px-3 py-1.5 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700">View Overdue →</a>
+                        <h3 class="font-bold text-red-900"><?= $t['sla_breach_alert'] ?></h3>
+                        <p class="text-sm text-red-700 mt-1"><?= $slaBreached ?> <?= $t['sla_breach_message'] ?></p>
+                        <a href="<?= BASE_URL ?>/modules/complaints/list.php?status=sla_breach" class="inline-block mt-2 px-3 py-1.5 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700"><?= $t['view_overdue'] ?></a>
                     </div>
                 </div>
             </section>
@@ -252,7 +252,7 @@ require_once '../../templates/header.php';
             <?php if ($widgetConfig['complaint_donut']['visible'] ?? true): ?>
             <section class="widget" data-widget-id="complaint_donut" x-show="widgetVisible('complaint_donut')">
                 <div class="card">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Complaint Status Distribution</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4"><?= $t['complaint_status_dist'] ?></h3>
                     <canvas id="complaint-donut-canvas" width="400" height="300" style="width: 100%; height: auto;"></canvas>
                 </div>
             </section>
@@ -262,16 +262,16 @@ require_once '../../templates/header.php';
             <?php if ($widgetConfig['top_markets']['visible'] ?? true): ?>
             <section class="widget" data-widget-id="top_markets" x-show="widgetVisible('top_markets')">
                 <div class="card">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Top 5 Markets by Complaints</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4"><?= $t['top_5_markets'] ?></h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm">
                             <thead>
                                 <tr class="border-b border-gray-200">
-                                    <th class="text-left py-3 px-4 font-semibold text-gray-700">Market</th>
-                                    <th class="text-center py-3 px-4 font-semibold text-gray-700">Location</th>
-                                    <th class="text-center py-3 px-4 font-semibold text-gray-700">Total</th>
-                                    <th class="text-center py-3 px-4 font-semibold text-gray-700">Pending</th>
-                                    <th class="text-center py-3 px-4 font-semibold text-gray-700">Resolution %</th>
+                                    <th class="text-left py-3 px-4 font-semibold text-gray-700"><?= $t['market'] ?></th>
+                                    <th class="text-center py-3 px-4 font-semibold text-gray-700"><?= $t['location'] ?></th>
+                                    <th class="text-center py-3 px-4 font-semibold text-gray-700"><?= $t['total'] ?></th>
+                                    <th class="text-center py-3 px-4 font-semibold text-gray-700"><?= $t['pending'] ?></th>
+                                    <th class="text-center py-3 px-4 font-semibold text-gray-700"><?= $t['resolution_percent'] ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -319,7 +319,7 @@ require_once '../../templates/header.php';
                                 <?php
                                 } catch (Exception $e) {
                                     error_log("Top markets query error: " . $e->getMessage());
-                                    echo '<tr><td colspan="5" class="py-4 text-center text-gray-500">Error loading data</td></tr>';
+                                    echo '<tr><td colspan="5" class="py-4 text-center text-gray-500">' . $t['error_loading_data'] . '</td></tr>';
                                 }
                                 ?>
                             </tbody>
@@ -333,7 +333,7 @@ require_once '../../templates/header.php';
             <?php if ($widgetConfig['growth_chart']['visible'] ?? true): ?>
             <section class="widget" data-widget-id="growth_chart" x-show="widgetVisible('growth_chart')">
                 <div class="card">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Platform Growth (Last 6 Months)</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4"><?= $t['platform_growth'] ?></h3>
                     <canvas id="growth-chart-canvas" width="800" height="320" style="width: 100%; height: auto;"></canvas>
                 </div>
             </section>
@@ -343,7 +343,7 @@ require_once '../../templates/header.php';
             <?php if ($widgetConfig['activity_feed']['visible'] ?? true): ?>
             <section class="widget" data-widget-id="activity_feed" x-show="widgetVisible('activity_feed')">
                 <div class="card">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Admin Activity</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4"><?= $t['recent_admin_activity'] ?></h3>
                     <div id="activity-feed-list" class="space-y-0">
                         <?php
                         try {
@@ -379,7 +379,7 @@ require_once '../../templates/header.php';
                         <?php
                         } catch (Exception $e) {
                             error_log("Activity feed error: " . $e->getMessage());
-                            echo '<p class="text-gray-500 text-center py-4">Error loading activity</p>';
+                            echo '<p class="text-gray-500 text-center py-4">' . $t['error_loading_activity'] . '</p>';
                         }
                         ?>
                     </div>
@@ -435,50 +435,50 @@ require_once '../../templates/header.php';
         
         <div x-show="panelOpen" @click.outside="panelOpen = false" class="absolute bottom-16 right-0 w-80 bg-white rounded-lg shadow-2xl border border-gray-200 max-h-96 overflow-y-auto">
             <div class="px-4 py-3 border-b border-gray-100 sticky top-0 bg-white">
-                <h3 class="font-semibold text-gray-900">Dashboard Widgets</h3>
-                <p class="text-xs text-gray-600 mt-1">Show/hide and reorder your dashboard</p>
+                <h3 class="font-semibold text-gray-900"><?= $t['dashboard_widgets'] ?></h3>
+                <p class="text-xs text-gray-600 mt-1"><?= $t['widget_description'] ?></p>
             </div>
             
             <div class="p-4 space-y-2">
                 <label class="flex items-center gap-3 cursor-pointer py-2 hover:bg-gray-50 px-2 rounded">
                     <input type="checkbox" x-model="widgets.metrics_row" @change="toggleWidget('metrics_row')" class="w-4 h-4 accent-green-600">
-                    <span class="text-sm font-medium text-gray-700">Metric Cards</span>
+                    <span class="text-sm font-medium text-gray-700"><?= $t['metric_cards'] ?></span>
                 </label>
                 
                 <label class="flex items-center gap-3 cursor-pointer py-2 hover:bg-gray-50 px-2 rounded">
                     <input type="checkbox" x-model="widgets.complaint_donut" @change="toggleWidget('complaint_donut')" class="w-4 h-4 accent-green-600">
-                    <span class="text-sm font-medium text-gray-700">Complaint Chart</span>
+                    <span class="text-sm font-medium text-gray-700"><?= $t['complaint_chart'] ?></span>
                 </label>
                 
                 <label class="flex items-center gap-3 cursor-pointer py-2 hover:bg-gray-50 px-2 rounded">
                     <input type="checkbox" x-model="widgets.sla_alert" @change="toggleWidget('sla_alert')" class="w-4 h-4 accent-green-600">
-                    <span class="text-sm font-medium text-gray-700">SLA Alert</span>
+                    <span class="text-sm font-medium text-gray-700"><?= $t['sla_alert'] ?></span>
                 </label>
                 
                 <label class="flex items-center gap-3 cursor-pointer py-2 hover:bg-gray-50 px-2 rounded">
                     <input type="checkbox" x-model="widgets.top_markets" @change="toggleWidget('top_markets')" class="w-4 h-4 accent-green-600">
-                    <span class="text-sm font-medium text-gray-700">Top Markets</span>
+                    <span class="text-sm font-medium text-gray-700"><?= $t['top_markets'] ?></span>
                 </label>
                 
                 <label class="flex items-center gap-3 cursor-pointer py-2 hover:bg-gray-50 px-2 rounded">
                     <input type="checkbox" x-model="widgets.growth_chart" @change="toggleWidget('growth_chart')" class="w-4 h-4 accent-green-600">
-                    <span class="text-sm font-medium text-gray-700">Growth Chart</span>
+                    <span class="text-sm font-medium text-gray-700"><?= $t['growth_chart'] ?></span>
                 </label>
                 
                 <label class="flex items-center gap-3 cursor-pointer py-2 hover:bg-gray-50 px-2 rounded">
                     <input type="checkbox" x-model="widgets.activity_feed" @change="toggleWidget('activity_feed')" class="w-4 h-4 accent-green-600">
-                    <span class="text-sm font-medium text-gray-700">Activity Feed</span>
+                    <span class="text-sm font-medium text-gray-700"><?= $t['activity_feed'] ?></span>
                 </label>
                 
                 <label class="flex items-center gap-3 cursor-pointer py-2 hover:bg-gray-50 px-2 rounded">
                     <input type="checkbox" x-model="widgets.health_pill" @change="toggleWidget('health_pill')" class="w-4 h-4 accent-green-600">
-                    <span class="text-sm font-medium text-gray-700">Health Status</span>
+                    <span class="text-sm font-medium text-gray-700"><?= $t['health_status'] ?></span>
                 </label>
             </div>
             
             <div class="px-4 py-3 border-t border-gray-100">
                 <button @click="resetWidgets()" class="w-full px-3 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded hover:bg-gray-300 transition">
-                    Reset to Defaults
+                    <?= $t['reset_to_defaults'] ?>
                 </button>
             </div>
         </div>

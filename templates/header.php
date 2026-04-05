@@ -49,6 +49,11 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
 
     <!-- App.js utilities -->
     <script src="<?= BASE_URL ?>/assets/js/app.js"></script>
+
+    <!-- Translation object for JavaScript -->
+    <script>
+        window.translations = <?php echo json_encode($t); ?>;
+    </script>
     
 </head>
 <body class="min-h-screen">
@@ -79,7 +84,7 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
                 
                 <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'seller'): ?>
                     <a href="<?= BASE_URL ?>/modules/complaints/submit.php" class="hover:text-gray-200 transition"><?= $t['nav_complaints'] ?></a>
-                    <a href="<?= BASE_URL ?>/modules/complaints/my_complaints.php" class="hover:text-gray-200 transition">📋 My History</a>
+                    <a href="<?= BASE_URL ?>/modules/complaints/my_complaints.php" class="hover:text-gray-200 transition"><?= $t['nav_my_history'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/suggestions/submit.php" class="hover:text-gray-200 transition"><?= $t['nav_suggestions'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/community/report.php" class="hover:text-gray-200 transition"><?= $t['nav_community'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/announcements/list.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>
@@ -90,7 +95,7 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
                     <a href="<?= BASE_URL ?>/modules/announcements/create.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/community/list.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_community'] ?></a>
                 <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                    <a href="<?= BASE_URL ?>/modules/admin/overview.php<?= $langParam ?>" class="hover:text-gray-200 transition">Admin Overview</a>
+                    <a href="<?= BASE_URL ?>/modules/admin/overview.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_admin_overview'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/analytics/dashboard.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_analytics'] ?? 'Analytics' ?></a>
                     <a href="<?= BASE_URL ?>/modules/announcements/list.php<?= $langParam ?>" class="hover:text-gray-200 transition"><?= $t['nav_announcements'] ?></a>
                 <?php endif; ?>
@@ -181,7 +186,7 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
                 
                 <?php if ($_SESSION['role'] === 'seller'): ?>
                     <a href="<?= BASE_URL ?>/modules/complaints/submit.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_complaints'] ?></a>
-                    <a href="<?= BASE_URL ?>/modules/complaints/my_complaints.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false">📋 My History</a>
+                    <a href="<?= BASE_URL ?>/modules/complaints/my_complaints.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_my_history'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/suggestions/submit.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_suggestions'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/community/report.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_community'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/announcements/list.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_announcements'] ?></a>
@@ -192,7 +197,7 @@ $langParam = isset($_SESSION['lang']) ? '?lang=' . $_SESSION['lang'] : '';
                     <a href="<?= BASE_URL ?>/modules/announcements/create.php" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_announcements'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/community/list.php" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_community'] ?></a>
                 <?php elseif ($_SESSION['role'] === 'admin'): ?>
-                    <a href="<?= BASE_URL ?>/modules/admin/overview.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false">Admin Overview</a>
+                    <a href="<?= BASE_URL ?>/modules/admin/overview.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_admin_overview'] ?></a>
                     <a href="<?= BASE_URL ?>/modules/analytics/dashboard.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_analytics'] ?? 'Analytics' ?></a>
                     <a href="<?= BASE_URL ?>/modules/announcements/list.php<?= $langParam ?>" class="block py-2 hover:text-gray-200 transition" @click="mobileMenuOpen = false"><?= $t['nav_announcements'] ?></a>
                 <?php endif; ?>
