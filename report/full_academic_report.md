@@ -334,6 +334,17 @@ sequenceDiagram
 - **Project scalability**: Clean folder hierarchy allows for growth without complexity
 - **Developer onboarding**: Documentation and test guides facilitate rapid understanding for new team members
 
+### 11.3 Tools and Technologies
+The PlaceParole system leverages a modern, production-ready technology stack that enhances both security and quality attributes. The backend utilizes **PHP 8.0+** with **PDO** for database interactions, ensuring secure prepared statements and preventing SQL injection attacks. **MySQL 8.0+** with utf8mb4 charset supports ACID-compliant transactions and handles multilingual content effectively.
+
+Frontend development employs **Tailwind CSS 4.2.1** for utility-first styling, compiled via **PostCSS** and **Autoprefixer**, enabling responsive, maintainable interfaces. **Alpine.js** provides lightweight reactive components for interactive elements like forms and modals, while **Chart.js** delivers data visualization for analytics dashboards.
+
+Security is reinforced through **BCRYPT** password hashing with a cost factor of 12, **CSRF tokens** generated via cryptographically secure random bytes, and **hash_equals()** for timing-safe comparisons. External integrations include **PHPMailer** for SMTP email delivery, **Twilio SDK** for WhatsApp and SMS messaging, 
+
+Development tooling encompasses **Composer** for PHP dependency management, **Node.js/npm** for frontend build processes, and **XAMPP** for cross-platform development environments. The project uses **Git** for version control with proper exclusion of sensitive files (.env, vendor/), and includes comprehensive testing utilities in the `tests/` folder for validation and debugging.
+
+This technology stack supports the system's quality attributes by providing robust, scalable components that facilitate maintainability, security, and extensibility. The combination of modern frameworks and careful tool selection ensures the platform can evolve with emerging web standards while maintaining backward compatibility.
+
 ## 12. Conclusions
 PlaceParole effectively implements a formal complaint management lifecycle with a well-organized, scalable project structure. It is academically sound in its modular architecture, consistent with real-world municipal e-governance platforms, and enhanced by thoughtful project organization. 
 
