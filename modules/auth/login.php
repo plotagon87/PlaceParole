@@ -48,26 +48,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Verify password using password_verify()
         // password_verify() safely compares the plain text password with the hashed password stored in the database
         if ($user && password_verify($password, $user['password'])) {
-            // Login successful — store user data in session
-            $_SESSION['user_id']   = $user['id'];
-            $_SESSION['role']      = $user['role'];
-            $_SESSION['market_id'] = $user['market_id'];
-            $_SESSION['name']      = $user['name'];
-            $_SESSION['lang']      = $user['lang'] ?? 'en';
-
-            // Regenerate session ID after login to prevent session fixation attacks
-            // This replaces the current session ID with a new one, invalidating any previously known IDs
-            session_regenerate_id(true);
-
-            // Redirect based on role
-            if ($user['role'] === 'admin') {
-                header('Location: ../../modules/admin/overview.php');
-            } elseif ($user['role'] === 'manager') {
-                header('Location: ../../modules/complaints/list.php');
+            // Reject users with invalid or missing role data
+            if (empty($user['role']) || !in_array($user['role'], ['admin', 'manager', 'seller'], true)) {
+                $error = 'Account role is invalid. Please contact the system administrator.';
             } else {
-                header('Location: ../../index.php');
+                // Login successful — store user data in session
+                $_SESSION['user_id']   = $user['id'];
+                $_SESSION['role']      = $user['role'];
+                $_SESSION['market_id'] = $user['market_id'];
+                $_SESSION['name']      = $user['name'];
+                $_SESSION['lang']      = $user['lang'] ?? 'en';
+
+                // Regenerate session ID after login to prevent session fixation attacks
+                // This replaces the current session ID with a new one, invalidating any previously known IDs
+                session_regenerate_id(true);
+
+                // Redirect based on role
+                if ($user['role'] === 'admin') {
+                    header('Location: ../../modules/admin/dashboard.php');
+                } elseif ($user['role'] === 'manager') {
+                    header('Location: ../../modules/complaints/list.php');
+                } else {
+                    header('Location: ../../index.php');
+                }
+                exit;
             }
-            exit;
         } else {
             // Failed — increment the counter
             $_SESSION[$attempts_key] = ($_SESSION[$attempts_key] ?? 0) + 1;
