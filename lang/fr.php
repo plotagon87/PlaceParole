@@ -96,13 +96,17 @@ return [
     'new_announcement'      => 'Nouvelle Annonce',
     'announcement_title'    => 'Titre',
     'announcement_body'     => 'Message',
+    'announcement_picture'  => 'Image',
     'send_via'              => "Envoyer via",
     'broadcast_announcement'=> 'Diffuser une Annonce',
     'announcement_channels' => 'Envoyer via',
     'channel_web'           => 'Web/Dans l\'app',
     'channel_sms'           => 'SMS',
     'channel_email'         => 'Email',
+    'channel_gmail'         => 'Gmail',
+    'channel_whatsapp'      => 'WhatsApp',
     'error_select_channel'  => 'Veuillez sélectionner au moins un canal.',
+    'announcement_sent'     => 'Annonce envoyée avec succès sur tous les canaux.',
 
     // --- Community Feedback ---
     'submit_feedback'       => 'Partagez Vos Commentaires',

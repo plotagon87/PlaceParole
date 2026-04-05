@@ -96,13 +96,17 @@ return [
     'new_announcement'      => 'New Announcement',
     'announcement_title'    => 'Title',
     'announcement_body'     => 'Message',
+    'announcement_picture'  => 'Picture',
     'send_via'              => 'Send via',
     'broadcast_announcement'=> 'Broadcast Announcement',
     'announcement_channels' => 'Send via',
     'channel_web'           => 'Web/In-App',
     'channel_sms'           => 'SMS',
     'channel_email'         => 'Email',
+    'channel_gmail'         => 'Gmail',
+    'channel_whatsapp'      => 'WhatsApp',
     'error_select_channel'  => 'Please select at least one channel.',
+    'announcement_sent'     => 'Announcement sent successfully to all channels.',
 
     // --- Community Feedback ---
     'submit_feedback'       => 'Share Your Feedback',

@@ -81,8 +81,11 @@ CREATE TABLE IF NOT EXISTS announcements (
     manager_id  INT NOT NULL,
     title       VARCHAR(200),
     body        TEXT,
-    sent_via    SET('web', 'sms', 'email'),
+    picture_path VARCHAR(255) NULL,
+    sent_via    SET('web', 'sms', 'email', 'gmail', 'whatsapp'),
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at  TIMESTAMP NULL,
     FOREIGN KEY (manager_id) REFERENCES users(id),
     FOREIGN KEY (market_id)  REFERENCES markets(id)
 );

@@ -26,9 +26,11 @@ function getChannelIcons($sent_via) {
     $channels = explode(',', $sent_via);
     $icons = [];
     $channel_map = [
-        'web' => '🌐 Web',
-        'sms' => '📱 SMS',
-        'email' => '📧 Email'
+        'web' => '🌐 ' . ($t['channel_web'] ?? 'Web'),
+        'sms' => '📱 ' . ($t['channel_sms'] ?? 'SMS'),
+        'email' => '📧 ' . ($t['channel_email'] ?? 'Email'),
+        'gmail' => '📧 ' . ($t['channel_gmail'] ?? 'Gmail'),
+        'whatsapp' => '💬 ' . ($t['channel_whatsapp'] ?? 'WhatsApp')
     ];
     foreach ($channels as $ch) {
         $ch = trim($ch);
@@ -64,6 +66,14 @@ function getChannelIcons($sent_via) {
                             </p>
                         </div>
                     </div>
+
+                    <?php if (!empty($ann['picture_path'])): ?>
+                        <div class="mb-4">
+                            <img src="<?= BASE_URL ?>/<?= htmlspecialchars($ann['picture_path']) ?>" 
+                                 alt="Announcement Image" 
+                                 class="w-full max-w-md h-auto rounded-lg shadow-sm">
+                        </div>
+                    <?php endif; ?>
 
                     <p class="text-gray-700 leading-relaxed mb-4">
                         <?= nl2br(htmlspecialchars($ann['body'])) ?>

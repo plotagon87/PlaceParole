@@ -14,7 +14,8 @@ echo "<hr>";
 $migrations = [
     '001_add_complaint_threading.sql',
     '002_add_suggestions_announcements_feedback.sql',
-    '003_add_soft_delete_columns.sql'
+    '003_add_soft_delete_columns.sql',
+    '005_add_announcement_picture_and_channels.sql'
 ];
 
 $migrationPath = __DIR__ . '/database_migrations/';

@@ -641,4 +641,246 @@ function markGenericNotificationAsRead($notification_id) {
     }
 }
 
+/**
+ * broadcastAnnouncement($announcement_id, $channels)
+ * 
+ * Broadcast an announcement to all market users through specified channels
+ * 
+ * @param int $announcement_id - Announcement ID
+ * @param array $channels - Channels to broadcast through
+ * @return array - Results for each channel
+ */
+function broadcastAnnouncement($announcement_id, $channels = ['web', 'sms', 'email', 'gmail', 'whatsapp']) {
+    global $pdo;
+    
+    try {
+        // Get announcement details
+        $stmt = $pdo->prepare("
+            SELECT a.*, u.name AS manager_name, m.name AS market_name
+            FROM announcements a
+            JOIN users u ON a.manager_id = u.id
+            JOIN markets m ON a.market_id = m.id
+            WHERE a.id = ?
+        ");
+        $stmt->execute([$announcement_id]);
+        $announcement = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$announcement) {
+            return ['error' => 'Announcement not found'];
+        }
+        
+        // Get all users in the market
+        $stmt = $pdo->prepare("SELECT id, name, email, phone FROM users WHERE market_id = ? AND is_active = 1");
+        $stmt->execute([$announcement['market_id']]);
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $results = [];
+        
+        foreach ($channels as $channel) {
+            $results[$channel] = ['sent' => 0, 'failed' => 0];
+            
+            foreach ($users as $user) {
+                $success = false;
+                
+                switch ($channel) {
+                    case 'web':
+                        // Create web notification
+                        $notif_id = createGenericNotification(
+                            $announcement['market_id'],
+                            $user['id'],
+                            'new_announcement',
+                            'announcement',
+                            $announcement_id,
+                            'web'
+                        );
+                        $success = $notif_id > 0;
+                        break;
+                        
+                    case 'sms':
+                        if (!empty($user['phone'])) {
+                            $success = sendAnnouncementViaSMS($user['phone'], $announcement);
+                        }
+                        break;
+                        
+                    case 'email':
+                    case 'gmail':
+                        if (!empty($user['email'])) {
+                            $success = sendAnnouncementViaEmail($user['email'], $user['name'], $announcement);
+                        }
+                        break;
+                        
+                    case 'whatsapp':
+                        if (!empty($user['phone'])) {
+                            $success = sendAnnouncementViaWhatsApp($user['phone'], $announcement);
+                        }
+                        break;
+                }
+                
+                if ($success) {
+                    $results[$channel]['sent']++;
+                } else {
+                    $results[$channel]['failed']++;
+                }
+            }
+        }
+        
+        return $results;
+        
+    } catch (Exception $e) {
+        error_log("broadcastAnnouncement error: " . $e->getMessage());
+        return ['error' => $e->getMessage()];
+    }
+}
+
+/**
+ * sendAnnouncementViaSMS($phone, $announcement)
+ * 
+ * Send announcement via SMS
+ * 
+ * @param string $phone - Phone number
+ * @param array $announcement - Announcement data
+ * @return bool - Success
+ */
+function sendAnnouncementViaSMS($phone, $announcement) {
+    if (empty($phone)) {
+        return false;
+    }
+    
+    require_once __DIR__ . '/../integrations/sms_send.php';
+    
+    $message = "📣 ANNOUNCEMENT: " . $announcement['title'] . "\n\n" . 
+               substr($announcement['body'], 0, 120) . 
+               (strlen($announcement['body']) > 120 ? "..." : "");
+    
+    // Truncate to SMS limit
+    if (strlen($message) > 160) {
+        $message = substr($message, 0, 157) . "...";
+    }
+    
+    return sendSMS($phone, $message);
+}
+
+/**
+ * sendAnnouncementViaEmail($email, $name, $announcement)
+ * 
+ * Send announcement via email
+ * 
+ * @param string $email - Email address
+ * @param string $name - User name
+ * @param array $announcement - Announcement data
+ * @return bool - Success
+ */
+function sendAnnouncementViaEmail($email, $name, $announcement) {
+    if (empty($email)) {
+        return false;
+    }
+    
+    require_once __DIR__ . '/../integrations/email_notify.php';
+    
+    $subject = "📣 Market Announcement: " . $announcement['title'];
+    $body = "
+        <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+            <div style='background: #16a34a; padding: 20px; border-radius: 8px 8px 0 0;'>
+                <h1 style='color: white; margin: 0;'>🗣 PlaceParole</h1>
+                <p style='color: white; margin: 5px 0 0 0;'>Market Announcement</p>
+            </div>
+            <div style='padding: 24px; background: #f9fafb; border: 1px solid #e5e7eb;'>
+                <p>Dear <strong>{$name}</strong>,</p>
+                <h2 style='color: #1f2937; margin: 20px 0;'>{$announcement['title']}</h2>
+                <div style='background: white; border-left: 4px solid #16a34a; padding: 16px; margin: 16px 0; border-radius: 4px;'>
+                    " . nl2br(htmlspecialchars($announcement['body'])) . "
+                </div>";
+    
+    if (!empty($announcement['picture_path'])) {
+        $image_url = BASE_URL . '/' . $announcement['picture_path'];
+        $body .= "<div style='text-align: center; margin: 20px 0;'>
+                    <img src='{$image_url}' alt='Announcement Image' style='max-width: 100%; height: auto; border-radius: 8px;'>
+                  </div>";
+    }
+    
+    $body .= "
+                <p style='color: #6b7280; font-size: 14px;'>
+                    This announcement was sent by {$announcement['manager_name']} from {$announcement['market_name']}.
+                </p>
+            </div>
+        </div>
+    ";
+    
+    // Use PHPMailer to send
+    $mail = new PHPMailer(true);
+    
+    try {
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = getenv('GMAIL_USERNAME');
+        $mail->Password = getenv('GMAIL_PASSWORD');
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+        
+        $mail->setFrom(getenv('GMAIL_USERNAME'), getenv('GMAIL_FROM_NAME') ?: 'PlaceParole Market Platform');
+        $mail->addAddress($email, $name);
+        
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body = $body;
+        
+        $mail->send();
+        return true;
+        
+    } catch (Exception $e) {
+        error_log("Email announcement failed for {$email}: " . $mail->ErrorInfo);
+        return false;
+    }
+}
+
+/**
+ * sendAnnouncementViaWhatsApp($phone, $announcement)
+ * 
+ * Send announcement via WhatsApp
+ * 
+ * @param string $phone - Phone number
+ * @param array $announcement - Announcement data
+ * @return bool - Success
+ */
+function sendAnnouncementViaWhatsApp($phone, $announcement) {
+    if (empty($phone)) {
+        return false;
+    }
+    
+    $twilio_account = getenv('TWILIO_ACCOUNT_SID');
+    $twilio_token = getenv('TWILIO_AUTH_TOKEN');
+    $twilio_from = getenv('TWILIO_WHATSAPP_FROM');
+    
+    if (empty($twilio_account) || empty($twilio_token) || empty($twilio_from)) {
+        error_log("WhatsApp credentials not configured");
+        return false;
+    }
+    
+    try {
+        require_once __DIR__ . '/../vendor/autoload.php';
+        
+        $client = new \Twilio\Rest\Client($twilio_account, $twilio_token);
+        
+        $message = "📣 *MARKET ANNOUNCEMENT*\n\n";
+        $message .= "*{$announcement['title']}*\n\n";
+        $message .= $announcement['body'] . "\n\n";
+        $message .= "_Sent by {$announcement['manager_name']} from {$announcement['market_name']}_";
+        
+        $client->messages->create(
+            'whatsapp:' . $phone,
+            [
+                'from' => $twilio_from,
+                'body' => $message
+            ]
+        );
+        
+        return true;
+        
+    } catch (Exception $e) {
+        error_log("WhatsApp announcement failed for {$phone}: " . $e->getMessage());
+        return false;
+    }
+}
+
 ?>
