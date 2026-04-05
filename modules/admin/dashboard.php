@@ -83,6 +83,9 @@ require_once '../../templates/header.php';
             <a href="<?= BASE_URL ?>/modules/admin/dashboard.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-green-50 text-green-700 font-medium">
                 <span>📊</span> Dashboard
             </a>
+            <a href="<?= BASE_URL ?>/modules/admin/overview.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
+                <span>🌍</span> Overview
+            </a>
             <a href="<?= BASE_URL ?>/modules/admin/users.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
                 <span>👥</span> Users
             </a>

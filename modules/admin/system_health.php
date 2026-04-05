@@ -72,7 +72,7 @@ $checks[] = performHealthCheck($pdo, 'Email', function() {
         $stmt = $pdo->prepare("SELECT MAX(created_at) as last_sent FROM notifications WHERE channel = 'email'");
         $stmt->execute();
         $lastSent = $stmt->fetch(PDO::FETCH_ASSOC)['last_sent'];
-    } catch {
+    } catch (Exception $e) {
         $lastSent = null;
     }
     
@@ -104,7 +104,7 @@ $checks[] = performHealthCheck($pdo, 'SMS', function() {
         $stmt = $pdo->prepare("SELECT MAX(created_at) as last_sent FROM notifications WHERE channel = 'sms'");
         $stmt->execute();
         $lastSent = $stmt->fetch(PDO::FETCH_ASSOC)['last_sent'];
-    } catch {
+    } catch (Exception $e) {
         $lastSent = null;
     }
     
@@ -195,8 +195,40 @@ $checks[] = performHealthCheck($pdo, 'Error Rate', function() {
 require_once '../../templates/header.php';
 ?>
 
-<div class="min-h-screen bg-gray-50">
-    <div class="max-w-6xl mx-auto px-6 py-6">
+<div class="flex min-h-screen bg-gray-50">
+    <!-- SIDEBAR -->
+    <aside class="fixed left-0 top-0 w-60 h-screen bg-white border-r border-gray-200 flex flex-col shadow-sm z-40">
+        <div class="px-6 py-4 border-b border-gray-100">
+            <h1 class="text-xl font-bold text-green-700">📊 PlaceParole</h1>
+            <p class="text-xs text-gray-500 mt-1">Admin Dashboard</p>
+        </div>
+        
+        <nav class="flex-1 px-3 py-4 space-y-2 overflow-y-auto">
+            <a href="<?= BASE_URL ?>/modules/admin/dashboard.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
+                <span>📊</span> Dashboard
+            </a>
+            <a href="<?= BASE_URL ?>/modules/admin/overview.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
+                <span>🌍</span> Overview
+            </a>
+            <a href="<?= BASE_URL ?>/modules/admin/users.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
+                <span>👥</span> Users
+            </a>
+            <a href="<?= BASE_URL ?>/modules/admin/activity_log.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 transition">
+                <span>📋</span> Activity Log
+            </a>
+            <a href="<?= BASE_URL ?>/modules/admin/system_health.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-green-50 text-green-700 font-medium">
+                <span>⚙️</span> System Health
+            </a>
+            <hr class="my-3">
+            <a href="<?= BASE_URL ?>/index.php" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-100 transition text-sm">
+                <span>🏠</span> Back to Site
+            </a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 ml-60 p-8">
+    <div class="max-w-6xl mx-auto">
         <div class="mb-6">
             <h2 class="text-3xl font-bold text-gray-900">System Health</h2>
             <p class="text-gray-600 text-sm mt-1">Real-time health status of all platform systems</p>
@@ -238,6 +270,7 @@ require_once '../../templates/header.php';
             <?php endforeach; ?>
         </div>
     </div>
+    </main>
 </div>
 
 <?php require_once '../../templates/footer.php'; ?>
